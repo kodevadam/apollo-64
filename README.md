@@ -49,8 +49,17 @@ GL-capable emulator.
       so we know it loads but not what it draws.
 - [ ] Real-time pacing via timer ISR (currently runs frame-batched)
 - [ ] DSKY artwork (uses libdragon built-in font for now)
-- [ ] IMU/PIPA/CDU counter wiring - without these, the AGC sits in
-      RESTART forever, which is exactly what the host smoke test reproduces.
+- [x] Luminary boots all the way to DUMMYJOB (executive idle loop at
+      fixed-memory 006647-006674). Critical init fields - especially
+      `AllowInterrupt = 1` - were missing from `agc_host_init`; once
+      added, the TC-trap-storm/GOJAM loop clears, the executive
+      stabilises, and the AGC behaves like real Apollo hardware
+      sitting on the pad. RestartLight staying on is *correct* (the
+      astronaut had to press RSET) - the smoke test demonstrates
+      clearing it.
+- [x] PIPA accelerometer pulse generation in `ChannelInput` (~168 Hz
+      Z-axis simulating 1g vertical, 4 Hz X/Y bias).
+- [ ] CDU pulses (gimbal angle counter activity).
 - [ ] Audio (1202 alarm beep, key clicks)
 
 ## Layout
