@@ -62,9 +62,8 @@ main(int argc, char **argv)
 {
   unsigned long cycles = (argc > 1) ? strtoul(argv[1], NULL, 0) : 200000;
 
-  /* Optional flag: "noperipherals" disables PIPA pulse generation. Useful
-   * for comparing PIPAZ accumulation with vs without. "alarms" prints
-   * every alarm the engine triggers. */
+  /* Optional flags (positional after cycle count, combinable). */
+  bool send_v35e = false;
   for (int i = 2; i < argc; i++) {
     if (strcmp(argv[i], "noperipherals") == 0)
       agc_host_set_peripherals(false);
@@ -72,6 +71,8 @@ main(int argc, char **argv)
       ShowAlarms = 1;
     else if (strcmp(argv[i], "inhibit") == 0)
       InhibitAlarms = 1;
+    else if (strcmp(argv[i], "v35e") == 0)
+      send_v35e = true;
   }
 
   printf("apollo-64 host smoke test\n");
@@ -125,6 +126,18 @@ main(int argc, char **argv)
        * to actually run and echo, which may not happen reliably. */
       g_agc.RestartLight = 0;
       rset_sent = true;
+    }
+
+    /* V35E (lamp test): four keypresses, one per ~100k cycles so the
+     * AGC's KEYRUPT handler has time to fully process each before the
+     * next arrives. Sequence: VERB, 3, 5, ENTR. */
+    static const uint8_t v35e_seq[] = { 021, 027, 036, 034 };  /* V 3 5 E */
+    static int v35e_step = 0;
+    if (send_v35e && v35e_step < 4 && done >= 1500000 + 100000UL * v35e_step) {
+      printf("  *** V35E step %d: keycode %02o @ cycle %lu\n",
+             v35e_step, v35e_seq[v35e_step], done);
+      agc_host_press_key(v35e_seq[v35e_step]);
+      v35e_step++;
     }
     printf("  ... %lu / %lu cycles, gen=%u, Z=%06o, T1=%06o, RESTART=%u\n",
            done, cycles,
