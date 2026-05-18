@@ -49,6 +49,12 @@ void agc_host_init(void);
  * of input channel 015 and raises the keystroke interrupt request. */
 void agc_host_press_key(uint8_t key_code);
 
+/* Set PRO (PROCEED) key state. PRO is wired differently from the keypad
+ * matrix - it's a dedicated bit on channel 032 (bit 14, active low). Brief
+ * press acknowledges flashing displays; ~0.5 s hold takes the AGC in/out
+ * of standby. Pass true for "held", false for "released". */
+void agc_host_set_pro(bool held);
+
 /* Step the AGC by `cycles` machine cycles. One AGC machine cycle is ~11.7 us
  * of wall time. Call this from a timer ISR at the right rate to maintain
  * real-time fidelity, or from the main loop for free-running mode. */

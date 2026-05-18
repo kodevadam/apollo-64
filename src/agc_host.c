@@ -35,23 +35,6 @@ static uint32_t pipa_x_counter;
 static uint32_t pipa_y_counter;
 static bool     peripherals_enabled = true;
 
-/* T3RUPT bootstrap. The AGC's idle-after-restart loop is a tight TC, which
- * the engine flags as a TC trap every 5ms simulated unless an interrupt
- * lands and breaks the loop. T3RUPT is the natural one - the executive
- * loads TIME3 to near-overflow each time it services T3RUPT, keeping the
- * cadence at ~10ms. But on cold boot TIME3 starts at zero and takes ~82s
- * simulated to overflow naturally, which is much longer than the TC trap
- * window. Result: every TC trap GOJAMs back to 04000, the bootstrap runs
- * again, and the loop never breaks.
- *
- * Workaround: force T3RUPT roughly every 10ms simulated for the first
- * second or so. Once the AGC software has primed TIME3 itself, our
- * external requests become harmless (the engine OR's them with whatever
- * the internal scaler generates). */
-#define T3_BOOTSTRAP_PERIOD (AGC_CYCLES_PER_SEC / 100)   /* ~853 cycles, 10 ms */
-#define T3_BOOTSTRAP_CYCLES AGC_CYCLES_PER_SEC           /* keep firing for 1s */
-static uint32_t t3_bootstrap_counter;
-static uint32_t t3_bootstrap_remaining = T3_BOOTSTRAP_CYCLES;
 
 extern void UnprogrammedIncrement(agc_t *State, int Counter, int IncType);
 
@@ -85,7 +68,19 @@ agc_host_init(void)
   g_agc.InputChannel[032] = 077777;
   g_agc.InputChannel[033] = 077777;
 
-  /* Step 3: program counter to the boot vector. */
+  /* Step 3: CPU state that needs explicit setup (memset zeros aren't
+   * always the right values). The canonical agc_engine_init.c does
+   * these and we were missing them - without AllowInterrupt=1 the AGC's
+   * boot sequence sits in a TC loop, gets TCTrap'd every 5 ms, and
+   * GOJAMs back to 04000 forever (queued T3/T4 interrupts can't be
+   * dispatched until the AGC software performs RELINT, which it never
+   * reaches). */
+  g_agc.AllowInterrupt = 1;
+  g_agc.InterruptRequests[8] = 1;  /* DOWNRUPT - gives the first ISR a kick. */
+  g_agc.DownruptTimeValid = 1;
+  g_agc.DownruptTime = 0;
+
+  /* Step 4: program counter to the boot vector. */
   g_agc.Erasable[0][RegZ] = 04000;
 
 
@@ -97,6 +92,18 @@ agc_host_press_key(uint8_t key_code)
 {
   pending_key = key_code & 0x1F;
   pending_key_dirty = true;
+}
+
+void
+agc_host_set_pro(bool held)
+{
+  /* PRO is channel 032 bit 14, active-low. The engine polls this on every
+   * scaler tick to set State->SbyPressed, which in turn drives standby
+   * entry/exit after the required hold time. */
+  if (held)
+    g_agc.InputChannel[032] &= (int16_t)~020000;
+  else
+    g_agc.InputChannel[032] |= (int16_t)020000;
 }
 
 void
@@ -143,17 +150,6 @@ ChannelInput(agc_t *State)
     pending_key_dirty = false;
     State->InputChannel[015] = pending_key;
     State->InterruptRequests[5] = 1;  /* KEYRUPT1 */
-  }
-
-  /* Bootstrap T3RUPT during the first second after init so the AGC has
-   * something to break its idle TC loop with before its own TIME3
-   * preloading kicks in. */
-  if (t3_bootstrap_remaining > 0) {
-    t3_bootstrap_remaining--;
-    if (++t3_bootstrap_counter >= T3_BOOTSTRAP_PERIOD) {
-      t3_bootstrap_counter = 0;
-      State->InterruptRequests[3] = 1;  /* T3RUPT */
-    }
   }
 
   /* Drive PIPA counters. The engine guarantees one instruction between

@@ -116,8 +116,14 @@ main(int argc, char **argv)
     int bucket = (g_agc.Erasable[0][RegZ] >> 9) & 0xF;  /* 0512 octal per bucket */
     pc_buckets[bucket]++;
     if (send_rset && !rset_sent && done >= rset_at) {
-      printf("  *** simulating RSET keypress @ cycle %lu\n", done);
+      printf("  *** simulating RSET keypress @ cycle %lu, "
+             "RestartLight pre=%u\n", done, g_agc.RestartLight);
       agc_host_press_key(022);  /* DSKY_KEY_RSET */
+      /* Also directly clear the restart light - the real hardware grounds
+       * the flip-flop on RSET press without needing software involvement;
+       * our channel-write-trigger path requires the AGC's PINBALL handler
+       * to actually run and echo, which may not happen reliably. */
+      g_agc.RestartLight = 0;
       rset_sent = true;
     }
     printf("  ... %lu / %lu cycles, gen=%u, Z=%06o, T1=%06o, RESTART=%u\n",
