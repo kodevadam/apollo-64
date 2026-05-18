@@ -1,19 +1,36 @@
-# Public Domain Mark 1.0
+# Licensing
 
-## No Copyright
+apollo-64 mixes three things with different licenses. Read carefully if
+you intend to redistribute.
 
-This work has been identified as being free of known restrictions under copyright law, including all related and neighboring rights.
+## 1. Original Apollo 11 flight software (`agc-software/`)
 
-You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. See Other Information below.
+**Public domain.** Works of the U.S. Government are not subject to
+copyright in the United States. The Apollo Guidance Computer source code
+for Comanche055 and Luminary099 was produced under NASA contracts at MIT
+and digitised by the Virtual AGC project and the MIT Museum.
 
-## Other Information
+## 2. Vendored Virtual AGC engine (`vendor/yaAGC/`)
 
-- The work may not be free of known copyright restrictions in all jurisdictions.
+**GPL-2.0-or-later.** Copyright (c) 2003-2025 Ronald S. Burkey and
+contributors. See `vendor/yaAGC/LICENSE` for the full text and
+`vendor/yaAGC/PATCHES.md` for the small diff applied to enable the N64
+build.
 
-- Persons may have other rights in or related to the work, such as patent or trademark rights, and others may have rights in how the work is used, such as publicity or privacy rights.
+## 3. apollo-64 N64 glue (`src/`, `tools/`, `Makefile`, docs)
 
-- In some jurisdictions moral rights of the author may persist beyond the term of copyright. These rights may include the right to be identified as the author and the right to object to derogatory treatments.
+**GPL-2.0-or-later.** Because the final ROM links against `agc_engine.c`
+(GPL-2-or-later), the combined work is covered by the GPL. This includes:
 
-- Unless expressly stated otherwise, the person who identified the work makes no warranties about the work, and disclaims liability for all uses of the work, to the fullest extent permitted by applicable law.
+- Source distribution of the ROM is required when binaries are distributed.
+- You cannot ship a closed-source commercial cartridge.
+- Forks, patches, and homebrew distribution are fine; just keep the
+  source available.
 
-- When using or citing the work, you should not imply endorsement by the author or the person who identified the work.
+## What "Public Domain Mark" applied to before this fork
+
+The upstream `chrislgarry/Apollo-11` repository applied PDM 1.0 to the
+whole repo on the basis that the only content was the Apollo source code
+itself. That mark still applies to the `agc-software/` subtree here. It
+does NOT apply to the engine glue we added, which is GPL by necessity
+(see section 2).

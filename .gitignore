@@ -1,2 +1,7 @@
+build/
+filesystem/
+apollo64.z64
+tools/bin2rope
+
+# Upstream-leftover ignores
 yaYUL.exe
-node_modules
