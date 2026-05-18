@@ -35,6 +35,24 @@ static uint32_t pipa_x_counter;
 static uint32_t pipa_y_counter;
 static bool     peripherals_enabled = true;
 
+/* T3RUPT bootstrap. The AGC's idle-after-restart loop is a tight TC, which
+ * the engine flags as a TC trap every 5ms simulated unless an interrupt
+ * lands and breaks the loop. T3RUPT is the natural one - the executive
+ * loads TIME3 to near-overflow each time it services T3RUPT, keeping the
+ * cadence at ~10ms. But on cold boot TIME3 starts at zero and takes ~82s
+ * simulated to overflow naturally, which is much longer than the TC trap
+ * window. Result: every TC trap GOJAMs back to 04000, the bootstrap runs
+ * again, and the loop never breaks.
+ *
+ * Workaround: force T3RUPT roughly every 10ms simulated for the first
+ * second or so. Once the AGC software has primed TIME3 itself, our
+ * external requests become harmless (the engine OR's them with whatever
+ * the internal scaler generates). */
+#define T3_BOOTSTRAP_PERIOD (AGC_CYCLES_PER_SEC / 100)   /* ~853 cycles, 10 ms */
+#define T3_BOOTSTRAP_CYCLES AGC_CYCLES_PER_SEC           /* keep firing for 1s */
+static uint32_t t3_bootstrap_counter;
+static uint32_t t3_bootstrap_remaining = T3_BOOTSTRAP_CYCLES;
+
 extern void UnprogrammedIncrement(agc_t *State, int Counter, int IncType);
 
 void
@@ -69,6 +87,7 @@ agc_host_init(void)
 
   /* Step 3: program counter to the boot vector. */
   g_agc.Erasable[0][RegZ] = 04000;
+
 
   g_dsky.generation = 1;
 }
@@ -124,6 +143,17 @@ ChannelInput(agc_t *State)
     pending_key_dirty = false;
     State->InputChannel[015] = pending_key;
     State->InterruptRequests[5] = 1;  /* KEYRUPT1 */
+  }
+
+  /* Bootstrap T3RUPT during the first second after init so the AGC has
+   * something to break its idle TC loop with before its own TIME3
+   * preloading kicks in. */
+  if (t3_bootstrap_remaining > 0) {
+    t3_bootstrap_remaining--;
+    if (++t3_bootstrap_counter >= T3_BOOTSTRAP_PERIOD) {
+      t3_bootstrap_counter = 0;
+      State->InterruptRequests[3] = 1;  /* T3RUPT */
+    }
   }
 
   /* Drive PIPA counters. The engine guarantees one instruction between

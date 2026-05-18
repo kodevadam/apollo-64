@@ -27,6 +27,10 @@
 #include "../src/dsky_decode.h"
 #include "../vendor/yaAGC/agc_engine.h"
 
+/* Engine globals we want to twiddle for visibility. */
+extern int ShowAlarms;
+extern int InhibitAlarms;
+
 /* Instrument ChannelOutput to count writes. The real ChannelOutput in
  * agc_host.c will still fire (we're linking it normally); this just adds
  * an observation hook via a wrapper symbol. Simplest approach: replace
@@ -59,10 +63,15 @@ main(int argc, char **argv)
   unsigned long cycles = (argc > 1) ? strtoul(argv[1], NULL, 0) : 200000;
 
   /* Optional flag: "noperipherals" disables PIPA pulse generation. Useful
-   * for comparing PIPAZ accumulation with vs without. */
+   * for comparing PIPAZ accumulation with vs without. "alarms" prints
+   * every alarm the engine triggers. */
   for (int i = 2; i < argc; i++) {
     if (strcmp(argv[i], "noperipherals") == 0)
       agc_host_set_peripherals(false);
+    else if (strcmp(argv[i], "alarms") == 0)
+      ShowAlarms = 1;
+    else if (strcmp(argv[i], "inhibit") == 0)
+      InhibitAlarms = 1;
   }
 
   printf("apollo-64 host smoke test\n");
@@ -95,10 +104,17 @@ main(int argc, char **argv)
   /* Run in batches so we can show progress for very long runs. */
   unsigned long batch = (cycles > 50000) ? 50000 : cycles;
   unsigned long done = 0;
+  /* Bucket the PC by 04000-octal-wide ranges to see what code areas the
+   * AGC visits. Stash one sample per outer iteration; not statistically
+   * pure but enough to spot "stuck in a loop" patterns. */
+  unsigned long pc_buckets[16] = {0};
+
   while (done < cycles) {
     unsigned long n = (cycles - done < batch) ? cycles - done : batch;
     agc_host_tick((uint32_t)n);
     done += n;
+    int bucket = (g_agc.Erasable[0][RegZ] >> 9) & 0xF;  /* 0512 octal per bucket */
+    pc_buckets[bucket]++;
     if (send_rset && !rset_sent && done >= rset_at) {
       printf("  *** simulating RSET keypress @ cycle %lu\n", done);
       agc_host_press_key(022);  /* DSKY_KEY_RSET */
@@ -124,6 +140,13 @@ main(int argc, char **argv)
   printf("  AllowInterrupt    = %u\n", g_agc.AllowInterrupt);
   printf("  Standby           = %u\n", g_agc.Standby);
   printf("  RestartLight      = %u\n", g_agc.RestartLight);
+  printf("  NightWatchman/Trp = %u / %u\n", g_agc.NightWatchman, g_agc.NightWatchmanTripped);
+  printf("  RuptLock/NoRupt   = %u / %u\n", g_agc.RuptLock, g_agc.NoRupt);
+  printf("  TCTrap/NoTC       = %u / %u\n", g_agc.TCTrap, g_agc.NoTC);
+  printf("  WarningFilter     = %u\n", g_agc.WarningFilter);
+  printf("  GeneratedWarning  = %u\n", g_agc.GeneratedWarning);
+  printf("  ParityFail        = %u\n", g_agc.ParityFail);
+  printf("  CheckParity       = %u\n", g_agc.CheckParity);
   printf("  PIPAX/Y/Z         = %06o / %06o / %06o\n",
          (unsigned short)g_agc.Erasable[0][RegPIPAX],
          (unsigned short)g_agc.Erasable[0][RegPIPAY],
@@ -138,6 +161,13 @@ main(int argc, char **argv)
          (unsigned short)g_agc.InputChannel[032]);
   printf("  channel 033       = %06o\n",
          (unsigned short)g_agc.InputChannel[033]);
+
+  printf("\nPC bucket sample histogram (Z range -> samples):\n");
+  for (int b = 0; b < 16; b++) {
+    if (pc_buckets[b])
+      printf("  %06o-%06o : %lu\n",
+             b * 01000, (b + 1) * 01000 - 1, pc_buckets[b]);
+  }
 
   printf("\nRaw channel 010 latches (relay rows 1..15):\n");
   for (int i = 1; i < 16; i++)

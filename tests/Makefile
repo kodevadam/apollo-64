@@ -2,7 +2,12 @@
 # Drives the AGC engine on the host so the pipeline can be smoke-tested
 # without flashing a ROM.
 
-CFLAGS ?= -O2 -Wall -Wextra -Wno-unused-parameter -DN64 -I../vendor/yaAGC -I../src
+# -Wno-format silences a noisy warning about FORMAT_64U being "%llu" while
+# host x86-64 uint64_t is "unsigned long". On the N64 MIPS target uint64_t is
+# "unsigned long long" so "%llu" is correct - the warning is a host-only
+# artefact of running test code we'd never compile this way for real.
+CFLAGS ?= -O2 -Wall -Wextra -Wno-unused-parameter -Wno-format \
+          -DN64 -I../vendor/yaAGC -I../src
 
 SOURCES = \
   host_smoke.c \
