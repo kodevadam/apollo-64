@@ -21,6 +21,22 @@ volatile dsky_snapshot_t g_dsky;
 static volatile uint8_t pending_key;
 static volatile bool    pending_key_dirty;
 
+/* PIPA counter pacing. The AGC's IMU subsystem needs to see PIPA pulses
+ * to declare the IMU alive; without them Luminary won't exit its restart
+ * loop. We simulate "spacecraft sitting on the pad" by generating PIPAZ
+ * pulses at ~168 Hz (the rate corresponding to 1g vertical acceleration,
+ * given 5.85 cm/s per PIPA pulse). PIPAX and PIPAY get tiny rates to
+ * keep the IMU monitor happy but not bias the navigation. */
+#define AGC_CYCLES_PER_SEC ((1024000UL + 6) / 12)         /* ~85333 */
+#define PIPA_Z_PERIOD      (AGC_CYCLES_PER_SEC / 168)     /* ~510 cycles */
+#define PIPA_XY_PERIOD     (AGC_CYCLES_PER_SEC / 4)       /* ~21333 cycles, 4 Hz */
+static uint32_t pipa_z_counter;
+static uint32_t pipa_x_counter;
+static uint32_t pipa_y_counter;
+static bool     peripherals_enabled = true;
+
+extern void UnprogrammedIncrement(agc_t *State, int Counter, int IncType);
+
 void
 agc_host_init(void)
 {
@@ -71,6 +87,12 @@ agc_host_tick(uint32_t cycles)
     agc_engine(&g_agc);
 }
 
+void
+agc_host_set_peripherals(bool on)
+{
+  peripherals_enabled = on;
+}
+
 /* ------------------------------------------------------------------
  * yaAGC callbacks
  * ------------------------------------------------------------------ */
@@ -103,9 +125,29 @@ ChannelInput(agc_t *State)
     State->InputChannel[015] = pending_key;
     State->InterruptRequests[5] = 1;  /* KEYRUPT1 */
   }
-  /* Return 0 = "no unprogrammed counter increment pending". When we wire
-   * IMU CDU/PIPA counters we'll return 1 here and call
-   * UnprogrammedIncrement() before returning. */
+
+  /* Drive PIPA counters. The engine guarantees one instruction between
+   * ChannelInput calls, so each pulse here corresponds to one machine
+   * cycle of "skipped" execution (which is fine - real PIPA pulses also
+   * consume a cycle for the unprogrammed-sequence handler). At most one
+   * PIPA pulse per ChannelInput call. */
+  if (peripherals_enabled) {
+    if (++pipa_z_counter >= PIPA_Z_PERIOD) {
+      pipa_z_counter = 0;
+      UnprogrammedIncrement(State, RegPIPAZ, 0);  /* PINC */
+      return 1;
+    }
+    if (++pipa_x_counter >= PIPA_XY_PERIOD) {
+      pipa_x_counter = 0;
+      UnprogrammedIncrement(State, RegPIPAX, 0);
+      return 1;
+    }
+    if (++pipa_y_counter >= PIPA_XY_PERIOD) {
+      pipa_y_counter = 0;
+      UnprogrammedIncrement(State, RegPIPAY, 0);
+      return 1;
+    }
+  }
   return 0;
 }
 

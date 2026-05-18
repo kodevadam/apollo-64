@@ -58,6 +58,13 @@ main(int argc, char **argv)
 {
   unsigned long cycles = (argc > 1) ? strtoul(argv[1], NULL, 0) : 200000;
 
+  /* Optional flag: "noperipherals" disables PIPA pulse generation. Useful
+   * for comparing PIPAZ accumulation with vs without. */
+  for (int i = 2; i < argc; i++) {
+    if (strcmp(argv[i], "noperipherals") == 0)
+      agc_host_set_peripherals(false);
+  }
+
   printf("apollo-64 host smoke test\n");
   printf("=========================\n");
   printf("Loading CoreRope (%d words) and initialising AGC...\n",
@@ -117,6 +124,20 @@ main(int argc, char **argv)
   printf("  AllowInterrupt    = %u\n", g_agc.AllowInterrupt);
   printf("  Standby           = %u\n", g_agc.Standby);
   printf("  RestartLight      = %u\n", g_agc.RestartLight);
+  printf("  PIPAX/Y/Z         = %06o / %06o / %06o\n",
+         (unsigned short)g_agc.Erasable[0][RegPIPAX],
+         (unsigned short)g_agc.Erasable[0][RegPIPAY],
+         (unsigned short)g_agc.Erasable[0][RegPIPAZ]);
+  printf("  CDUX/Y/Z          = %06o / %06o / %06o\n",
+         (unsigned short)g_agc.Erasable[0][RegCDUX],
+         (unsigned short)g_agc.Erasable[0][RegCDUY],
+         (unsigned short)g_agc.Erasable[0][RegCDUZ]);
+  printf("  channel 030       = %06o (IMU fail bits)\n",
+         (unsigned short)g_agc.InputChannel[030]);
+  printf("  channel 032       = %06o\n",
+         (unsigned short)g_agc.InputChannel[032]);
+  printf("  channel 033       = %06o\n",
+         (unsigned short)g_agc.InputChannel[033]);
 
   printf("\nRaw channel 010 latches (relay rows 1..15):\n");
   for (int i = 1; i < 16; i++)

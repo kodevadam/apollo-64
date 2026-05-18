@@ -54,4 +54,8 @@ void agc_host_press_key(uint8_t key_code);
  * real-time fidelity, or from the main loop for free-running mode. */
 void agc_host_tick(uint32_t cycles);
 
+/* Toggle the simulated IMU peripherals (PIPA pulse generation). On by
+ * default. Useful for the smoke test to compare with/without peripherals. */
+void agc_host_set_peripherals(bool on);
+
 #endif
