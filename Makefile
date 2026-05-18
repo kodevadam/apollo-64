@@ -25,23 +25,21 @@ src = \
   src/main.c \
   src/agc_host.c \
   src/dsky.c \
+  src/dsky_decode.c \
   src/input.c \
   src/rope.c \
   vendor/yaAGC/agc_engine.c
 
-# (Assets pipeline goes here once we have artwork. For now the renderer
-# uses libdragon's built-in font, so the DFS is empty.)
-assets_conv =
+# No DFS assets yet - dsky.c uses libdragon's built-in font. When real
+# artwork lands, add a $(BUILD_DIR)/$(ROM_NAME).dfs rule that runs
+# $(N64_MKDFS) over a filesystem/ directory of sprites, and add the .dfs
+# as a prerequisite of the .z64 target.
 
 all: $(ROM_NAME).z64
-
-$(BUILD_DIR)/$(ROM_NAME).dfs: $(assets_conv)
-	$(N64_MKDFS) $@ filesystem || $(N64_MKDFS) $@
 
 $(BUILD_DIR)/$(ROM_NAME).elf: $(src:%.c=$(BUILD_DIR)/%.o)
 
 $(ROM_NAME).z64: N64_ROM_TITLE = "Apollo-64"
-$(ROM_NAME).z64: $(BUILD_DIR)/$(ROM_NAME).dfs
 
 # Regenerate rope.c from a pre-assembled .bin. Run yaYUL yourself first;
 # see BUILDING.md.

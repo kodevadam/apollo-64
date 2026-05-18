@@ -21,7 +21,7 @@ void
 input_init(void)
 {
   joypad_init();
-  prev = (joypad_buttons_t){0};
+  prev = (joypad_buttons_t){ .raw = 0 };
 }
 
 /* Return the DSKY key code for the first button that transitioned from
