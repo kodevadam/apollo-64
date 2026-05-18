@@ -99,7 +99,7 @@ main(int argc, char **argv)
    * second arg "rset". Without it the AGC sits in restart forever, which is
    * the expected behaviour but boring to look at. */
   bool send_rset = (argc > 2 && strcmp(argv[2], "rset") == 0);
-  unsigned long rset_at = cycles / 2;
+  unsigned long rset_at = 200000;  /* ~2.3s simulated - well after init */
   bool rset_sent = false;
 
   /* Run in batches so we can show progress for very long runs. */
@@ -128,22 +128,29 @@ main(int argc, char **argv)
       rset_sent = true;
     }
 
-    /* V35E (lamp test): four keypresses, one per ~100k cycles so the
-     * AGC's KEYRUPT handler has time to fully process each before the
-     * next arrives. Sequence: VERB, 3, 5, ENTR. */
-    static const uint8_t v35e_seq[] = { 021, 027, 036, 034 };  /* V 3 5 E */
+    /* V36E (Fresh Start) - the cleanest way to get the AGC into a
+     * displayable state. VB36 -> SLAP1 (PINBALL VERBTAB:1035), which
+     * forcibly re-initialises the executive and shows the standard
+     * V37 N00 idle prompt.
+     *
+     * Codes are keypad-input codes per the PINBALL CHARIN2 dispatch
+     * table (PINBALL_GAME__BUTTONS_AND_LIGHTS.agc:494). */
+    static const uint8_t v35e_seq[] = { 021, 003, 006, 034 };  /* VERB 3 6 ENTR */
     static int v35e_step = 0;
-    if (send_v35e && v35e_step < 4 && done >= 1500000 + 100000UL * v35e_step) {
-      printf("  *** V35E step %d: keycode %02o @ cycle %lu\n",
+    if (send_v35e && v35e_step < 4 && done >= 1500000 + 200000UL * v35e_step) {
+      printf("  *** V36E step %d: keycode %02o @ cycle %lu\n",
              v35e_step, v35e_seq[v35e_step], done);
       agc_host_press_key(v35e_seq[v35e_step]);
       v35e_step++;
     }
-    printf("  ... %lu / %lu cycles, gen=%u, Z=%06o, T1=%06o, RESTART=%u\n",
+    printf("  ... %lu / %lu cycles, gen=%u, Z=%06o, T1=%06o, "
+           "ch11=%06o ch163=%06o RESTART=%u\n",
            done, cycles,
            g_dsky.generation,
            g_agc.Erasable[0][RegZ],
            (unsigned short)g_agc.Erasable[0][RegTIME1],
+           (unsigned short)g_dsky.channel11,
+           (unsigned short)g_dsky.channel163,
            g_agc.RestartLight);
   }
 

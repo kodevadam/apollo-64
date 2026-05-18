@@ -80,7 +80,22 @@ agc_host_init(void)
   g_agc.DownruptTimeValid = 1;
   g_agc.DownruptTime = 0;
 
-  /* Step 4: program counter to the boot vector. */
+  /* Step 4: prime RegTIME4 close to overflow so T4RUPT fires within ~10ms
+   * simulated instead of waiting ~82s for natural overflow.
+   *
+   * Why this matters: T4RUPT calls DSPOUT (PINBALL_GAME__BUTTONS_AND_
+   * LIGHTS.agc:164 - "DSPOUT (A PART OF T4RUPT) HANDLES THE PLACING OF
+   * THE DSPTAB INFORMATION INTO OUTPUT CHANNEL 10"). Without T4RUPT,
+   * Luminary builds the DSPTAB buffer correctly in response to VERB/NOUN
+   * keypresses, but the contents never get pushed to channel 010 - so
+   * the screen stays blank no matter what the operator types.
+   *
+   * Once T4RUPT services once, the handler reloads RegTIME4 itself to
+   * keep the cadence (~120 Hz display refresh), so we only need to
+   * bootstrap the first one. */
+  g_agc.Erasable[0][RegTIME4] = 077775;  /* signed 15-bit: 2 ticks from overflow */
+
+  /* Step 5: program counter to the boot vector. */
   g_agc.Erasable[0][RegZ] = 04000;
 
 
