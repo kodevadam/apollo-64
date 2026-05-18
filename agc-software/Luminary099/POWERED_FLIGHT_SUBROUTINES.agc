@@ -1,33 +1,41 @@
-# Copyright:	Public domain.
-# Filename:	POWERED_FLIGHT_SUBROUTINES.agc
-# Purpose: 	Part of the source code for Luminary 1A build 099.
-#		It is part of the source code for the Lunar Module's (LM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	Ron Burkey <info@sandroid.org>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	1259-1267
-# Mod history:	2009-05-26 RSB	Adapted from the corresponding
-#				Luminary131 file, using page
-#				images from Luminary 1A.
-#		2011-01-06 JL	Fixed pseudo-label indentation.
-#
-# This source code has been transcribed or otherwise adapted from
-# digitized images of a hardcopy from the MIT Museum.  The digitization
-# was performed by Paul Fjeld, and arranged for by Deborah Douglas of
-# the Museum.  Many thanks to both.  The images (with suitable reduction
-# in storage size and consequent reduction in image quality as well) are
-# available online at www.ibiblio.org/apollo.  If for some reason you
-# find that the images are illegible, contact me at info@sandroid.org
-# about getting access to the (much) higher-quality images which Paul
-# actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#	Assemble revision 001 of AGC program LMY99 by NASA 2021112-061
-#	16:27 JULY 14, 1969
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	POWERED_FLIGHT_SUBROUTINES.agc
+## Purpose: 	Part of the source code for Luminary 1A build 099.
+##		It is part of the source code for the Lunar Module's (LM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	Ron Burkey <info@sandroid.org>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	1259-1267
+## Mod history:	2009-05-26 RSB	Adapted from the corresponding 
+##				Luminary131 file, using page 
+##				images from Luminary 1A.
+##		2011-01-06 JL	Fixed pseudo-label indentation.
+##		2016-12-17 RSB	Proofed text comments with octopus/ProoferComments
+##				and corrected the errors found.
+##		2017-03-16 RSB	Comment-text fixes identified in 5-way
+##				side-by-side diff of Luminary 69/99/116/131/210.
+##		2017-03-17 RSB	Comment-text fixes identified in diff'ing
+##				Luminary 99 vs Comanche 55.
+##		2021-05-30 ABS	SINSLOC -> SINESLOC
 
-# Page 1259
+## This source code has been transcribed or otherwise adapted from
+## digitized images of a hardcopy from the MIT Museum.  The digitization
+## was performed by Paul Fjeld, and arranged for by Deborah Douglas of
+## the Museum.  Many thanks to both.  The images (with suitable reduction
+## in storage size and consequent reduction in image quality as well) are
+## available online at www.ibiblio.org/apollo.  If for some reason you
+## find that the images are illegible, contact me at info@sandroid.org
+## about getting access to the (much) higher-quality images which Paul
+## actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##	Assemble revision 001 of AGC program LMY99 by NASA 2021112-61
+##	16:27 JULY 14, 1969 
+
+## Page 1259
 		BANK	14		# SAME FBANK AS THE FINDCDUD SUB-PROGRAM
 		SETLOC	POWFLITE
 		BANK
@@ -39,7 +47,7 @@
 # COSINES OF THREE 2'S COMPLEMENT ANGLES AND PLACE THE RESULT, DOUBLE
 # PRECISION, IN THE SAME ORDER AS THE INPUTS, AT SINCDU AND COSCDU.  AN
 # ADDITIONAL OUTPUT IS THE 1'S COMPLEMENT ANGLES AT CDUSPOT.  THESE
-# ROUTINES GO OUT OF THEIR WAY TO LEAVE THE MPAC AREA AS THEY FIND IT.
+# ROUTINES GO OUT OF THEIR WAY TO LEAVE THE MPAC AREA AS THEY FIND IT,
 # EXCEPT FOR THE GENERALLY UNIMPORTANT MPAC +2.  THEY DIFFER ONLY IN
 # WHERE THEY GET THE ANGLES, AND IN METHOD OF CALLING.
 #
@@ -78,7 +86,7 @@ CDUTRIGS	CA	CDUX
 		TS	CDUSPOT +4
 		CA	CDUY
 		TS	CDUSPOT
-# Page 1260
+## Page 1260
 		CA	CDUZ
 		TS	CDUSPOT +2
 
@@ -114,9 +122,9 @@ TR*GL**P	MASK	SIX		# MAKE IT EVEN AND SMALLER
 		CCS	TEM3
 		TCF	TR*GL**P
 		TC	TEM2
-# Page 1261
-# *******************************************************************************************************
-# QUICTRIG, INTENDED FOR QUIDANCE CYCLE USE WHERE TIME IS CRITICAL, IS A MUCH FASTER VERSION OF CD*TR*GS.
+## Page 1261
+# ****************************************************************************************************************
+# QUICTRIG, INTENDED FOR GUIDANCE CYCLE USE WHERE TIME IS CRITICAL, IS A MUCH FASTER VERSION OF CD*TR*GS.
 # QUICTRIG COMPUTES AND STORES THE SINES AND COSINES OF THE 2'S COMPLEMENT ANGLES AT CDUSPOT, CDUSPOT +2,
 # AND CDUSPOT +4.  UNLIKE CD*TR*GS, QUICTRIG DOES NOT LEAVE THE 1'S COMPLEMENT VERSIONS OF THE ANGLES IN
 # CDUSPOT.  QUICTRIG'S EXECUTION TIME IS 4.1 MS;  THIS IS 10 TIMES AS FAST AS CD*TR*GS.  QUICTRIG MAY BE
@@ -148,23 +156,23 @@ QUICTRIG	INHINT			# INHINT SINCE DAP USES THE SAME TEMPS
 		RELINT
 		TC	A
 
-# Page 1262
-#****************************************************************************
+## Page 1262
+# ****************************************************************************************************************
 # THESE INTERFACE ROUTINES MAKE IT POSSIBLE TO CALL AX*SR*T, ETC., IN
 # INTERPRETIVE.  LATER, WHERE POSSIBLE, THEY WILL BE ELIMINATED.
 #
 # THESE INTERFACE ROUTINES ARE PERMANENT.  ALL RESTORE USER'S EBANK
 # SETTING. ALL ARE STRICT INTERPRETIVE SUBROUTINES, CALLED USING "CALL",
-# RETURNING VIA QPRET.  ALL EXPECT AND RETURN THE VECTOR TO BE TRANSFORMED
-# INTERPRETER-STYLE IN MPAC; COMPONENTS AT MPAC, MPAC +3, AND MPAC +5.
+# RETURNING VIA QPRET.  ALL EXPECT AND RETURN THE VECTOR TO BE TRANSFOR-
+# MED INTERPRETER-STYLE IN MPAC; COMPONENTS AT MPAC, MPAC +3, AND MPAC +5.
 #
 # TRG*SMNB AND TRG*NBSM BOTH EXPECT TO SEE THE 2'S COMPLEMENT ANGLES
 # AT CDUSPOT (ORDER Y Z X, AT CDUSPOT, CDUSPOT +2, AND CDUSPOT +4; ODD
-# LOCATIONS NEED NOT BE ZEROED).  TRG*NBSM DOES THE NB TO SM TRANSFORMATION;
-# TRG*SMNB, VICE VERSA.
+# LOCATIONS NEED NOT BE ZEROED).  TRG*NBSM DOES THE NB TO SM TRANSFOR-
+# MATION;  TRG*SMNB, VICE VERSA.
 #
 # CDU*NBSM DOES ITS TRANSFORMATION USING THE PRESENT CONTENTS OF
-# THE CDL COUNTERS.  OTHERWISE IT IS LIKE TRG*NBSM.
+# THE CDU COUNTERS.  OTHERWISE IT IS LIKE TRG*NBSM.
 #
 # CDU*SMNB IS THE COMPLEMENT OF CDU*NBSM.
 
@@ -175,7 +183,7 @@ CDU*SMNB	EXIT
 TRG*SMNB	EXIT
 		TC	CD*TR*GS
 C*MM*N1		TC	MPACVBUF	# AX*SR*T EXPECTS VECTOR IN VBUF
-		CS	THREE		# SIGNAL FOR SM TO NB TRANSFORMATION.
+		CS	THREE		# SIGNAL FOR SM TO NB TRANSFORMATION
 C*MM*N2		TC	AX*SR*T
 		TC	INTPRET
 		VLOAD	RVQ
@@ -197,8 +205,8 @@ C*MM*N3		TC	MPACVBUF	# FOR AX*SR*T
 #
 # NOTE THAT JUST AS CD*TR*GS NEED BE CALLED ONLY ONCE FOR EACH SERIES
 # OF TRANSFORMATIONS USING THE SAME ANGLES, SO TOO ONLY ONE OF TRG*NBSM
-# Page 1263
-# AND TRG*SMNB NEED BE CALLED FOR EACH SERIES.  FOR SUBSEQUENT TRANFOR-
+## Page 1263
+# AND TRG*SMNB NEED BE CALLED FOR EACH SERIES.  FOR SUBSEQUENT TRANSFOR-
 # MATIONS USE *NBSM* AND *SMNB*.
 
 *SMNB*		EXIT
@@ -213,9 +221,9 @@ C*MM*N3		TC	MPACVBUF	# FOR AX*SR*T
 # AX*SR*T EXPECTS TO FIND THE SINES AND COSINES OF THE ANGLES OF ROTATION
 # AT SINCDU AND COSCDU, IN THE ORDER Y Z X.  A CALL TO CD*TR*GS, WITH
 # THE 2'S COMPLEMENT ANGLES (ORDER Y Z X) AT CDUSPOT, WILL TAKE CARE OF
-# THIS.  HERE IS A SAMPLE CALLING SEQUENCE:--
+# THIS.  HERE IS A SAMPLE CALLING SEQUENCE:-
 #		TC	CDUTRIGS
-#		CS	THREE		# ("CA THREE" FOR NBSM)
+#		CS	THREE		("CA THREE" FOR NBSM)
 #		TC	AX*SR*T
 # THE CALL TO CD*TR*GS NEED NOT BE REPEATED, WHEN AX*SR*T IS CALLED MORE
 # THAN ONCE, UNLESS THE ANGLES HAVE CHANGED.
@@ -225,7 +233,7 @@ C*MM*N3		TC	MPACVBUF	# FOR AX*SR*T
 # HAPPENS TO LIE ALONG AN AXIS OF THE SYSTEM TO WHICH IT IS TO BE TRANS-
 # FORMED CONVINCES ONE THAT THIS IS A RESTRICTION WHICH MUST BE ACCEPTED.
 
-AX*SR*T		TS	DEXDEX		# WHERE IT BECOMES THE INDEX OF INDEXES.
+AX*SR*T		TS	DEXDEX		# WHERE IT BECOMES THE INDEX OF INDEXES
 		EXTEND
 		QXCH	RTNSAVER
 
@@ -245,13 +253,13 @@ R*TL**P		CCS	DEXDEX		#       	+3 --> 0	-3 --> 2
 		TCF	LOOP1		# REALLY BE A SUBTRACT, AND VICE VERSA
 
 LOOP2		DXCH	BUF		# LOADING VECTOR COMPONENT, STORING INDEX
-# Page 1264
+## Page 1264
 LOOP1		DXCH	MPAC
-		CA	SINSLOC
+		CA	SINESLOC
 		AD	DEX1
 		TS	ADDRWD
 
-		TC	DMPSUB		# MULTIPLY AT SIN(CDUANGLE)
+		TC	DMPSUB		# MULTIPLY BY SIN(CDUANGLE)
 		CCS	DEXDEX
 		DXCH	MPAC		# NBSM CASE
 		TCF	+3
@@ -276,7 +284,7 @@ LOOP1		DXCH	MPAC
 		INDEX	DEX1
 		DXCH	VBUF
 		DXCH	BUF		# LOADING INDEX, STORING VECTOR COMPONENT
-
+		
 		CCS	A		# 'CAUSE THAT'S WHERE THE INDEX NOW IS
 		TCF	LOOP2
 
@@ -289,15 +297,15 @@ TSTPOINT	CCS	DEXDEX		# ONLY THE BRANCHING FUNCTION IS USED
 		TCF	R*TL**P
 		TC	RTNSAVER
 
-SINSLOC		ADRES	SINCDU		# FOR USE IN SETTING ADDRWD
+SINESLOC	ADRES	SINCDU		# FOR USE IN SETTING ADDRWD
 
-INDEXI		DEC	4		# **********   DON'T   ***********
-		DEC	2		# **********   TOUCH   ***********
-		DEC	0		# **********   THESE   ***********
-# Page 1265
-		DEC	4		# ********** CONSTANTS ***********
+INDEXI		DEC	4		# **********   DON'T   **********
+		DEC	2		# **********   TOUCH   **********
+		DEC	0		# **********   THESE   **********
+## Page 1265
+		DEC	4		# ********** CONSTANTS **********
 
-# ******************************************************************************
+# ****************************************************************************************************************
 
 		BANK	10
 		SETLOC	FLESHLOC
@@ -343,7 +351,7 @@ FLESHPOT	TS	TEM2
 		DCS	SINCDUY
 		DXCH	MPAC
 		TC	DMPSUB		# ADDRWD SET TO COSCDUZ
-# Page 1266
+## Page 1266
 		DXCH	MPAC
 		DDOUBL
 		INDEX	TEM1
@@ -395,7 +403,7 @@ FLESHPOT	TS	TEM2
 		TC	DMPSUB		# ADDRWD SET TO COSCDUX
 		DXCH	MPAC
 
-# Page 1267
+## Page 1267
 		DDOUBL
 		DAS 	BUF
 
@@ -405,7 +413,7 @@ FLESHPOT	TS	TEM2
 		EXTEND
 		DCA	MPAC
 		INDEX	TEM1
-		DXCH	14		# = - SINY COSX + SINX SINZ COSY
+		DXCH	14		# = SINY COSX + SINX SINZ COSY
 
 		EXTEND
 		DCA	MPAC 	+3
@@ -444,4 +452,4 @@ FLESHPOT	TS	TEM2
 		CA	TEM2
 		TS	EBANK
 		TCF	SWRETURN
-
+		

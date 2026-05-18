@@ -1,35 +1,41 @@
-# Copyright:	Public domain.
-# Filename:	POWERED_FLIGHT_SUBROUTINES.agc
-# Purpose:	Part of the source code for Colossus 2A, AKA Comanche 055.
-#		It is part of the source code for the Command Module's (CM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	Ron Burkey <info@sandroid.org>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	1365-1372
-# Mod history:  2009-05-10 SN   (Sergio Navarro).  Started adapting
-#                               from the Colossus249/ file of the same
-#                               name, using Comanche055 page images.
-#
-# This source code has been transcribed or otherwise adapted from digitized
-# images of a hardcopy from the MIT Museum.  The digitization was performed
-# by Paul Fjeld, and arranged for by Deborah Douglas of the Museum.  Many
-# thanks to both.  The images (with suitable reduction in storage size and
-# consequent reduction in image quality as well) are available online at
-# www.ibiblio.org/apollo.  If for some reason you find that the images are
-# illegible, contact me at info@sandroid.org about getting access to the
-# (much) higher-quality images which Paul actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#    Assemble revision 055 of AGC program Comanche by NASA
-#    2021113-051.  10:28 APR. 1, 1969
-#
-#    This AGC program shall also be referred to as
-#            Colossus 2A
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	POWERED_FLIGHT_SUBROUTINES.agc
+## Purpose:	Part of the source code for Colossus 2A, AKA Comanche 055.
+##		It is part of the source code for the Command Module's (CM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	Ron Burkey <info@sandroid.org>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	1365-1372 
+## Mod history: 2009-05-10 SN   (Sergio Navarro).  Started adapting
+##                              from the Colossus249/ file of the same
+##                              name, using Comanche055 page images.
+##		2010-08-29 JL	Fixed indentation.
+##		2016-12-22 RSB	Proofed comment text using octopus/ProoferComments
+##				and corrected the errors found.
+##		2017-01-18 RSB	Fixed comment-text errors noted while diff'ing
+##				vs Colossus 249.
+##
+## This source code has been transcribed or otherwise adapted from digitized
+## images of a hardcopy from the MIT Museum.  The digitization was performed
+## by Paul Fjeld, and arranged for by Deborah Douglas of the Museum.  Many
+## thanks to both.  The images (with suitable reduction in storage size and
+## consequent reduction in image quality as well) are available online at
+## www.ibiblio.org/apollo.  If for some reason you find that the images are
+## illegible, contact me at info@sandroid.org about getting access to the
+## (much) higher-quality images which Paul actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##    Assemble revision 055 of AGC program Comanche by NASA
+##    2021113-051.  10:28 APR. 1, 1969 
+##
+##    This AGC program shall also be referred to as
+##            Colossus 2A
 
 
-# Page 1365
+## Page 1365
 		BANK	14		# SAME FBANK AS THE FINDCDUD SUB-PROGRAM
 		SETLOC	POWFLITE
 		BANK
@@ -37,22 +43,22 @@
 		EBANK=	DEXDEX
 		COUNT*	$$/POWFL
 
-# 	CDUTRIG, CDUTRIG1, CDUTRIG2, AND CD*GR*GS ALL COMPUTE THE SINES AND
+# CDUTRIG, CDUTRIG1, CDUTRIG2, AND CD*TR*GS ALL COMPUTE THE SINES AND
 # COSINES OF THREE 2'S COMPLEMENT ANGLES AND PLACE THE RESULT, DOUBLE
 # PRECISION, IN THE SAME ORDER AS THE INPUTS, AT SINCDU AND COSCDU.  AN
 # ADDITIONAL OUTPUT IS THE 1'S COMPLEMENT ANGLES AT CDUSPOT.  THESE
 # ROUTINES GO OUT OF THEIR WAY TO LEAVE THE MPAC AREA AS THEY FIND IT,
 # EXCEPT FOR THE GENERALLY UNIMPORTANT MPAC +2.  THEY DIFFER ONLY IN
 # WHERE THEY GET THE ANGLES, AND IN METHOD OF CALLING.
-
-# 	CDUTRIG (AND CDUTRIG1, WHICH CAN BE CALLED IN BASIC) COMPUTE THE
+#
+# CDUTRIG (AND CDUTRIG1, WHICH CAN BE CALLED IN BASIC) COMPUTE THE
 # SINES AND COSINES FROM THE CURRENT CONTENTS OF THE CDU REGISTERS.
 # THE CONTENTS OF CDUTEMP, ETC., ARE NOT TOUCHED SO THAT THEY MAY
 # CONTINUE TO FORM A CONSISTENT SET WITH THE LATEST PIPA READINGS.
-
-# 	CDUTRIG1 IS LIKE CDUTRIG EXCEPT THAT IT CAN BE CALLED IN BASIC.
-
-# 	CD*TR*GS FINDS CDU VALUES IN CDUSPOT RATHER THAN IN CDUTEMP.  THIS
+#
+# CDUTRIG1 IS LIKE CDUTRIG EXCEPT THAT IT CAN BE CALLED IN BASIC.
+#
+# CD*TR*GS FINDS CDU VALUES IN CDUSPOT RATHER THAN IN CDUTEMP.  THIS
 # ALLOWS USERS TO MAKE TRANSFORMATIONS USING ARBITRARY ANGLES, OR REAL
 # ANGLES IN AN ORDER OTHER THAN X Y Z.  A CALL TO THIS ROUTINE IS
 # NECESSARY IN PREPARATION FOR A CALL TO AX*SR*T IN EITHER OF ITS TWO
@@ -62,8 +68,8 @@
 # MORE THAN ONCE, PROVIDED THE ANGLES HAVE NOT CHANGED.  NOTE THAT SINCE
 # IT CLOBBERS BUF2 (IN THE SINE AND COSINE ROUTINES) CD*TR*GS CANNOT BE
 # CALLED USING BANKCALL.  SORRY.
-
-# 	CD*TR*G IS LIKE CD*TR*GS EXCEPT THAT IT CAN BE CALLED IN
+#
+# CD*TR*G IS LIKE CD*TR*GS EXCEPT THAT IT CAN BE CALLED IN
 # INTERPRETIVE.
 
 CDUTRIG		EXIT
@@ -80,7 +86,7 @@ CDUTRIGS	CA	CDUX
 		TS	CDUSPOT +4
 		CA	CDUY
 		TS	CDUSPOT
-# Page 1366
+## Page 1366
 		CA	CDUZ
 		TS	CDUSPOT +2
 
@@ -116,20 +122,19 @@ TR*GL**P	MASK	SIX		# MAKE IT EVEN AND SMALLER
 		CCS	TEM3
 		TCF	TR*GL**P
 		TC	TEM2
-# Page 1367
-# *******************************************************************************************************
-
-# 	QUICTRIG, INTENDED FOR GUIDANCE CYCLE USE WHERE TIME IS CRITICAL, IS A MUCH FASTER VERSION OF CD*TR*GS.
+## Page 1367
+# ****************************************************************************************************************
+# QUICTRIG, INTENDED FOR GUIDANCE CYCLE USE WHERE TIME IS CRITICAL, IS A MUCH FASTER VERSION OF CD*TR*GS.
 # QUICTRIG COMPUTES AND STORES THE SINES AND COSINES OF THE 2'S COMPLEMENT ANGLES AT CDUSPOT, CDUSPOT +2,
 # AND CDUSPOT +4.  UNLIKE CD*TR*GS, QUICTRIG DOES NOT LEAVE THE 1'S COMPLEMENT VERSIONS OF THE ANGLES IN
-# CDUSPOT.  QUICTRIG'S EXECUTION TIME IS 4.1 MS; THIS IS 10 TIMES AS FAST AS CD*TR*GS.  QUICTRIG MAY BE
+# CDUSPOT.  QUICTRIG'S EXECUTION TIME IS 4.1 MS;    THIS IS 10 TIMES AS FAST AS CD*TR*GS.    QUICTRIG MAY BE
 # CALLED FROM INTERPRETIVE AS AN RTB OP-CODE, OR FROM BASIC VIA BANKCALL OR IBNKCALL.
 
 QUICTRIG	INHINT			# INHINT SINCE DAP USES THE SAME TEMPS
 		EXTEND
 		QXCH	ITEMP1
 		CAF	FOUR
-	+4	MASK	SIX
+ +4		MASK	SIX
 		TS	ITEMP2
 		INDEX	ITEMP2
 		CA	CDUSPOT
@@ -150,18 +155,16 @@ QUICTRIG	INHINT			# INHINT SINCE DAP USES THE SAME TEMPS
 		CA	ITEMP1
 		RELINT
 		TC	A
-# Page 1368
-#****************************************************************************
-
-
-# 	THESE INTERFACE ROUTINES MAKE IT POSSIBLE TO CALL AX*SR*T, ETC., IN
+## Page 1368
+#****************************************************************************************************************
+# THESE INTERFACE ROUTINES MAKE IT POSSIBLE TO CALL AX*SR*T, ETC., IN
 # INTERPRETIVE.  LATER, WHERE POSSIBLE, THEY WILL BE ELIMINATED.
 #
-# 	NBSM WILL BE THE FIRST TO GO.  IT SHOULD NOT BE USED.
+# NBSM WILL BE THE FIRST TO GO.  IT SHOULD NOT BE USED.
 
 NBSM		STQ
 			X2
-		LXC,1	VLOAD*
+		LXC,1	VLOAD*	
 			S1		# BASE ADDRESS OF THE CDU ANGLES IS IN S1
 			0,1
 		STOVL	CDUSPOT
@@ -171,20 +174,20 @@ NBSM		STQ
 		STCALL	32D		# SINCE THERE'S NO STGOTO
 			X2
 
-# 	THESE INTERFACE ROUTINES ARE PERMANENT.  ALL RESTORE USER'S EBANK
-# SETTING.  ALL ARE STRICT INTERPRETIVE SUBROUTINES, CALLED USING "CALL",
+# THESE INTERFACE ROUTINES ARE PERMANENT.  ALL RESTORE USER'S EBANK
+# SETTING. ALL ARE STRICT INTERPRETIVE SUBROUTINES, CALLED USING "CALL",
 # RETURNING VIA QPRET.  ALL EXPECT AND RETURN THE VECTOR TO BE TRANSFOR-
 # MED INTERPRETER-STYLE IN MPAC; COMPONENTS AT MPAC, MPAC +3, AND MPAC +5.
-
-# 	TRG*SMNB AND TRG*NBSM BOTH EXPECT TO SEE THE 2'S COMPLEMENT ANGLES
+#
+# TRG*SMNB AND TRG*NBSM BOTH EXPECT TO SEE THE 2'S COMPLEMENT ANGLES
 # AT CDUSPOT (ORDER Y Z X, AT CDUSPOT, CDUSPOT +2, AND CDUSPOT +4; ODD
 # LOCATIONS NEED NOT BE ZEROED).  TRG*NBSM DOES THE NB TO SM TRANSFOR-
 # MATION; TRG*SMNB, VICE VERSA.
-
-# 	CDU*NBSM DOES ITS TRANSFORMATION USING THE PRESENT CONTENTS OF
-# THE CDL COUNTERS.  OTHERWISE IT IS LIKE TRG*NBSM.
 #
-# 	CDU*SMNB IS THE COMPLEMENT OF CDU*NBSM.
+# CDU*NBSM DOES ITS TRANSFORMATION USING THE PRESENT CONTENTS OF
+# THE CDU COUNTERS.  OTHERWISE IT IS LIKE TRG*NBSM.
+#
+# CDU*SMNB IS THE COMPLEMENT OF CDU*NBSM.
 
 CDU*SMNB	EXIT
 		TC	CDUTRIGS
@@ -193,7 +196,7 @@ CDU*SMNB	EXIT
 TRG*SMNB	EXIT
 		TC	CD*TR*GS
 C*MM*N1		TC	MPACVBUF	# AX*SR*T EXPECTS VECTOR IN VBUF
-		CS	THREE		# SIGNAL FOR SM TO NB TRANSFORMATION.
+		CS	THREE		# SIGNAL FOR SM TO NB TRANSFORMATION
 C*MM*N2		TC	AX*SR*T
 		TC	INTPRET
 		VLOAD	RVQ
@@ -202,7 +205,7 @@ C*MM*N2		TC	AX*SR*T
 CDU*NBSM	EXIT
 		TC	CDUTRIGS
 
-# Page 1369
+## Page 1369
 
 		TCF	C*MM*N3
 
@@ -212,13 +215,13 @@ C*MM*N3		TC	MPACVBUF	# FOR AX*SR*T
 		CA	THREE		# SIGNAL FOR NB TO SM TRANSFORMATION
 		TCF	C*MM*N2
 
-# 	*NBSM* AND *SMNB* EXPECT TO SEE THE SINES AND COSINES (AT SINCDU
+# *NBSM* AND *SMNB* EXPECT TO SEE THE SINES AND COSINES (AT SINCDU
 # AND COSCDU) RATHER THAN THE ANGLES THEMSELVES.  OTHERWISE THEY ARE
 # LIKE TRG*NBSM AND TRG*SMNB.
-
-# 	NOTE THAT JUST AS CD*TR*GS NEED BE CALLED ONLY ONCE FOR EACH SERIES
+#
+# NOTE THAT JUST AS CD*TR*GS NEED BE CALLED ONLY ONCE FOR EACH SERIES
 # OF TRANSFORMATIONS USING THE SAME ANGLES, SO TOO ONLY ONE OF TRG*NBSM
-# AND TRG*SMNB NEED BE CALLED FOR EACH SERIES.  FOR SUBSEQUENT TRANFOR-
+# AND TRG*SMNB NEED BE CALLED FOR EACH SERIES.  FOR SUBSEQUENT TRANSFOR-
 # MATIONS USE *NBSM* AND *SMNB*.
 
 *SMNB*		EXIT
@@ -227,22 +230,20 @@ C*MM*N3		TC	MPACVBUF	# FOR AX*SR*T
 *NBSM*		EXIT
 		TCF	C*MM*N3
 
-# 	AX*SR*T COMBINES THE OLD SMNB AND NBSM.  FOR THE NB TO SM
+# AX*SR*T COMBINES THE OLD SMNB AND NBSM.  FOR THE NB TO SM
 # TRANSFORMATION, ENTER WITH +3 IN A.  FOR SM TO NB, ENTER WITH -3.
 # THE VECTOR TO BE TRANSFORMED ARRIVES, AND IS RETURNED, IN VBUF.
 # AX*SR*T EXPECTS TO FIND THE SINES AND COSINES OF THE ANGLES OF ROTATION
 # AT SINCDU AND COSCDU, IN THE ORDER Y Z X.  A CALL TO CD*TR*GS, WITH
 # THE 2'S COMPLEMENT ANGLES (ORDER Y Z X) AT CDUSPOT, WILL TAKE CARE OF
 # THIS.  HERE IS A SAMPLE CALLING SEQUENCE:-
-
-#			TC	CDUTRIGS
-#			CS	THREE		("CA THREE" FOR NBSM)
-#			TC	AX*SR*T
-
+#		TC	CDUTRIGS
+#		CS	THREE		("CA THREE" FOR NBSM)
+#		TC	AX*SR*T
 # THE CALL TO CD*TR*GS NEED NOT BE REPEATED, WHEN AX*SR*T IS CALLED MORE
 # THAN ONCE, UNLESS THE ANGLES HAVE CHANGED.
-
-# 	AX*SR*T IS GUARANTEED SAFE ONLY FOR VECTORS OF MAGNITUDE LESS THAN
+#
+# AX*SR*T IS GUARANTEED SAFE ONLY FOR VECTORS OF MAGNITUDE LESS THAN
 # UNITY.  A LOOK AT THE CASE IN WHICH A VECTOR OF GREATER MAGNITUDE
 # HAPPENS TO LIE ALONG AN AXIS OF THE SYSTEM TO WHICH IT IS TO BE TRANS-
 # FORMED CONVINCES ONE THAT THIS IS A RESTRICTION WHICH MUST BE ACCEPTED.
@@ -254,7 +255,7 @@ AX*SR*T		TS	DEXDEX		# WHERE IT BECOMES THE INDEX OF INDEXES
 R*TL**P		CCS	DEXDEX		#       	+3 --> 0	-3 --> 2
 		CS	DEXDEX		# THUS:		+2 --> 1	-2 --> 1
 		AD	THREE		#		+1 --> 2	-1 --> 0
-# Page 1370
+## Page 1370
 		EXTEND
 		INDEX	A
 		DCA	INDEXI
@@ -299,36 +300,33 @@ LOOP1		DXCH	MPAC
 		INDEX	DEX1
 		DXCH	VBUF
 		DXCH	BUF		# LOADING INDEX, STORING VECTOR COMPONENT
-
 		CCS	A		# 'CAUSE THAT'S WHERE THE INDEX NOW IS
 		TCF	LOOP2
 
 		EXTEND
 		DIM	DEXDEX		# DECREMENT MAGNITUDE PRESERVING SIGN
 
-# Page 1371
+## Page 1371
 TSTPOINT	CCS	DEXDEX		# ONLY THE BRANCHING FUNCTION IS USED
 		TCF	R*TL**P
 		TC	RTNSAVER
 		TCF	R*TL**P
 		TC	RTNSAVER
 
-
 SINESLOC	ADRES	SINCDU		# FOR USE IN SETTING ADDRWD
 
+INDEXI		DEC	4		# **********   DON'T   **********
+		DEC	2		# **********   TOUCH   **********
+		DEC	0		# **********   THESE   **********
+		DEC	4		# ********** CONSTANTS **********
 
-INDEXI		DEC	4		# **********   DON'T   ***********
-		DEC	2		# **********   TOUCH   ***********
-		DEC	0		# **********   THESE   ***********
-		DEC	4		# ********** CONSTANTS ***********
-
-# ******************************************************************************
-# Page 1372
+# ****************************************************************************************************************
+## Page 1372
 # THIS SUBROUTINE COMPUTES INCREMENTAL CHANGES IN CDU(GIMBAL) ANGLES FROM INCREMENTAL CHANGES ABOUT SM AXES.  IT
 # REQUIRES SM INCREMENTS AS A DP VECTOR SCALED AT ONE REVOLUTION(DTHETASM,+2,+4).  SIN,COS(CDUY,Z,X) ARE IN
-# SINCDU,+2,+4 AND COSCDU,+2,+4 RESPECTIVELY,SCALED TO ONE HALF.  CDU INCREENTS ARE PLACED IN DCDU,+2,+4 SCALED TO
+# SINCDU,+2,+4 AND COSCDU,+2,+4 RESPECTIVELY, SCALED TO ONE HALF.  CDU INCREENTS ARE PLACED IN DCDU,+2,+4 SCALED TO
 # ONE REVOLUTION.
-
+#
 #	*  COS(IGA)SEC(MGA)		0		-SIN(IGA)SEC(MGA) *
 #	*								  *
 #	* -COS(IGA)TAN(MGA)		1		 SIN(IGA)TAN(MGA) *
@@ -338,34 +336,35 @@ INDEXI		DEC	4		# **********   DON'T   ***********
 		BANK	14
 		SETLOC	POWFLIT1
 		BANK
-
+		
 SMCDURES	DLOAD	DMP
 			DTHETASM
 			COSCDUY
-
+			
 		PDDL	DMP
 			DTHETASM +4
 			SINCDUY
-
+			
 		BDSU
 		DDV
 			COSCDUZ
 		STORE	DCDU
-
+		
 		DMP	SL1		# SCALE
 			SINCDUZ
 		BDSU
-
+		
 			DTHETASM +2
 		STODL	DCDU +2
 			DTHETASM
-
+			
 		DMP	PDDL
 			SINCDUY
 			DTHETASM +4
-
+			
 		DMP	DAD
 			COSCDUY
 		SL1
 		STORE	DCDU +4
 		RVQ
+

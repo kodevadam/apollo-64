@@ -1,46 +1,51 @@
-# Copyright:	Public domain.
-# Filename:	KALCMANU_STEERING.agc
-# Purpose:	Part of the source code for Comanche, build 055.
-#		It is part of the source code for the Command Module's (CM)
-#		Apollo Guidance Computer (AGC), Apollo 11.
-# Assembler:	yaYUL
-# Reference:	pp. 414-419
-# Contact:	Onno Hommes <ohommes@cmu.edu>.
-# Website:	www.ibiblio.org/apollo.
-# Mod history:	05/07/09 OH	Transcription Batch 1 Assignment
-#
-# The contents of the "Comanche055" files, in general, are transcribed
-# from scanned documents.
-#
-#	Assemble revision 055 of AGC program Comanche by NASA
-#	2021113-051.  April 1, 1969.
-#
-#	This AGC program shall also be referred to as Colossus 2A
-#
-#	Prepared by
-#			Massachusetts Institute of Technology
-#			75 Cambridge Parkway
-#			Cambridge, Massachusetts
-#
-#	under NASA contract NAS 9-4065.
-#
-# Refer directly to the online document mentioned above for further information.
-# Please report any errors to info@sandroid.org.
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	KALCMANU_STEERING.agc
+## Purpose:	Part of the source code for Comanche, build 055.
+##		It is part of the source code for the Command Module's (CM)
+##		Apollo Guidance Computer (AGC), Apollo 11.
+## Assembler:	yaYUL
+## Reference:	pp. 414-419
+## Contact:	Onno Hommes <ohommes@cmu.edu>.
+## Website:	www.ibiblio.org/apollo.
+## Mod history:	05/07/09 OH	Transcription Batch 1 Assignment 
+##		2016-12-10 RSB	Proofed comments with octopus/ProoferComments
+##				and fixed the errors found.
+##		2017-01-28 RSB	WTIH -> WITH.
+##		2021-05-30 ABS	ZEROERROR -> ZEROEROR
+##
+## The contents of the "Comanche055" files, in general, are transcribed 
+## from scanned documents. 
+##
+##	Assemble revision 055 of AGC program Comanche by NASA
+##	2021113-051.  April 1, 1969.  
+##
+##	This AGC program shall also be referred to as Colossus 2A
+##
+##	Prepared by
+##			Massachusetts Institute of Technology
+##			75 Cambridge Parkway
+##			Cambridge, Massachusetts
+##
+##	under NASA contract NAS 9-4065.
+##
+## Refer directly to the online document mentioned above for further information.
+## Please report any errors to info@sandroid.org.
 
-# Page 414
+## Page 414
 # GENERATION OF STEERING COMMANDS FOR DIGITAL AUTOPILOT FREE FALL MANEUVERS
 #
 # NEW COMMANDS WILL BE GENERATED EVERY ONE SECOND DURING THE MANEUVER
 
 		BANK	15
-
+		
 		SETLOC	KALCMON1
 		BANK
-
+		
 		EBANK=	BCDU
-
+		
 		COUNT	22/KALC
-
+		
 NEWDELHI	CS	HOLDFLAG	# SEE IF MANEUVER HAS BEEN INTERRUPTED
 		EXTEND			# BY ASTRONAUT
 		BZMF	NOGO	-2	# IF SO, TERMINATE KALCMANU
@@ -59,7 +64,7 @@ NEWANGL		TC	INTPRET
 		AXC,1	CALL
 			MIS
 			DCMTOCDU	# PICK UP THE NEW CDU ANGLES FROM MATRIX
-		RTB
+		RTB	
 			V1STO2S
 		STORE	NCDU		# NEW CDU ANGLES
 		BONCLR	EXIT
@@ -77,8 +82,8 @@ INCRDCDU	TS	KSPNDX
 		EXTEND			# CDU ANGLES
 		MP	QUADROT
 		INDEX	KDPNDX
-		DXCH	DELCDUX		# ANGEL INCREMENTS TO BE ADDED TO
-# Page 415
+		DXCH	DELCDUX		# ANGLE INCREMENTS TO BE ADDED TO
+## Page 415
 		INDEX	KSPNDX		# DCDU EVERY TENTH SEC
 		CA	NCDU		# BY LEM DAP
 		INDEX	KSPNDX
@@ -87,23 +92,23 @@ INCRDCDU	TS	KSPNDX
 		TS	CDUXD
 		CCS	KSPNDX
 		TCF	INCRDCDU	# LOOP FOR THREE AXES
-
-		RELINT
+		
+		RELINT		
 # COMPARE PRESENT TIME WITH TIME TO TERMINATE MANEUVER
 
 TMANUCHK	TC	TIMECHK
 		TC	POSTJUMP
 		CADR	CONTMANU
-
-		CAF	ONE
+		
+		CAF	ONE		
 MANUSTAL	TC	WAITLIST
 		EBANK=	BCDU
 		2CADR	MANUSTOP
-
+		
 		RELINT
 		TCF	ENDOFJOB
-
-
+		
+		
 TIMECHK		EXTEND
 		DCS	TIME2
 		DXCH	TTEMP
@@ -128,7 +133,7 @@ MANUOFF		AD	1SEC
 
 		SETLOC	MANUSTUF
 		BANK
-# Page 416
+## Page 416
 MANUSTAT	EXIT			# INITIALIZATION ROUTINE
 		EXTEND			# FOR AUTOMATIC MANEUVERS
 		DCA	TIME2
@@ -165,9 +170,9 @@ HIGHGAIN	CS	RCSFLAGS	# IF SO, SET HIGH RATE FLAG (BIT 15 OF
 		XCH	NEXTIME
 		TC	POSTJUMP
 		CADR	INCRDCDU -1
-
+				
 CONTMANU	INHINT			# CONTINUE WITH UPDATE PROCESS
-		CS	TIME1
+		CS	TIME1		
 		AD	NEXTIME
 		CCS	A
 		AD	ONE
@@ -177,9 +182,9 @@ CONTMANU	INHINT			# CONTINUE WITH UPDATE PROCESS
 MANUCALL	TC	WAITLIST
 		EBANK=	BCDU
 		2CADR	UPDTCALL
-
+		
 		RELINT
-# Page 417
+## Page 417
 		CAF	1SEC		# INCREMENT TIME FOR NEXT UPDATE
 		ADS	NEXTIME
 		TCF	ENDOFJOB
@@ -191,13 +196,13 @@ UPDTCALL	CAF	PRIO26		# CALL FOR UPDATE
 		2CADR	NEWDELHI
 
 		TC	TASKOVER
-
-# Page 418
+		
+## Page 418
 # ROUTINE FOR TERMINATING AUTOMATIC MANEUVERS
 
 		SETLOC	KALCMON3
 		BANK
-
+	
 MANUSTOP	TC	STOPYZ
 		TC	IBNKCALL
 		CADR	LOADYZ
@@ -207,14 +212,14 @@ ENDROLL		CA	CPHI
 		TC	STOPRATE
 ENDMANU		CA	ATTPRIO		# RESTORE USERS PRIORITY
 		TS	NEWPRIO
-
+		
 		CA	ZERO		# ZERO ATTCADR
 		DXCH	ATTCADR
-
+		
 		TC	SPVAC		# RETURN TO USER OF GOMANUR
-
+		
 		TC	TASKOVER
-
+		
 		SETLOC	STOPRAT
 		BANK
 STOPRATE	CAF	ZERO
@@ -223,11 +228,11 @@ STOPRATE	CAF	ZERO
 		TS	WBODY		# RATE
 		TS	WBODY +1
 		TS	BIAS		# BIAS
-
+		
 		CS	BIT15		# MAKE SURE HIGH RATE FLAG (BIT 15 OF
 		MASK	RCSFLAGS	# RCSFLAGS) IS RESET.
 		TS	RCSFLAGS
-
+		
 STOPYZ		CAF	ZERO
 		TS	DELCDUY		# ZERO PITCH, YAW
 		TS	DELCDUY	+1	# INCREMENTAL ANGLES
@@ -240,12 +245,12 @@ STOPYZ		CAF	ZERO
 		TS	BIAS1		# BIASES
 		TS	BIAS2
 		TC	Q
-
+		
 		SETLOC MANUSTUF
 		BANK
 
-# Page 419
-ZEROERROR	CA	CDUX		# PICK UP CDU ANGLES AND STORE IN
+## Page 419
+ZEROEROR	CA	CDUX		# PICK UP CDU ANGLES AND STORE IN
 		TS	CDUXD		# CDU DESIRED
 		CA	CDUY
 		TS	CDUYD
@@ -255,7 +260,7 @@ ZEROERROR	CA	CDUX		# PICK UP CDU ANGLES AND STORE IN
 
 		SETLOC	KALCMON1
 		BANK
-
+		
 LOADCDUD	CA	CPHI		# STORE TERMINAL ANGLES INTO
 		TS	CDUXD		# COMMAND ANGLES
 LOADYZ		CA	CTHETA

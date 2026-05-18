@@ -1,32 +1,39 @@
-# Copyright:	Public domain.
-# Filename:	ASCENT_GUIDANCE.agc
-# Purpose: 	Part of the source code for Luminary 1A build 099.
-#		It is part of the source code for the Lunar Module's (LM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	Hartmuth Gutsche <hgutsche@xplornet.com>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	843-856
-# Mod history:	2009-05-23 HG	Transcribed from page images.
-#		2009-06-05 RSB	Fixed a couple of typos.
-#		2009-06-07 RSB	Corrected a typo.
-#
-# This source code has been transcribed or otherwise adapted from
-# digitized images of a hardcopy from the MIT Museum.  The digitization
-# was performed by Paul Fjeld, and arranged for by Deborah Douglas of
-# the Museum.  Many thanks to both.  The images (with suitable reduction
-# in storage size and consequent reduction in image quality as well) are
-# available online at www.ibiblio.org/apollo.  If for some reason you
-# find that the images are illegible, contact me at info@sandroid.org
-# about getting access to the (much) higher-quality images which Paul
-# actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#	Assemble revision 001 of AGC program LMY99 by NASA 2021112-061
-#	16:27 JULY 14, 1969
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	ASCENT_GUIDNCE.agc
+## Purpose: 	Part of the source code for Luminary 1A build 099.
+##		It is part of the source code for the Lunar Module's (LM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	Hartmuth Gutsche <hgutsche@xplornet.com>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	843-856
+## Mod history:	2009-05-23 HG	Transcribed from page images.
+##		2009-06-05 RSB	Fixed a couple of typos.
+##		2009-06-07 RSB	Corrected a typo.
+##		2010-12-31 JL	Fixed page number comment.
+##		2016-12-13 RSB	GOTOP00H -> GOTOPOOH
+##		2016-12-17 RSB	Proofed text comments with octopus/ProoferComments
+##				and corrected the errors found.
+##		2017-03-14 RSB	Comment-text fixes identified in 5-way
+##				side-by-side diff of Luminary 69/99/116/131/210.
 
-# Page 843
+## This source code has been transcribed or otherwise adapted from
+## digitized images of a hardcopy from the MIT Museum.  The digitization
+## was performed by Paul Fjeld, and arranged for by Deborah Douglas of
+## the Museum.  Many thanks to both.  The images (with suitable reduction
+## in storage size and consequent reduction in image quality as well) are
+## available online at www.ibiblio.org/apollo.  If for some reason you
+## find that the images are illegible, contact me at info@sandroid.org
+## about getting access to the (much) higher-quality images which Paul
+## actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##	Assemble revision 001 of AGC program LMY99 by NASA 2021112-61
+##	16:27 JULY 14, 1969 
+
+## Page 843
 		BANK	34
 		SETLOC	ASCFILT
 		BANK
@@ -77,11 +84,11 @@ ATMAG		TC	PHASCHNG
 		SR1	DDV
 			TBUP
 		STCALL	AT
-# Page 844
+## Page 844
 			ASCENT
 BIT3H		OCT	4
 
-# Page 845
+## Page 845
 		BANK	30
 		SETLOC	ASENT
 		BANK
@@ -107,14 +114,14 @@ ASCENT		VLOAD	ABVAL
 		V/SC	DOT
 			2SEC(18)
 			UNIT/R/		# G.UR*2(9) = GR*2(9).
-		PDVL	VXV		# STORE IN PDL(0)
-			UNIT/R/		# LOAD UNIT/R/ *2(-1)
+		PDVL	VXV		# STORE IN PDL(0)			(2)
+			UNIT/R/		# LOAD UNIT/R/ *2(-1).
 			V		# UR*2(-1) X V*2(-7) = H/R*2(-8).
 		VSQ	DDV		# H(2)/R(2)*2(-16).
 			/R/MAG		# H(2)/R(3)*2(9).
 		SL1	DAD
 		STADR
-		STODL	GEFF		# GEFF*2(10)m/CS/CS.
+		STODL	GEFF		# GEFF*2(10)M/CS/CS.
 			ZDOTD
 		DSU
 			ZDOT
@@ -128,7 +135,7 @@ ASCENT		VLOAD	ABVAL
 		VXSC	PDDL
 			LAXIS
 			RDOTD
-# Page 846
+## Page 846
 		DSU
 			RDOT
 		STORE	DRDOT		# DRDOT = (RDOTD - RDOT) * 2(7) M/CS.
@@ -136,7 +143,7 @@ ASCENT		VLOAD	ABVAL
 			UNIT/R/
 		VAD	VSL1
 		STADR
-		STORE	VGVECT		# VG = (DRDOT)R + (DVDOT)L + (DZDOT)Z.
+		STORE	VGVECT		# VG = (DRDOT)R + (DYDOT)L + (DZDOT)Z.
 		DLOAD	DMP		# LOAD TGO
 			TGO		# TGO GEFF
 			GEFF
@@ -150,7 +157,7 @@ ASCENT		VLOAD	ABVAL
 		STOVL	VGBODY
 			VGVECT
 		ABVAL	BOFF		# MAGNITUDE OF VGVECT
-			FLRCS		# IF FLRCS=0,D0 NORMAL GUIDANCE
+			FLRCS		# IF FLRCS=0,DO NORMAL GUIDANCE
 			MAINENG
 		DDV			# USE TGO=VG/AT WITH RCS
 			AT/RCS
@@ -179,7 +186,7 @@ MAINENG		DDV	PUSH		# VG/VE IN PDL(0)		(2)
 T2TEST		DLOAD
 			TGO
 		DSU	BMN		# IF TGO - T2 NEG., GO TO CMPONENT
-# Page 847
+## Page 847
 			T2A
 			CMPONENT
 		DLOAD	DSU
@@ -230,14 +237,14 @@ RATES		DLOAD	DSU
 		STORE	PRATE		# B * 2(8)
 		BMN	DLOAD		# B>0 NOT PERMITTED
 			CHKBMAG
-# Page 848
+## Page 848
 			HI6ZEROS
 		STCALL	PRATE
 			PROK
 CHKBMAG		SR4	DDV		# B*2(4)
 			TBUP		# (B / TAU) * 2(21)
 		DSU	BPL
-			PRLIMIT		# ( B / TAU ) = 2(21) MAX.
+			PRLIMIT		# ( B / TAU ) * 2(21) MAX.
 			PROK
 		DLOAD	DMP
 			PRLIMIT
@@ -250,7 +257,7 @@ PROK		DLOAD
 			YDOT
 			Y		# Y + YDOT TGO
 		DSU	PDDL		# Y + YDOT TGO - YCO
-			YCO		# MPAC = - DY*(-24.) IN PDL(8)	(10)
+			YCO		# MPAC = - DY*2(-24.) IN PDL(8)	(10)
 			DYDOT
 		DMP	DAD		# D21 DYDOT - DY		(8)
 			04D
@@ -277,11 +284,11 @@ CONST		DLOAD	DMP		# LOAD B*2(8)
 		STORE	YCONS
 CMPONENT	SETPD	DLOAD
 			00D
- 			100CS
- 		DMP
+			100CS
+		DMP
 			PRATE		# B(T-T0)*2(-9)
 		DAD	DDV		# (A+B(T-T0))*2(-9)
-# Page 849
+## Page 849
 			PCONS		# (A+B(T-T0))/TBUP*2(8)
 			TBUP
 		SL1	DSU
@@ -294,17 +301,17 @@ CMPONENT	SETPD	DLOAD
 		DDV	SL1
 			TBUP
 		STORE	ATY		# ATY*2(9)
-		VXSC	PDDL		# ATY UY*2(8)		(6)
+		VXSC	PDDL		# ATY UY*2(8)			(6)
 			LAXIS
 			ATR
-		VXSC	VAD
+		VXSC	VAD		#				(0)
 			UNIT/R/
-		VSL1	PUSH		# AH*2(9) IN PDL(0)	(6)
+		VSL1	PUSH		# AH*2(9) IN PDL(0)		(6)
 		ABVAL	PDDL		# AH(2) IN PDL(34)
-			AT		# AHMAG IN PDL(6)	(8)
+			AT		# AHMAG IN PDL(6)		(8)
 		DSQ	DSU		# (AT(2)-AH(2))*2(18)
 			34D		# =ATP2*2(18)
-		PDDL	PUSH		#			(12)
+		PDDL	PUSH		#				(12)
 			AT
 		DSQ	DSU		# (AT(2)KR(2)-AH(2))*2(18)	(10)
 			34D		# =ATP3*2(18)
@@ -313,9 +320,9 @@ CMPONENT	SETPD	DLOAD
 			8D
 		SQRT	GOTO		# ATP*2(9)
 			AIMER
-NO-ATP		DLOAD	BDDV		# KR AT/AH = KH		(8)
+NO-ATP		DLOAD	BDDV		# KR AT/AH = KH			(8)
 			6D
-		VXSC			# KH AG*2(9)
+		VXSC			# KH AH*2(9)
 			00D
 		STODL	00D		# STORE NEW AH IN PDL(0)
 			HI6ZEROS
@@ -324,7 +331,7 @@ AIMER		SIGN
 		STORE	ATP
 		VXSC
 			ZAXIS1		# ATP ZAXIS *2(8).
-		VSL1	VAD		# AT*2(0)
+		VSL1	VAD		# AT*2(9)
 			00D
 		STORE	UNFC/2		# WILL BE OVERWRITTEN IF IN VERT. RISE.
 		SETPD	BON
@@ -332,7 +339,7 @@ AIMER		SIGN
 			FLPI
 			P12RET
 		BON
-# Page 850
+## Page 850
 			FLVR
 			CHECKALT
 MAINLINE	VLOAD	VCOMP
@@ -346,7 +353,7 @@ MAINLINE	VLOAD	VCOMP
 			ROTFLAG
 			ANG1CHEK
 CLRXFLAG	CLEAR	CLEAR
-			NOR29FLG	# START r29 IN ASCENT PHASE.
+			NOR29FLG	# START R29 IN ASCENT PHASE.
 			XOVINFLG	# ALLOW X-AXIS OVERRIDE
 ASCTERM		EXIT
 		CA	FLAGWRD9
@@ -358,7 +365,7 @@ ASCTERM		EXIT
 			FINDCDUW -2
 ASCTERM1	EXIT
  +1		CA	FLAGWRD9	# INSURE THAT THE NOUN 63 DISPLAY IS
- 		MASK	FLRCSBIT	# BYPASSED IF WE ARE IN THE RCS TRIMMING
+		MASK	FLRCSBIT	# BYPASSED IF WE ARE IN THE RCS TRIMMING
 		CCS	A		# MODE OF OPERATION
 		TCF	ASCTERM3
 		CA	FLAGWRD8	# BYPASS DISPLAYS IF ENGINE FAILURE IS
@@ -374,16 +381,16 @@ ASCTERM3	TCF	ENDOFJOB
 ASCTERM4	EXIT
 		INHINT
 		TC	IBNKCALL	# NO GUIDANCE THIS CYCLE -- HENCE ZERO
-		CADR	ZATTEROR	# THE DAP COMMANDED ERRORS.
+		CADR	ZATTEROR	# THE DAP ATTITUDE ERRORS.
 		TCF	ASCTERM1 +1
 
 CHECKALT	DLOAD	DSU
 			/R/MAG
 			/LAND/
-		DSU	BMN		# IF H LT 25K CHECK Z AXIS ORIENTATION
+		DSU	BMN		# IF H LT 25K CHECK Z AXIS ORIENTATION.
 			25KFT
 			CHECKYAW
-# Page 851
+## Page 851
 EXITVR		CLEAR	BON
 			FLVR
 			ROTFLAG
@@ -434,7 +441,7 @@ CHECKYAW	SET
 			ZAXIS1
 		VAD	UNIT
 		PUSH	DOT
-# Page 852
+## Page 852
 			YNBPIP
 		ABS	DSU
 			SIN5DEG
@@ -446,7 +453,7 @@ CHECKYAW	SET
 			EXITVR1
 		GOTO
 			KEEPVR
-
+			
 		BANK	5
 		SETLOC	ASENT3
 		BANK
@@ -483,7 +490,7 @@ ENGOFF		RTB
 		TCF	+2		# C(A) = 0
 		CAF	ZERO		# C(A) = 0
 		AD	BIT1		# C(A) = 1 BIT OR DT.
-# Page 853
+## Page 853
 		TS	ENGOFFDT
 		TC	TWIDDLE
 		ADRES	ENGOFF1
@@ -518,23 +525,23 @@ CUTOFF		TC	UPFLAG		# SET FLRCS FLAG.
 		ADRES	FLRCS
 
  -5		CAF	V16N63
- 		TC	BANKCALL
+		TC	BANKCALL
 		CADR	GOFLASH
 		TCF	+3
 		TCF	CUTOFF1
 		TCF	-5
 
  +3		TC	POSTJUMP
- 		CADR	TERMASC
+		CADR	TERMASC
 
 CUTOFF1		INHINT
-		TC	IBNKCALL	# ZERO ATTITUDE ERRORS BEFORE REDUCINT DB.
+		TC	IBNKCALL	# ZERO ATTITUDE ERRORS BEFORE REDUCING DB.
 		CADR	ZATTEROR
 		TC	IBNKCALL
 		CADR	SETMINDB
 		TC	POSTJUMP
 		CADR	CUTOFF2
-# Page 854
+## Page 854
 
 V16N63		VN	1663
 		BANK	30
@@ -568,7 +575,7 @@ V16N85C		VN	1685
 		SETLOC	ASENT1
 		BANK
 		COUNT* $$/ASENT
-
+		
 YCOMP		VLOAD	DOT
 			UNIT/R/
 			QAXIS
@@ -576,11 +583,14 @@ YCOMP		VLOAD	DOT
 			RCO
 		STORE	Y
 		RVQ
-
+		
 		BANK	30
 		SETLOC	ASENT
 		BANK
-# Page 855
+		
+## Page 855
+# ASCENT GUIDANCE CONSTANTS
+
 100CS		EQUALS	2SEC(18)
 T2A		EQUALS	2SEC(17)
 4SEC(17)	2DEC	400 B-17
@@ -603,7 +613,7 @@ PRLIMIT		2DEC	-.0639		# (B/TBUP)MIN=-.1FT.SEC(-3)
 MINABDV		2DEC	.0356 B-5	# 10 PERCENT BIGGER THAN GRAVITY
 1/DV0		=	MASS1
 
-# Page 856
+## Page 856
 # THE LOGARITHM SUBROUTINE
 
 		BANK	24

@@ -1,39 +1,44 @@
-# Copyright:	Public domain.
-# Filename:	AUTOMATIC_MANEUVERS.agc
-# Purpose:	Part of the source code for Colossus 2A, AKA Comanche 055.
-#		It is part of the source code for the Command Module's (CM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	Ron Burkey <info@sandroid.org>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	1025-1036
-# Mod history:	2009-05-13 RSB	Adapted from the Colossus249/ file of the
-#				same name, using Comanche055 page images.
-#
-# This source code has been transcribed or otherwise adapted from digitized
-# images of a hardcopy from the MIT Museum.  The digitization was performed
-# by Paul Fjeld, and arranged for by Deborah Douglas of the Museum.  Many
-# thanks to both.  The images (with suitable reduction in storage size and
-# consequent reduction in image quality as well) are available online at
-# www.ibiblio.org/apollo.  If for some reason you find that the images are
-# illegible, contact me at info@sandroid.org about getting access to the
-# (much) higher-quality images which Paul actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#	Assemble revision 055 of AGC program Comanche by NASA
-#	2021113-051.  10:28 APR. 1, 1969
-#
-#	This AGC program shall also be referred to as
-#			Colossus 2A
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	AUTOMATIC_MANEUVERS.agc
+## Purpose:	Part of the source code for Colossus 2A, AKA Comanche 055.
+##		It is part of the source code for the Command Module's (CM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	Ron Burkey <info@sandroid.org>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	1025-1036
+## Mod history:	2009-05-13 RSB	Adapted from the Colossus249/ file of the
+##				same name, using Comanche055 page images.
+##		2016-12-21 RSB	Proofed comment text using octopus/ProoferComments
+##				and corrected the errors found.
+##		2017-01-07 RSB	Fixed comment errors detected in cross-diff vs
+##				Colossus 237 and Colossus 249.
+##
+## This source code has been transcribed or otherwise adapted from digitized
+## images of a hardcopy from the MIT Museum.  The digitization was performed
+## by Paul Fjeld, and arranged for by Deborah Douglas of the Museum.  Many
+## thanks to both.  The images (with suitable reduction in storage size and
+## consequent reduction in image quality as well) are available online at
+## www.ibiblio.org/apollo.  If for some reason you find that the images are
+## illegible, contact me at info@sandroid.org about getting access to the 
+## (much) higher-quality images which Paul actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##	Assemble revision 055 of AGC program Comanche by NASA
+##	2021113-051.  10:28 APR. 1, 1969  
+##
+##	This AGC program shall also be referred to as
+##			Colossus 2A
 
-# Page 1025
+## Page 1025
 		BANK	21
 		SETLOC	DAPS3
 		BANK
-
+		
 		COUNT	21/DAPAM
-
+		
 		EBANK=	KMPAC
 AHFNOROT	EXTEND
 		READ	CHAN31
@@ -50,13 +55,12 @@ AHFNOROT	EXTEND
 		MASK	BIT13
 		EXTEND
 		BZMF	HOLDFUNC
-
-
+		
 AUTOCONT	CA	HOLDFLAG	# IF HOLDFLAG IS +, GO TO GRABANG.
 		EXTEND			# OTHERWISE, GO TO ATTHOLD.
 		BZMF	ATTHOLD
 		TCF	GRABANG
-
+		
 # MINIMUM IMPULSE CONTROL
 
 FREECONT	CAF	ONE
@@ -78,18 +82,17 @@ FREECONT	CAF	ONE
 		TS	TAU1
 		INDEX	YMANNDX
 		CA	MINTAU
-# Page 1026
+## Page 1026
 		TS	TAU2
 		TCF	T6PROGM
-
-
+		
 MINTAU		DEC	0
 		DEC	23		# = 14MS
 		DEC	-23		# = -14MS
 		DEC	0
-
-# Page 1027
-# 	CALCULATION OF ATTITUDE ERRORS-
+		
+## Page 1027
+# CALCULATION OF ATTITUDE ERRORS-
 #	-    *     -      -          -
 #	AK = AMGB (CDUX - THETADX) + BIAS
 #
@@ -99,11 +102,10 @@ MINTAU		DEC	0
 #	*   *   *                               **                *    *     *
 #	*AK2*   * 0  -COS(PSI)SIN(PHI)  COS(PHI)** CDUZ - THETADZ *    *BIAS2*
 #
-# 	THE BIASES ARE ADDED ONLY WHILE PERFORMING AUTOMATIC MANEUVERS (ESP KALCMANU) TO PROVIDE ADDITIONAL LEAD
+# THE BIASES ARE ADDED ONLY WHILE PERFORMING AUTOMATIC MANEUVERS (ESP KALCMANU) TO PROVIDE ADDITIONAL LEAD
 # AND PREVENT OVERSHOOT WHEN STARTING AN AUTOMATIC MANEUVER.  NORMALLY THE REQUIRED LEAD IS ONLY 1-2 DEGREES.
 # BUT DURING HIGH RATE MANEUVERS IT CAN BE AS MUCH AS 7 DEGREES.  THE BIASES ARE COMPUTED BY KALCMANU AND REMAIN
 # FIXED UNTIL THE MANEUVER IS COMPLETED AT WHICH TIME THEY ARE RESET TO ZERO.
-
 
 ATTHOLD		CA	CDUX
 		EXTEND
@@ -137,7 +139,7 @@ ATTHOLD		CA	CDUX
 		ADS	ERRORZ
 		CS	HOLDFLAG
 		EXTEND
-# Page 1028
+## Page 1028
 		BZMF	JETS
 		CA	BIAS		# AD BIASES ONLY IF PERFORMING AUTOMATIC
 		ADS	ERRORX
@@ -146,8 +148,7 @@ ATTHOLD		CA	CDUX
 		CA	BIAS2
 		ADS	ERRORZ
 		TCF	JETS
-
-
+		
 HOLDFUNC	CCS	HOLDFLAG
 		TCF	+3
 		TCF	ATTHOLD
@@ -162,7 +163,7 @@ GRABANG		CAF	ZERO		# ZERO WBODYS AND BIASES
 		TS	BIAS
 		TS	BIAS1
 		TS	BIAS2
-
+		
 		CA	RCSFLAGS
 		MASK	OCT16000
 		EXTEND			# IS RATE DAMPING COMPLETED
@@ -172,7 +173,7 @@ GRABANG		CAF	ZERO		# ZERO WBODYS AND BIASES
 		TS	ERRORY
 		TS	ERRORZ
 		TCF	JETS
-
+		
 ENDDAMP		TS	HOLDFLAG	# SET HOLDFLAG +0
 		EXTEND
 		DCA	CDUX		# PICK UP CDU ANGLES FOR ATTITUDE HOLD
@@ -181,11 +182,12 @@ ENDDAMP		TS	HOLDFLAG	# SET HOLDFLAG +0
 		TS	THETADZ
 		TCF	ATTHOLD
 
-# Page 1029
+## Page 1029
 # JET SWITCHING LOGIC AND CALCULATION OF REQUIRED ROTATION COMMANDS
 #
 # DETERMINE THE LOCATION OF THE RATE ERROR AND THE ATTITUDE ERROR RELATIVE TO THE SWITCHING LOGIC IN THE PHASE
 # PLANE.
+#
 # COMPUTE THE CHANGE IN RATE CORRESPONDING TO THE ATTITUDE ERROR NECESSARY TO DRIVE THE THE S/C INTO THE
 # APPROPRIATE DEADZONE.
 #
@@ -194,17 +196,17 @@ ENDDAMP		TS	HOLDFLAG	# SET HOLDFLAG +0
 #        WL+H                         .
 # *********************************   .					***** SWITCH LINES ENCLOSING DEADZONES
 #   R23  WL                        *  .
-# ----------------------------------* .					----- DESIRED RATE LINES
+# --------------------------------- * .					----- DESIRED RATE LINES
 #   R23  WL-H       -                *.
 # ****************** -                .					R20, R21, R22, ETC REGIONS IN PHASE
 #                   * -               .* R18      R20       R21		PLANE FOF COMPUTING DESIRED RESPONSE
 #                    *                . *
 #                     *-              .  *
 #   R22             R24*-    R23      .   *
-#                       *             .    *
+#                       *-            .    *
 #                        *            .     *
 #                         + -ADB      .      * AF              ATTITUDE
-#  ........................+--+---------------+--+........................
+# .........................+--+---------------+--+........................
 #                           AF *      .     +ADB  +             ERROR
 #                               *     .            *
 #                                *    .            -*
@@ -217,11 +219,9 @@ ENDDAMP		TS	HOLDFLAG	# SET HOLDFLAG +0
 #                                     . * --------------------------------
 #                                     .  *
 #                                     .   ********************************
-#                                     .
-
+#				      .
 #			FIG. 1	PHASE PLANE SWITCHING LOGIC
-
-
+#
 # CONSTANTS FOR JET SWITCHING LOGIC
 
 WLH/SLOP	DEC	.00463		# = WL+H/SLOPE = .83333 DEG	$180
@@ -232,7 +232,7 @@ WLMH		2DEC	.0006666666	# = WL-H = 0.3 DEG/SEC		$450
 
 WL		2DEC	.0008888888	# = WL   = 0.4 DEG/SEC		$450
 
-# Page 1030
+## Page 1030
 SLOPE2		DEC	.32		# = 0.8 DEG/SEC/DEG		$450/180
 JETS		CA	ADB
 		AD	FOUR		# AF = FLAT REGION = .044 DEG
@@ -256,7 +256,7 @@ JLOOP		TS	SPNDX
 INHOLD		INDEX	SPNDX
 		CA	ERRORX
 		TS	AERR		# AERR = BIAS + AK
-
+		
 		CCS	EDOT
 		TCF	POSVEL
 		TCF	SIGNCK1
@@ -281,14 +281,14 @@ NEGVEL		EXTEND
 		TS	ADBVEL		# -(ADB+AF)
 		CS	AERR
 		TS	AERRVEL
-
+		
 J6.		EXTEND
-# Page 1031
+## Page 1031
 		SU	ADB
 		AD	WLH/SLOP
 		EXTEND
 		BZMF	J8
-
+		
 		CS	T5TEMP		# (ADB+AF)
 		AD	AERRVEL
 		EXTEND
@@ -304,7 +304,7 @@ J6.		EXTEND
 		EXTEND
 		BZMF	J18
 		TCF	J23
-
+		
 J7		CS	WL-H/SLP
 		EXTEND
 		SU	T5TEMP		# (ADB+AF)
@@ -312,7 +312,7 @@ J7		CS	WL-H/SLP
 		EXTEND
 		BZMF	J20
 		TCF	J21
-
+		
 J8		EXTEND
 		DCS	WLH
 		DXCH	WTEMP
@@ -327,20 +327,20 @@ SIGNCK2		CCS	WTEMP +1
 		TCF	J22
 		TCF	J22
 		TCF	NJ22
-
+		
 NJ22		EXTEND
 		DCA	EDOTVEL
 		EXTEND
 		DV	SLOPE
 		AD	T5TEMP		# (ADB+AF)
 		AD	AERRVEL
-# Page 1032
+## Page 1032
 		CCS	A
 		TCF	J23
 		TCF	J23
 		TCF	+2
 		TCF	J23
-
+		
 		EXTEND
 		DCS	WLMH		# WL - H
 		DXCH	WTEMP
@@ -355,7 +355,7 @@ SIGNCK3		CCS	WTEMP +1
 		TCF	J23
 		TCF	J23
 		TCF	NJ23
-
+		
 NJ23		CA	AERRVEL
 		AD	T5TEMP		# (ADB+AF)
 		AD	WL-H/SLP
@@ -364,12 +364,12 @@ NJ23		CA	AERRVEL
 		TCF	J24
 		TCF	J22
 		TCF	J22
-
+		
 J18		EXTEND
 		DCS	EDOT
 		DXCH	KMPAC
 		TCF	JTIME
-
+		
 J20		CS	AERR
 		AD	ADBVEL
 		EXTEND
@@ -379,13 +379,13 @@ J20		CS	AERR
 		DCS	EDOT
 		DAS	KMPAC
 		TCF	JTIME
-
+		
 J21		CCS	EDOT
 		TCF	JP
 		TCF	SIGNCK4
 		TCF	JN
 SIGNCK4		CCS	EDOT +1
-# Page 1033
+## Page 1033
 		TCF	JP
 		TCF	JP
 		TCF	JN
@@ -396,7 +396,7 @@ JN		EXTEND
 		DCA	WL
 		DAS	KMPAC
 		TCF	JTIME
-
+		
 JP		EXTEND
 		DCS	EDOT
 		DXCH	KMPAC
@@ -404,7 +404,7 @@ JP		EXTEND
 		DCS	WL
 		DAS	KMPAC
 		TCF	JTIME
-
+		
 J22		CCS	EDOT
 		TCF	JN
 		TCF	SIGNCK5
@@ -414,21 +414,21 @@ SIGNCK5		CCS	EDOT +1
 		TCF	JN
 		TCF	JP
 		TCF	JP
-
+		
 J23		INDEX	SPNDX
 		CS	BIT13		# RESET RATE DAMPING FLAG
 		MASK	RCSFLAGS	# BIT13 FOR ROLL  (SPNDX = 0)
 		TS	RCSFLAGS	# BIT12 FOR PITCH (SPNDX = 1)
 					# BIT11 FOR YAW   (SPNDX = 2)
-
+					
 		INDEX	SPNDX
 		CAF	OCT01400	# IS THERE TO BE A FORCED FIRING ON THIS
 		MASK	RCSFLAGS	# AXIS
 		EXTEND
 		BZF	DOJET +2	# NO, GO TO DOJET +2 AND DO NOTHING
-
+		
 		TCF	J18		# YES, GO TO J18 AND FORCE A FIRING
-
+		
 J24		CS	AERR
 		EXTEND
 		SU	ADBVEL
@@ -436,12 +436,12 @@ J24		CS	AERR
 		MP	SLOPE2		# (HYSTERESIS SLOPE)
 		DXCH	KMPAC
 		EXTEND
-# Page 1034
+## Page 1034
 		DCS	EDOT
 		DAS	KMPAC
-
-# Page 1035
-# 	COMPUTE THE JET ON TIME NECESSARY TO ACCOMPLISH THE DESIRED CHANGE IN RATE, IE
+		
+## Page 1035
+# COMPUTE THE JET ON TIME NECESSARY TO ACCOMPLISH THE DESIRED CHANGE IN RATE, IE
 #
 #	     T  = J/M(DELTA W)
 #	      J
@@ -452,15 +452,15 @@ J24		CS	AERR
 #	    J/M = S/C INERTIA TO TORQUE 9ATIO SCALED BY
 #		  	(57.3/450)(B24/1600)(1/.8)
 #		  FOR 1 JET OPERATION  (M = 700 FT-LB).
-#		  IE  J/M = J(SLUG-FTFT) x 0.00000085601606
+#		  IE J/M = J(SLUG-FTFT) X 0.00000085601606
 #
 #	          THE CORRESPONDING COMPUTER VARIABLES ESTABLISHED BY
 #		  KEYBOARD ENTRY ARE
-#			J/M (ROLL)
+#			J/M  (ROLL)
 #			J/M1 (PITCH)
 #			J/M2 (YAW)
 #
-#	     T  = JET-ON TIME    SCALED 16384/1600 SEC
+#	     T  = JET ON-TIME    SCALED 16384/1600 SEC
 #	      J
 #
 #	          THE COMPUTER VARIABLES ARE
@@ -482,15 +482,15 @@ JTIME		INDEX	SPNDX		# PICK UP S/C INERTIA/TORQUE RATIO
 		TCF	DOJET
 		CA	NEGMAX
 		TCF	DOJET
-
+		
 TAUNORM		CA	KMPAC +1
 DOJET		INDEX	SPNDX
 		TS	TAU
 		CCS	SPNDX
 		TCF	JLOOP
 		TCF	T6PROG
-
-# Page 1036
+		
+## Page 1036
 ZEROCMDS	CAF	ZERO
 		TS	TAU
 		TS	TAU1
@@ -499,6 +499,7 @@ T6PROG		EXTEND			# WHEN THE ROTATION COMMANDS (TAUS)
 		DCA	JETADDR		# HAVE BEEN DETERMINED
 		DXCH	T5LOC		# RESET T5LOC FOR PHASE3
 		TCF	RESUME
-
+		
 		EBANK=	KMPAC
 JETADDR		2CADR	JETSLECT
+

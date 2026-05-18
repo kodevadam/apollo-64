@@ -1,41 +1,45 @@
-# Copyright:	Public domain.
-# Filename:	MEASUREMENT_INCORPORATION.agc
-# Purpose:	Part of the source code for Luminary 1A build 099.
-#		It is part of the source code for the Lunar Module's (LM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-#
-# Assembler:	yaYUL
-# Contact:	Jim Lawton <jim DOT lawton AT gmail DOT com>
-# Website:	www.ibiblio.org/apollo.
-# Pages:	1149-1158
-# Mod history:	2009-05-28 JL	Updated from page images.
-#		2011-01-06 JL	Fixed pseudo-label indentation.
-#
-# This source code has been transcribed or otherwise adapted from digitized
-# images of a hardcopy from the MIT Museum.  The digitization was performed
-# by Paul Fjeld, and arranged for by Deborah Douglas of the Museum.  Many
-# thanks to both.  The images (with suitable reduction in storage size and
-# consequent reduction in image quality as well) are available online at
-# www.ibiblio.org/apollo.  If for some reason you find that the images are
-# illegible, contact me at info@sandroid.org about getting access to the
-# (much) higher-quality images which Paul actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#    Assemble revision 001 of AGC program LMY99 by NASA 2021112-061
-#    16:27 JULY 14, 1969
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	MEASUREMENT_INCORPORATION.agc
+## Purpose:	Part of the source code for Luminary 1A build 099.
+##		It is part of the source code for the Lunar Module's (LM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+##
+## Assembler:	yaYUL
+## Contact:	Jim Lawton <jim DOT lawton AT gmail DOT com>
+## Website:	www.ibiblio.org/apollo.
+## Pages:	1149-1158
+## Mod history:	2009-05-28 JL	Updated from page images.
+##		2011-01-06 JL	Fixed pseudo-label indentation.
+##		2016-12-17 RSB	Proofed text comments with octopus/ProoferComments
+##				and corrected the errors found.
+##		2021-05-30 ABS	ZEROD -> ZEROO
+##
+## This source code has been transcribed or otherwise adapted from digitized
+## images of a hardcopy from the MIT Museum.  The digitization was performed
+## by Paul Fjeld, and arranged for by Deborah Douglas of the Museum.  Many
+## thanks to both.  The images (with suitable reduction in storage size and
+## consequent reduction in image quality as well) are available online at
+## www.ibiblio.org/apollo.  If for some reason you find that the images are
+## illegible, contact me at info@sandroid.org about getting access to the
+## (much) higher-quality images which Paul actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##    Assemble revision 001 of AGC program LMY99 by NASA 2021112-061
+##    16:27 JULY 14, 1969
 
-# Page 1149
-# INCORP1 -- PERFORMS THE SIX DIMENSIONAL STATE VECTOR DEVIATION FOR POSITION
-# AND VELOCITY OR THE NINE-DIMENSIONAL DEVIATION OF POSITION, VELOCITY, AND
-# RADAR OR LANDMARK BIAS. THE OUTPUT OF THE BVECTOR ROUTINE ALONG WITH THE
-# ERROR TRANSITION MATRIX (W) ARE USED AS INPU TO THE ROUTINE. THE DEVIATION
-# IS OBTAINED BY COMPUTING AN ESTIMATED TRACKING MEASUREMENT FROM THE
-# CURRENT STATE VECTOR AND COMPARING IT WITH AN ACTUAL TRACKING MEASUREMENT
-# AND APPLYING A STATISTICAL WEIGHTING VECTOR.
+## Page 1149
+#  INCORP1--PERFORMS THE SIX DIMENSIONAL STATE VECTOR DEVIATION FOR POSITI
+# ON AND VELOCITY OR THE NINE DIMENSIONAL DEVIATION OF POSITION,VELOCITY,A
+# ND RADAR OR LANDMARK BIAS.THE OUTPUT OF THE BVECTOR ROUTINE ALONG WITH T
+# HE ERROR TRANSITION MATRIX(W) ARE USED AS INPUT TO THE ROUTINE.THE DEVIA
+# TION IS OBTAINED BY COMPUTING AN ESTIMATED TRACKING MEASUREMENT FROM THE
+# CURRENT STATE VECTOR AND COMPARING IT WITH AN ACTUAL TRACKING MEASUREMEN
+# T AND APPLYING A STATISTICAL WEIGHTING VECTOR.
 #
 # INPUT
-#	 DMENFLG = 0 (6-DIMENSIONAL BVECTOR), =1 (9-DIMENSIONAL)
+#	 DMENFLG = 0 6DIMENSIONAL BVECTOR   1=9DIMENSIONAL
 #	       W = ERROR TRANSITION MATRIX 6X6 OR 9X9
 #	VARIANCE = VARIANCE (SCALAR)
 #	  DELTAQ = MEASURED DEVIATION (SCALAR)
@@ -45,7 +49,7 @@
 #	  DELTAX = STATE VECTOR DEVIATIONS 6 OR 9 DIMENSIONAL
 #	      ZI = VECTOR USED FOR THE INCORPORATION 6 OR 9 DIMENSIONAL
 #	   GAMMA = SCALAR
-#	   OMEGA = OMEGA WEIGHTING VECTOR 6 OR 9 DIMENSIONAL
+#	   OMEGA = OMEGA WEIGHTING VECTOR 6 OR 9 DIMENTIONAL
 #
 # CALLING SEQUENCE
 #	L	CALL 	INCORP1
@@ -77,7 +81,7 @@ Z123		VLOAD	MXV*
 		STORE	ZI +18D,2
 		VLOAD
 			BVECTOR +6	# BVECTOR (1)
-# Page 1150
+## Page 1150
 		MXV*	VAD*
 			W +108D,1
 			ZI +18D,2
@@ -86,7 +90,7 @@ Z123		VLOAD	MXV*
 			BVECTOR +12D	# BVECTOR (2)
 		MXV*	VAD*
 			W +162D,1
-			ZI +18D,2	# B(0)*W+B(1)*(W+54)+B(2)*(W+108) FIRST PASS
+			ZI +18D,2	# B(0)*W+B(1)*(W+54)+B(2)*(W+108) FIRST PAS
 		STORE	ZI +18D,2	# ZI THEN Z2 THEN Z3
 		TIX,1
 			INCOR1
@@ -128,7 +132,7 @@ INCOR1B		SL2	BOV
 			INCOR1B
 INCOR1C		TLOAD	ROUND
 			TRIPA
-# Page 1151
+## Page 1151
 		DMP	SQRT
 			TEMPVAR
 		SL*	TAD
@@ -160,7 +164,7 @@ INCOR1C		TLOAD	ROUND
  -3		SSP
 			S2
 			54D
-INCOR2		VLOAD	VXM*		# COMPUT OMEGA1,2,3
+INCOR2		VLOAD	VXM*		# COMPUTE OMEGA1,2,3
 			ZI
 			W +162D,2
 		PUSH	VLOAD
@@ -179,7 +183,7 @@ INCOR2		VLOAD	VXM*		# COMPUT OMEGA1,2,3
 		STORE	OMEGA +6
 		VLOAD	STADR
 		STORE	OMEGA
-# Page 1152
+## Page 1152
 		BON	VLOAD
 			DMENFLG
 			INCOR2AB
@@ -203,8 +207,8 @@ INCOR3		VLOAD*
 		GOTO
 			EGRESS
 
-# Page 1153
-# INCORP2 - INCORPORATES THE COMPUTED STATE VECTOR DEVIATIONS INTO THE
+## Page 1153
+#  INCORP2 -INCORPORATES THE COMPUTED STATE VECTOR DEVIATIONS INTO THE
 # ESTIMATED STATE VECTOR. THE STATE VECTOR UPDATED MAY BE FOR EITHER THE
 # LEM OR THE CSM. DETERMINED BY FLAG VEHUPFLG. (ZERO = LEM) (1 = CSM)
 #
@@ -256,7 +260,7 @@ INCORP2		STQ	CALL
 		TS	ZIXA		# INITIAL IX 2 SETTING FOR Z COMPONENT
 		TS	ZIXB
 FAZA		TC	PHASCHNG
-# Page 1154
+## Page 1154
 		OCT	04022
 		TC	UPFLAG
 		ADRES	REINTFLG
@@ -307,7 +311,7 @@ FAZA1		CA	WIXB		# START FIRST PHASE OF INCORP2
 		DLOAD*	DCOMP		# CALC LOWER 3X9 PARTITION OF W MATRIX
 			ZI,2
 		NORM	VXSC
-# Page 1155
+## Page 1155
 			S2
 			OMEGAM3
 		XCHX,2	LXC,2
@@ -358,9 +362,9 @@ FAZB5		SLOAD	DAD
 			FAZB2
 FAZC		CALL
 			GRP2PC
-# Page 1156
+## Page 1156
 		VLOAD	VAD		# START 3RD PHASE OF INCORP2
-			X789		# 7TH, 8TH, 9TH COMPONENT OF STATE VECTOR
+			X789		# 7TH,8TH,9TH,COMPONENT OF STATE VECTOR
 			DELTAX +12D	# INCORPORATION FOR X789
 		STORE	TX789
 		BON	RTB
@@ -409,7 +413,7 @@ FAZAB3		CALL
 		CALL
 			SVDWN2		# STORE DOWNLINK STATE VECTOR
 FAZAB4		CALL
-# Page 1157
+## Page 1157
 			GRP2PC		# PHASE CHANGE
 		BOFF	VLOAD
 			DMENFLG
@@ -430,7 +434,7 @@ DOCSM1		RTB	CALL
 			SVDWN1		# STORE DOWNLINK STATE VECTOR
 		GOTO
 			FAZAB4
-ZEROD		=	ZEROVECS
+ZEROO		=	ZEROVECS
 54DD		DEC	54
 6DD		DEC	-6
 12DD		DEC	12
@@ -461,7 +465,7 @@ NEWZCOMP	VLOAD	ABVAL
 			NORMZI
 			NORMZI		# SAVE X1
 		NORM	INCR,1
-# Page 1158
+## Page 1158
 			X1
 		DEC	2
 		VLOAD	VSL*

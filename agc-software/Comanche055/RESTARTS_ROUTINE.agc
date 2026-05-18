@@ -1,37 +1,44 @@
-# Copyright:    Public domain.
-# Filename:     RESTARTS_ROUTINE.agc
-# Purpose:      Part of the source code for Comanche, build 055. It
-#               is part of the source code for the Command Module's
-#               (CM) Apollo Guidance Computer (AGC), Apollo 11.
-# Assembler:    yaYUL
-# Reference:    pp. 1414-1419
-# Contact:      Ron Burkey <info@sandroid.org>
-# Website:      http://www.ibiblio.org/apollo.
-# Mod history:  2009-05-07 RSB	Adapted from Colossus249 file of the same
-#				name, and page images. Corrected various
-#				typos in the transcription of program
-#				comments, and these should be back-ported
-#				to Colossus249.
-#
-# The contents of the "Comanche055" files, in general, are transcribed
-# from scanned documents.
-#
-#       Assemble revision 055 of AGC program Comanche by NASA
-#       2021113-051.  April 1, 1969.
-#
-#       This AGC program shall also be referred to as Colossus 2A
-#
-#       Prepared by
-#                       Massachusetts Institute of Technology
-#                       75 Cambridge Parkway
-#                       Cambridge, Massachusetts
-#
-#       under NASA contract NAS 9-4065.
-#
-# Refer directly to the online document mentioned above for further
-# information.  Please report any errors to info@sandroid.org.
+### FILE="Main.annotation"
+## Copyright:   Public domain.
+## Filename:    RESTARTS_ROUTINE.agc
+## Purpose:     Part of the source code for Comanche, build 055. It
+##              is part of the source code for the Command Module's
+##              (CM) Apollo Guidance Computer (AGC), Apollo 11.
+## Assembler:   yaYUL
+## Reference:   pp. 1414-1419
+## Contact:     Ron Burkey <info@sandroid.org>
+## Website:     http://www.ibiblio.org/apollo.
+## Mod history: 2009-05-07 RSB	Adapted from Colossus249 file of the same
+##				name, and page images. Corrected various 
+##				typos in the transcription of program 
+##				comments, and these should be back-ported  
+##				to Colossus249.
+##		2010-08-28 JL	Added missing comment character.
+##		2016-12-22 RSB	Proofed comment text using octopus/ProoferComments
+##				and corrected the errors found.
+##		2017-01-18 RSB	Fixed comment-text errors noted while diff'ing
+##				vs Colossus 249.
+##		2017-03-14 RSB	Comment-text fixes noted in proofing Luminary 116.
 
-# Page 1414
+## The contents of the "Comanche055" files, in general, are transcribed 
+## from scanned documents. 
+##
+##       Assemble revision 055 of AGC program Comanche by NASA
+##       2021113-051.  April 1, 1969.  
+##
+##       This AGC program shall also be referred to as Colossus 2A
+##
+##       Prepared by
+##                       Massachusetts Institute of Technology
+##                       75 Cambridge Parkway
+##                       Cambridge, Massachusetts
+##
+##       under NASA contract NAS 9-4065.
+##
+## Refer directly to the online document mentioned above for further
+## information.  Please report any errors to info@sandroid.org.
+
+## Page 1414
 		BANK	01
 		SETLOC	RESTART
 		BANK
@@ -39,7 +46,7 @@
 		EBANK=	PHSNAME1	# GOPROG MUST SWITCH TO THIS EBANK
 
 		COUNT	01/RSROU
-
+		
 RESTARTS	CA	MPAC +5		# GET GROUP NUMBER -1
 		DOUBLE			# SAVE FOR INDEXING
 		TS	TEMP2G
@@ -68,20 +75,20 @@ GETPART2	CCS	TEMPPHS		# IS IT AN X.1 RESTART
 
 ITSAVAR		MASK	OCT1400		# IS IT TYPE B ?
 		CCS	A
-		TCF	ITSLIKEB	# YES,IT IS TYPE B
+		TCF	ITSLIKEB	# YES, IT IS TYPE B
 
 		EXTEND			# STORE THE JOB (OR TASK) 2CADR FOR EXIT
 		NDX	TEMP2G
 		DCA	PHSNAME1
 		DXCH	GOLOC
 
-		CA	TEMPPHS		# SEE IF THIS IS A JOB, TASK, OR A LONGCALL
+		CA	TEMPPHS		# SEE IF THIS IS A JOB, TASK, OR A LONGCAL
 		MASK	OCT7
 		AD	MINUS2
 		CCS	A
 		TCF	ITSLNGCL	# ITS A LONGCALL
 
-# Page 1415
+## Page 1415
 RTRNCADR	TC	SWRETURN	# CANT GET HERE
 		TCF	ITSAWAIT
 
@@ -93,7 +100,7 @@ ITSAWAIT	CA	WTLTCADR	# SET UP WAITLIST CALL
 		NDX	TEMP2G		# DIRECTLY STORED
 		CA	PHSPRDT1
 TIMETEST	CCS	A		# IS IT AN IMMEDIATE RESTART
-		INCR	A		# NO.
+		INCR	A		# NO,
 		TCF	FINDTIME	# FIND OUT WHEN IT SHOULD BEGIN
 
 		TCF	ITSINDIR	# STORED INDIRECTLY
@@ -107,7 +114,7 @@ TIMETEST	CCS	A		# IS IT AN IMMEDIATE RESTART
 		BANK
 
 		COUNT	02/RSROU
-
+		
 ITSINDIR	LXCH	GOLOC +1	# GET THE CORRECT E BANK IN CASE THIS IS
 		LXCH	BB		# SWITCHED ERRASIBLE
 
@@ -126,13 +133,13 @@ ITSINDIR	LXCH	GOLOC +1	# GET THE CORRECT E BANK IN CASE THIS IS
 		BANK
 
 		COUNT	01/RSROU
-
-FINDTIME	COM			# MAKE NEGATIVE SINCE IT WILL BE SUBTRACTED
+		
+FINDTIME	COM			# MAKE NEGITIVE SINCE IT WILL BE SUBTRACTD
 		TS	L		# AND SAVE
 		NDX	TEMP2G
 		CS	TBASE1
 		EXTEND
-# Page 1416
+## Page 1416
 		SU	TIME1
 		CCS	A
 		COM
@@ -182,7 +189,7 @@ ITSATBL		TS	CYR		# FIND OUT IF THE PHASE IS ODD OR EVEN
 
 		CA	RTRNCADR	# IN CASE THIS IS THE SECOND PART OF A
 		TS	GOLOC +2	# TYPE B RESTART, WE NEED PROPER EXIT
-# Page 1417
+## Page 1417
 		CA	TEMPPHS		# SET UP POINTER FOR FINDING OUR PLACE IN
 		TS	SR		# THE RESTART TABLES
 		AD	SR
@@ -190,13 +197,13 @@ ITSATBL		TS	CYR		# FIND OUT IF THE PHASE IS ODD OR EVEN
 		AD	SIZETAB +1
 		TS	POINTER
 
-CONTBL2		EXTEND			# FIND OUT WHAT'S IN THE TABLE
+CONTBL2		EXTEND			# FIND OUT WHAT:S IN THE TABLE
 		NDX	POINTER
 		DCA	CADRTAB		# GET THE 2CADR
 
 		LXCH	GOLOC +1	# STORE THE BB INFORMATION
 
-		CCS	A		# IS IT A JOB OR IT IT TIMED
+		CCS	A		# IS IT A JOB OR IS IT TIMED
 		INCR	A		# POSITIVE, MUST BE A JOB
 		TCF	ITSAJOB2
 
@@ -210,7 +217,7 @@ CONTBL2		EXTEND			# FIND OUT WHAT'S IN THE TABLE
 		MASK	BIT10		# THIS SHOULD BE ONE IF WE HAVE -BB
 		CCS	A		# FOR THAT MATTER SO SHOULD BE BITS 9,8,7,
 					# 6,5, AND LAST BUT NOT LEAST (PERHAPS NOT
-					# IN IMPORTANCE ANYWAY. BIT 4
+					# IN IMPORTANCE ANYWAY.  BIT 4
 		TCF	ITSWTLST	# IT IS A WAITLIST CALL
 
 		NDX	POINTER		# OBTAIN THE ORIGINAL DELTA T
@@ -225,7 +232,7 @@ CONTBL2		EXTEND			# FIND OUT WHAT'S IN THE TABLE
 		BANK
 
 		COUNT	02/RSROU
-
+		
 ITSLGCL1	LXCH	GOLOC +1	# OBTAIN THE CORRECT E BANK
 		LXCH	BB
 		LXCH	GOLOC +1	# AND PRESERVE OUR E AND F BANKS
@@ -233,11 +240,10 @@ ITSLGCL1	LXCH	GOLOC +1	# OBTAIN THE CORRECT E BANK
 		EXTEND			# GET THE DELTA TIME
 		NDX	A
 		DCA	0
-# Page 1418
+## Page 1418
 		LXCH	GOLOC +1	# RESTORE OUR E AND F BANK
 		LXCH	BB		# RESTORE THE TASKS E AND F BANKS
 		LXCH	GOLOC +1	# AND PRESERVE OUR L
-
 		TCF	ITSLGCL2	# NOW LET:S PROCESS THIS LONGCALL
 
 # ***** YOU MAY RETURN TO SWITCHED FIXED *****
@@ -247,7 +253,6 @@ ITSLGCL1	LXCH	GOLOC +1	# OBTAIN THE CORRECT E BANK
 		BANK
 
 		COUNT	01/RSROU
-
 ITSLGCL2	DXCH	LONGTIME
 
 		EXTEND			# CALCULATE TIME LEFT
@@ -263,7 +268,7 @@ ITSLGCL2	DXCH	LONGTIME
 		TCF	IMEDIATE -3
 		CCS	LONGTIME +1
 		TCF	LONGCLCL
-		NOOP			# CAN:T GET HERE	*********
+		NOOP			# CAN:T GET HERE *********
 		TCF	IMEDIATE -3
 		TCF	IMEDIATE
 
@@ -284,7 +289,7 @@ ITSLNGCL	CA	WTLTCADR	# ASSUME IT WILL GO TO WAITLIST
 
 ITSWTLST	CS	GOLOC +1	# CORRECT THE BBCON INFORMATION
 		TS	GOLOC +1
-# Page 1419
+## Page 1419
 		NDX	POINTER		# GET THE DT AND FIND OUT IF IT WAS STORED
 		CA	PRDTTAB		# DIRECTLY OR INDIRECTLY
 
@@ -303,7 +308,7 @@ ITSEVEN		CA	TEMPSWCH	# SET UP FOR EITHER THE SECOND PART OF THE
 		NDX	TEMP2G		# SET UP POINTER FOR OUR LOCATION WITHIN
 		CA	SIZETAB		# THE TABLE
 		AD	TEMPPHS		# THIS MAY LOOK BAD BUT LET:S SEE YOU DO
-		AD	TEMPPHS		# BETTER IN TIME OR NUMBER OF LOCATIONS
+		AD	TEMPPHS		# BETTER IN TIME OR NUMBERR OF LOCATIONS
 		AD	TEMPPHS
 		TS	POINTER
 
@@ -313,7 +318,7 @@ PHSPART2	CA	THREE		# SET THE POINTER FOR THE SECOND HALF OF
 		ADS	POINTER		# THE TABLE
 
 		CA	RTRNCADR	# THIS WILL BE OUR LAST TIME THROUGH THE
-		TS	GOLOC +2	# EVEN TABLE , SO AFTER IT  GET THE NEXT
+		TS	GOLOC +2	# EVEN TABLE, SO AFTER IT GET THE NEXT
 					# GROUP
 		TCF	CONTBL2		# SO LET:S GET THE SECOND ENTRY IN THE TBL
 

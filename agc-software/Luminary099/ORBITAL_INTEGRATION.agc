@@ -1,37 +1,41 @@
-# Copyright:	Public domain.
-# Filename:	ORBITAL_INTEGRATION.agc
-# Purpose: 	Part of the source code for Luminary 1A build 099.
-#		It is part of the source code for the Lunar Module's (LM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	Ron Burkey <info@sandroid.org>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	1227-1248
-# Mod history:	2009-05-26 RSB	Adapted from the corresponding
-#				Luminary131 file, using page
-#				images from Luminary 1A.
-#		2009-06-05 RSB	Fixed 3 typos.
-#		2009-06-06 RSB	Page 1248 was missing entirely for some reason.
-#		2009-06-07 RSB	Corrected a typo.
-#
-# This source code has been transcribed or otherwise adapted from
-# digitized images of a hardcopy from the MIT Museum.  The digitization
-# was performed by Paul Fjeld, and arranged for by Deborah Douglas of
-# the Museum.  Many thanks to both.  The images (with suitable reduction
-# in storage size and consequent reduction in image quality as well) are
-# available online at www.ibiblio.org/apollo.  If for some reason you
-# find that the images are illegible, contact me at info@sandroid.org
-# about getting access to the (much) higher-quality images which Paul
-# actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#	Assemble revision 001 of AGC program LMY99 by NASA 2021112-061
-#	16:27 JULY 14, 1969
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	ORBITAL_INTEGRATION.agc
+## Purpose: 	Part of the source code for Luminary 1A build 099.
+##		It is part of the source code for the Lunar Module's (LM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	Ron Burkey <info@sandroid.org>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	1227-1248
+## Mod history:	2009-05-26 RSB	Adapted from the corresponding 
+##				Luminary131 file, using page 
+##				images from Luminary 1A.
+##		2009-06-05 RSB	Fixed 3 typos.
+##		2009-06-06 RSB	Page 1248 was missing entirely for some reason.
+##		2009-06-07 RSB	Corrected a typo.
+##		2016-12-17 RSB	Proofed text comments with octopus/ProoferComments
+##				and corrected the errors found.
+##		2017-03-17 RSB	Comment-text fixes identified in diff'ing
+##				Luminary 99 vs Comanche 55.
+##		2017-08-17 RSB	Comment-text fixes identified from AP11ROPE scans.
 
-# Page 1227
-# ORBITAL INTEGRATION
+## This source code has been transcribed or otherwise adapted from
+## digitized images of a hardcopy from the MIT Museum.  The digitization
+## was performed by Paul Fjeld, and arranged for by Deborah Douglas of
+## the Museum.  Many thanks to both.  The images (with suitable reduction
+## in storage size and consequent reduction in image quality as well) are
+## available online at www.ibiblio.org/apollo.  If for some reason you
+## find that the images are illegible, contact me at info@sandroid.org
+## about getting access to the (much) higher-quality images which Paul
+## actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##	Assemble revision 001 of AGC program LMY99 by NASA 2021112-61
+##	16:27 JULY 14, 1969 
 
+## Page 1227
 # DELETE
 		BANK	13
 		SETLOC	ORBITAL
@@ -63,7 +67,7 @@ KEPPREP		LXA,2	SETPD
 			4D
 		DSQ	PDDL		# (FS)SQ (+12 +2(N1-N2))	8D	PL 10D
 			4D
-		DSQ	PDDL*		# SSQ/MU (-20R +2(N1-N2))	10D	PL 12D
+		DSQ	PDDL*		# SSQ/MU (-2 OR +2(N1-N2))	10D	PL 12D
 			MUEARTH,2
 		SR3	SR4
 		PDVL	VSQ		# PREALIGN MU (+43 OR +37) 	12D	PL 14D
@@ -75,7 +79,7 @@ KEPPREP		LXA,2	SETPD
 		DMP	SL*
 			DP2/3
 			0 	-3,1	# 10L(1/R-ALPHA) (+13 +2(N1-N2))
-		XSU,1	DAD		# 2(FS)SQ - ETCETERA			PL 8D
+		XSU,1	DAD		# 2(FS)SQ - ETCETRA			PL 8D
 			S1		# X1 = N2-N1
 		SL*	DSU		# -FS+2(FS)SQ ETC (+6 +N1-N2)		PL 6D
 			8D,1
@@ -83,7 +87,7 @@ KEPPREP		LXA,2	SETPD
 			0D
 			4D
 		SL*	SL*
-# Page 1228
+## Page 1228
 			8D,1
 			0,1		# S(-FS(1-2FS)-1/6...) (+17 OR +16)
 		DAD	PDDL		#					PL 6D
@@ -105,7 +109,7 @@ KEPPREP		LXA,2	SETPD
 		GOTO
 			KEPLERN
 
-# Page 1229
+## Page 1229
 FBR3		LXA,1	SSP
 			DIFEQCNT
 			S1
@@ -123,7 +127,7 @@ FBR3		LXA,1	SSP
 		STCALL	TET
 			KEPPREP
 
-# Page 1230
+## Page 1230
 # AGC ROUTINE TO COMPUTE ACCELERATION COMPONENTS.
 
 ACCOMP		LXA,1	LXA,2
@@ -173,7 +177,7 @@ ACCOMP		LXA,1	LXA,2
 			0
 		STORE	BETAV
 		STOVL	RPQV
-# Page 1231
+## Page 1231
 			2D
 		STORE	RPSV
 		SLOAD	DSU
@@ -224,7 +228,7 @@ GAMCOMP		VLOAD	VSR1
 		NORM	ROUND
 			31D
 		PDDL	NORM		# NORMED B SQUARED TO PD LIST
-# Page 1232
+## Page 1232		
 			ALPHAM		# NORMALIZE (LESS ONE) LENGTH OF ALPHA
 			32D		# SAVING NORM SCALE FACTOR IN X1
 		SR1	PDVL
@@ -233,9 +237,9 @@ GAMCOMP		VLOAD	VSR1
 		STODL	BETAV
 			36D
 		STORE	BETAM
-		NORM	BDDV		# FORM NORMALIZE QUOTIEN ALPHAM/BETAM
+		NORM	BDDV		# FORM NORMALIZED QUOTIENT ALPHAM/BETAM
 			33D
-		SR1R	PUSH		# C(PDL+2) = ALMOST NORMALIZE RHO.
+		SR1R	PUSH		# C(PDL+2) = ALMOST NORMALIZED RHO.
 		DLOAD*
 			ASCALE,1
 		STORE	S1
@@ -273,9 +277,9 @@ GAMCOMP		VLOAD	VSR1
 			14D
 		DMPR	VXSC
 			6
-			BETAV		#		_
+			BETAV		#		-
 		PDVL	VSR3		# (G/2)(C(PD+4))B/2 TO PD+16D
-# Page 1233
+## Page 1233
 			ALPHAV
 		VAD	PUSH		# A12 + C(PD+16D) TO PD+16D
 		DLOAD	DMP
@@ -327,7 +331,7 @@ INT-ABRT	EXIT
 		TC	POODOO
 		OCT	00430
 
-# Page 1234
+## Page 1234
 # THE OBLATE ROUTINE COMPUTES THE ACCELERATION DUE TO OBLATENESS.  IT USES THE UNIT OF THE VEHICLE
 # POSITION VECTOR FOUND IN ALPHAV AND THE DISTANCE TO THE CENTER IN ALPHAM.  THIS IS ADDED TO THE SUM OF THE
 # DISTURBING ACCELERATIONS IN FV AND THE PROPER DIFEQ STAGE IS CALLED VIA X1.
@@ -379,7 +383,7 @@ COMTERM		STORE	UZ
 		PDDL	DMPR
 			2
 			5/128
-# Page 1235
+## Page 1235
 		BDSU
 		DMP*
 			J4REQ/J3,2
@@ -396,9 +400,9 @@ COMTERM		STORE	UZ
 		DMP*	SR1
 			J4REQ/J3,2
 		DDV	DAD
-			ALPHAM
+			ALPHAM		#               -3
 		DMPR*	SR3
-			2J3RE/J2,2
+			2J3RE/J2,2	#    3        4
 		DDV	DAD
 			ALPHAM
 		VXSC	VSL1
@@ -426,11 +430,11 @@ COMTERM		STORE	UZ
 			FV
 			GOBAQUE
 		STCALL	FV
-			QUALITY1
-
+			QUALITY1	
+			
 QUALITY3	DSQ			# J22 TERM X R**4 IN 2D, SCALED B61
 					# AS VECTOR.
-# Page 1236
+## Page 1236
 		PUSH	DMP		# STORE COSPHI**2 SCALED B2 IN 8D
 			5/8		# 5 SCALED B3
 		PDDL	SR2		# PUT 5 COSPHI**2, D5, IN 8D.  GET
@@ -457,7 +461,7 @@ QUALITY3	DSQ			# J22 TERM X R**4 IN 2D, SCALED B61
 			5/8		# 5 B3 ANSWER B5
 		SL1	DAD		# FROM 12D FOR Z COMPONENT (SL1 GIVES 10
 					# INSTEAD OF 5 FOR COEFFICIENT)
-		PDDL	NORM		# BACK INTO 12D FOR Z COMPNENT.
+		PDDL	NORM		# BACK INTO 12D FOR Z COMPONENT.
 			ALPHAM		# SCALED B27 FOR MOON
 			X2
 		PUSH	SLOAD		# STORE IN 14D, DESTROYING URPV
@@ -465,10 +469,10 @@ QUALITY3	DSQ			# J22 TERM X R**4 IN 2D, SCALED B61
 			E32C31RM
 		DDV	VXSC		# IF X2 = 0, DIVISION GIVES B53, VXSC
 					# OUT OF 8D B5 GIVES B58
-		VSL*	VAD		# SHIFT MAKES B61, FOR ADDITION OF
+		VSL*	VAD		# SHIFT MAKES B61, FOR ADDITION OF 
 					# VECTOR IN 2D
 			0	-3,2
-		VSL*	V/SC		# OPERAND FROM 0D.  B108 FOR X1 = 0
+		VSL*	V/SC		# OPERAND FROM 0D, B108 FOR X1 = 0
 			0	-27D,1	# FOR X1 = 0, MAKES B88, GIVING B-20
 					# FOR RESULT.
 		PDDL	PDDL
@@ -481,7 +485,7 @@ QUALITY3	DSQ			# J22 TERM X R**4 IN 2D, SCALED B61
 		VAD	BOV		# OVERFLOW INDICATOR RESET IN "RP-TO-R"
 			FV
 			GOBAQUE
-# Page 1237
+## Page 1237			
 		STORE	FV
 NBRANCH		SLOAD	LXA,1
 			DIFEQCNT
@@ -532,7 +536,7 @@ RECTEST		VLOAD	ABVAL		# RECTIFY IF
 			3/4		#	   EXCEEDS 3/4 IN MAGNITUDE
 			CALLRECT	#
 		DAD	SL*		#			OR
-# Page 1238
+## Page 1238
 			3/4		#
 			0 	-7,2	#	2) ABVAL(TDELTAV) EQUALS OR EXCEEDS
 		DDV	DSU		#	   .01(ABVAL(RCV))
@@ -583,7 +587,7 @@ LUNSPH		DLOAD	SR2
 			LUNPOS
 		VCOMP
 		STORE	RPQV
-# Page 1239
+## Page 1239		
 DOSWITCH	CALL
 			ORIGCHNG
 		GOTO
@@ -620,7 +624,7 @@ ORIGCHNG	STQ	CALL
 			MOONFLAG
 			CLRMOON
 			SETMOON
-# Page 1240
+## Page 1240
 # THE RECTIFY SUBROUTINE IS CALLED BY THE INTEGRATION PROGRAM AND OCCASIONALLY BY THE MEASUREMENT INCORPORATION
 # ROUTINES TO ESTABLISH A NEW CONIC.
 
@@ -646,8 +650,8 @@ MINIRECT	STORE	VRECT
 		STORE	XKEP
 		RVQ
 
-# Page 1241
-# THE THREE DIFEQ ROUTINES -- DIFEQ+0, DIFEQ+12, DIFEQ+24 -- ARE ENTERED TO PROCESS THE CONTRIBUTIONS AT THE
+## Page 1241
+# THE THREE DIFEQ ROUTINES - DIFEQ+0, DIFEQ+12, AND DIFEQ+24 - ARE ENTERED TO PROCESS THE CONTRIBUTIONS AT THE
 # BEGINNING, MIDDLE, AND END OF THE TIMESTEP, RESPECTIVELY.  THE UPDATING IS DONE BY THE NYSTROM METHOD.
 
 DIFEQ+0		VLOAD	VSR3
@@ -698,7 +702,7 @@ DIFEQ+2		DLOAD	DMPR
 
 		CALL
 			GRP2PC
-# Page 1242
+## Page 1242
 		LXA,2	SSP
 			COLREG
 			S2
@@ -742,14 +746,14 @@ ENDSTATE	BOV	VLOAD
 		TC	PHASCHNG
 		OCT	04022		# PHASE 1
 		TC	UPFLAG		# PHASE CHANGE HAS OCCURRED BETWEEN
-		ADRES	REINTFLG	# INSTALL AND INTWAKE
+		ADRES	REINTFLG	# INTSTALL AND INTWAKE
 		TC	INTPRET
 		SSP
 			QPRET
 			AMOVED
 		BON	GOTO
 			VINTFLAG
-# Page 1243
+## Page 1243
 			ATOPCSM
 			ATOPLEM
 AMOVED		SET	SSP
@@ -789,7 +793,7 @@ DIFEQCOM	DLOAD	DAD		# INCREMENT H AND DIFEQCNT.
 			FBR3
 
 WMATEND		CLEAR	CLEAR
-			DIM0FLAG	# DON'T INTEGRATE W THIS TIME
+			DIM0FLAG	# DONT INTEGRATE W THIS TIME
 			ORBWFLAG	# INVALIDATE W
 		CLEAR
 			RENDWFLG
@@ -798,14 +802,14 @@ WMATEND		CLEAR	CLEAR
 		TC	ALARM
 		OCT	421
 		TC	INTPRET
-# Page 1244
+## Page 1244
 		GOTO
 			TESTLOOP	# FINISH INTEGRATING STATE VECTOR
 
-# Page 1245
+## Page 1245
 # ORBITAL ROUTINE FOR EXTRAPOLATION OF THE W MATRIX.  IT COMPUTES THE SECOND DERIVATIVE OF EACH COLUMN POSITION
 # VECTOR OF THE MATRIX AND CALLS THE NYSTROM INTEGRATION ROUTINES TO SOLVE THE DIFFERENTIAL EQUATIONS.  THE PROGRAM
-# USES A TABLE OF VEHICLE POSITION VECTORS COMPUTED DURING THE INTEGRATION OF THE VEHICLE'S POSITION AND VELOCITY.
+# USES A TABLE OF VEHICLE POSITION VECTORS COMPUTED DURING THE INTEGRATION OF THE VEHICLES POSITION AND VELOCITY.
 
 DOW..		LXA,2	DLOAD*
 			PBODY
@@ -854,11 +858,11 @@ DOW..1		VLOAD	VSR4
 			S2
 			34D
 		VSL*	RVQ
-# Page 1246
-			0 	-8D,2
+## Page 1246
+			0 	-8D,2	
 
-# ********************************************************************************
-# ********************************************************************************
+# ****************************************************************************************************************
+# ****************************************************************************************************************
 SETITCTR	SSP	BOFF		# SET ITERCTR FOR LAMBERT CALLS.  THIS
 			ITERCTR		# CODING BELONGS IN INITVEL AND IS HERE
 			20D		# FOR PURPOSES OF A ONE-MODULE
@@ -868,8 +872,8 @@ SETITCTR	SSP	BOFF		# SET ITERCTR FOR LAMBERT CALLS.  THIS
 			ITERCTR
 			5
 			LAMBERT
-# ********************************************************************************
-# ********************************************************************************
+# ****************************************************************************************************************
+# ****************************************************************************************************************
 
 		SETLOC	ORBITAL1
 		BANK
@@ -904,7 +908,7 @@ DP2/3		2DEC	.6666666667
 2/3		EQUALS	DP2/3
 OCT27		OCT	27
 
-# Page 1247
+## Page 1247
 		BANK	13
 		SETLOC	ORBITAL2
 		BANK
@@ -956,7 +960,7 @@ QUALITY2	PDDL	DSQ		# SQUARE INTO 2D, B2
 		DMP	VXSC		# 5(Y**2-X**2)UR
 			5/8		# CONSTANT, 5B3
 			URPV		# VECTOR.  RESULT MAXIMUM IS 5, SCALING
-# Page 1248
+## Page 1248
 					# HERE B6
 		VSL3	PDDL		# STORE SCALED B3 IN 2D, 4D, 6D FOR XYZ
 			URPV		# X COMPONENT, B1
@@ -970,8 +974,8 @@ QUALITY2	PDDL	DSQ		# SQUARE INTO 2D, B2
 					# ANSWER, SAME AS MULTIPLYING BY UNITY.
 					# MAX IS 7.
 		STORE	4D		# 2D HAS VECTOR, B3.
-		SLOAD	VXSC		# MULTIPLY COEFFICIENT TIMES VECTOR IN 2D
+		SLOAD	VXSC		# MULTIPLY COEFFIECIENT TIMES VECTOR IN 2D
 			E3J22R2M
 		PDDL	RVQ		# J22 TERM X R**4 IN 2D, SCALED B61
 			COSPHI/2	# SAME AS URPV +4  Z COMPONENT
-
+			

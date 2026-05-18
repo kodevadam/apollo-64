@@ -1,47 +1,50 @@
-# Copyright:    Public domain.
-# Filename:     CM_BODY_ATTITUDE.agc
-# Purpose:      Part of the source code for Comanche, build 055. It
-#               is part of the source code for the Command Module's
-#               (CM) Apollo Guidance Computer (AGC), Apollo 11.
-# Assembler:    yaYUL
-# Reference:    pp. 883-889
-# Contact:      Ron Burkey <info@sandroid.org>
-# Website:      http://www.ibiblio.org/apollo.
-# Mod history:  2009-05-12 RSB	Adapted from Colossus249 file of the same
-#				name and Comanche 055 page images.
-#
-# The contents of the "Comanche055" files, in general, are transcribed
-# from scanned documents.
-#
-#       Assemble revision 055 of AGC program Comanche by NASA
-#       2021113-051.  April 1, 1969.
-#
-#       This AGC program shall also be referred to as Colossus 2A
-#
-#       Prepared by
-#                       Massachusetts Institute of Technology
-#                       75 Cambridge Parkway
-#                       Cambridge, Massachusetts
-#
-#       under NASA contract NAS 9-4065.
-#
-# Refer directly to the online document mentioned above for further
-# information.  Please report any errors to info@sandroid.org.
+### FILE="Main.annotation"
+## Copyright:   Public domain.
+## Filename:    CM_BODY_ATTITUDE.agc
+## Purpose:     Part of the source code for Comanche, build 055. It
+##              is part of the source code for the Command Module's
+##              (CM) Apollo Guidance Computer (AGC), Apollo 11.
+## Assembler:   yaYUL
+## Reference:   pp. 883-889
+## Contact:     Ron Burkey <info@sandroid.org>
+## Website:     http://www.ibiblio.org/apollo.
+## Mod history: 2009-05-12 RSB	Adapted from Colossus249 file of the same
+##				name and Comanche 055 page images.
+##		2016-12-21 RSB	Proofed comment text using octopus/ProoferComments
+##				and corrected the errors found.
+##
+## The contents of the "Comanche055" files, in general, are transcribed 
+## from scanned documents. 
+##
+##       Assemble revision 055 of AGC program Comanche by NASA
+##       2021113-051.  April 1, 1969.  
+##
+##       This AGC program shall also be referred to as Colossus 2A
+##
+##       Prepared by
+##                       Massachusetts Institute of Technology
+##                       75 Cambridge Parkway
+##                       Cambridge, Massachusetts
+##
+##       under NASA contract NAS 9-4065.
+##
+## Refer directly to the online document mentioned above for further
+## information.  Please report any errors to info@sandroid.org.
 
-# Page 883
+## Page 883
 		BANK	35
-
+		
 		SETLOC	BODYATT
 		BANK
-
+		
 		COUNT	37/CMBAT
-
+		
 # PDL 12D - 15D SAFE.
 
-# VALUES OF GIMBAL AND BODY ANGLES VALID AT PIP TIME ARE SAVED DURING	READACCS.
+# VALUES OF GIMBAL AND BODY ANGLES VALID AT PIP TIME ARE SAVED DURING  READACCS.
 
 		EBANK=	RTINIT		# LET INTERPRETER SET EB
-
+		
 CM/POSE		TC	INTPRET		# COME HERE VIA AVEGEXIT.
 
 		SETPD	VLOAD
@@ -55,11 +58,11 @@ CM/POSE		TC	INTPRET		# COME HERE VIA AVEGEXIT.
 			KWE
 		VAD	STADR
 		STORE	-VREL		# SAVE FOR ENTRY GUIDANCE.	REF COORDS
-
+		
 		UNIT	LXA,1
 			36D		# ABVAL( -VREL) TO X1
 		STORE	UXA/2		# -UVREL			REF COORDS
-
+		
 		VXV	VCOMP
 			UNITR		# .5 UNIT			REF COORDS
 		UNIT	SSP		# THE FOLLOWING IS TO PROVIDE A STABLE
@@ -71,17 +74,17 @@ SPVQUIT		DEC	.019405		# 1000/ 2 VS
 CM/POSE2	STORE	UYA/2		#				REF COORDS
 
 		STORE	OLDUYA		# RESTORE, OR SAVE AS CASE MAY BE.
-
+		
 		VXV	VCOMP
 			UXA/2		# FINISH OBTAINING TRAJECTORY TRIAD.
 		VSL1
 		STORE	UZA/2		#				REF COORDS
-# Page 884
+## Page 884
 		TLOAD			# PICK UP CDUX, CDUY, CDUZ CORRESPONDING
-			AOG/PIP		# TO PIPUP TIME IN 2S.C AND SAVE.
+			AOG/PIP		# TO PIPUP TIME IN 2S,C AND SAVE.
 CM/TRIO		STODL	24D
 			25D		# AIG/PIP
-
+			
 		RTB	PUSH		# TO PDL0
 			CDULOGIC
 		COS
@@ -91,7 +94,7 @@ CM/TRIO		STODL	24D
 		STODL	UBX/2 +4	# -SI /2
 			26D		# AMG/PIP
 		RTB	PUSH		# TO PDL 0
-			CDULOGIC
+			CDULOGIC	
 		SIN	PDDL		# XCH PDL 0.  SAVE SM /2
 		COS	PDDL		# CM /2 TO PDL 2
 			0		# SM /2
@@ -119,14 +122,14 @@ CM/TRIO		STODL	24D
 			UBX/2		# CI /2
 			UBY/2 +4
 		STOVL	UBY/2 +4	# YB/4				PLATFORM COORDS
-
-				# YB = (-COSMCI + SOSI , COCM , COSMSI + SOCI )
-
+		
+					# YB = (-COSMCI + SOSI , COCM , COSMSI + SOCI )
+					
 			UBY/2
 		VXM	VSL2
 			REFSMMAT	# .5 UNIT
 		STODL	UBY/2		# YB/2 DONE			REF COORDS
-# Page 885
+## Page 885
 					# CM /2 FROM PDL 2
 		VXSC	VSL1
 			UBX/2
@@ -134,20 +137,20 @@ CM/TRIO		STODL	24D
 		STADR			# SM /2 FROM PDL 0
 		STOVL	UBX/2 +2	# SM /2 REPLACES NOISE
 			UBX/2		# XB/2				PLATFORM COORDS
-
-				# XB = ( CMCI , SM , -CMSI )
-
+			
+					# XB = ( CMCI , SM , -CMSI )
+					
 		VXM	VSL1
 			REFSMMAT	# .5 UNIT
 		STORE	UBX/2		# XB/2 DONE			REF COORDS
-
+		
 		VXV	VSL1
 			UBY/2
 		STOVL	UBZ/2		# ZB/2 DONE			REF COORDS
-
-				# EQUIVALENT TO
-				# ZB = ( SOSMCI + COSI , -SOCM , -SOSMSI + COCI)
-
+		
+					# EQUIVALENT TO
+					# ZB = ( SOSMCI + COSI , -SOCM , -SOSMSI + COCI )
+					
 			UXA/2		# -UVREL/2 = -UVA/2
 		VXV	UNIT		# GET UNIT(-UVREL*UBY)/2 = UL/2
 			UBY/2		# YB/2
@@ -155,7 +158,7 @@ CM/TRIO		STODL	24D
 			UZA/2		# UNA/2
 		STOVL	COSTH		# COS(ROLL)/4
 			0		# UL/2
-
+			
 		DOT
 			UYA/2
 		STCALL	SINTH		# -SIN(ROLL)/4
@@ -172,37 +175,38 @@ CM/TRIO		STODL	24D
 		STOVL	SINTH		# -SIN(ALFA)/4
 		DOT			# UL/2 FROM PDL 0
 			UBZ/2
-		STCALL	COSTH		# COS(ALFA)/2
+		STCALL	COSTH		# COS(ALFA)/4
 			ARCTRIG
 		STOVL	8D		# -(ALFA/180) /2
 			UNITR		# UR/2				REF COORDS
 		DOT	SL1
-# Page 886
+## Page 886
 			UZA/2		# MORE ACCURATE AT LARGE ARG.
 		ARCCOS
 		STORE	10D		# (-GAMA/180)/2
-
+		
 		TLOAD	EXIT		# ANGLES IN MPAC IN THE ORDER
 					# -( (ROLL, BETA, ALFA) /180)/2
 			6D		# THESE VALUES CORRECT AT PIPUP TIME.
 
-# Page 887
+# SPACER
+## Page 887
 # BASIC SUBROUTINE TO UPDATE ATTITUDE ANGLES
 
 		EBANK=	AOG
-
+		
 CM/ATUP		CA	EBAOG
 		TS	EBANK
 CMTR1		INDEX	FIXLOC
 		CS	10D		# (GAMA/180)/2
 		XCH	GAMA
 		TS	L
-
+		
 		INHINT
-				# MUST REMAIN INHINTED UNTIL UPDATE OF BODY
-				# ANGLES, SO THAT GAMDIFSW IS VALID FIRST PASS
-				# INDICATOR.
-
+					# MUST REMAIN INHINTED UNTIL UPDATE OF BODY
+					# ANGLES, SO THAT GAMDIFSW IS VALID FIRST PASS
+					# INDICATOR.
+					
 		CS	CM/FLAGS
 		MASK	BIT11		# GAMDIFSW=94D BIT11	INITLY=0
 		EXTEND			# DONT CALC GAMA DOT UNTIL HAVE FORMD
@@ -210,26 +214,26 @@ CMTR1		INDEX	FIXLOC
 		BZF	DOGAMDOT	# IS OK, GO ON.
 		ADS	CM/FLAGS	# KNOW BIT IS 0
 		TC	NOGAMDOT	# SET GAMDOT = 0
-
+		
 DOGAMDOT	CS	L
 		AD	GAMA		# DEL GAMA/360= T GAMDOT/360
 		EXTEND
 		MP	TCDU		# TCDU = .1 SEC, T = 2 SEC.
 		TS	GAMDOT		# GAMA DOT TCDU / 180
-
+		
 		EXTEND			# IGNORE GAMDOT IF LEQ .5 DEG/SEC
 		BZMF	+2
 		COM
 		AD	FIVE
 		EXTEND
 		BZMF	+3		# SET GAMDOT=+0 AS TAG IF TOO SMALL.
-
+		
 NOGAMDOT	CA	ZERO		# COME HERE INHINTED.
 		TS	GAMDOT
-					# FOR NOW LEAVE IN 2S.C
+					# FOR NOW LEAVE IN 2S,C
 					# UPDATE ANGLES BY CORRECTING EUILER ANG
 					# FOR ACCRUED INCREMENT SINCE PIPUP
-					# R = R EUIL + R(NOW) -R(PIPUP)
+					# R = R EUIL + R(NOW) - R(PIPUP)
 		CS	MPAC		# GET (R EUL/180) /2
 		DOUBLE			# POSSIBLE OVERFLOW
 		TC	CORANGOV	# CORRECT FOR OVFL IF ANY
@@ -237,9 +241,9 @@ NOGAMDOT	CA	ZERO		# COME HERE INHINTED.
 		SU	ROLL/PIP	# GET INCR SINCE PIPUP
 		AD	ROLL/180	# ONLY SINGLE OVFL POSSIBLE.
 		TC	CORANGOV	# CORRECT FOR OVFL IF ANY
-# Page 888
+## Page 888
 		TS	TEMPROLL
-
+		
 		CS	MPAC +2		# GET (ALFA EUL/180) /2
 		DOUBLE			# SAME AS FOR ROLL.  NEEDED FOR EXT ATM DAP
 		TC	CORANGOV	# CORRECT FOR OVFL IF ANY
@@ -248,54 +252,55 @@ NOGAMDOT	CA	ZERO		# COME HERE INHINTED.
 		AD	ALFA/180
 		TC	CORANGOV	# CORRECT FOR OVFL IF ANY
 		TS	TEMPALFA
-
+		
 		CS	MPAC +1		# GET (BETA EUL/180) /2
 CMTR2		DOUBLE
 		EXTEND
 		SU	BETA/PIP
 		AD	BETA/180
 		XCH	TEMPBETA	# OVFL NOT EXPECTED.
-
+		
 		CA	EBANK3
 		TS	EBANK
-
+		
 		EBANK=	PHSNAME5
 		EXTEND
 		DCA	REPOSADR	# THIS ASSUMES THAT THE		TC  PHASCHNG
 		DXCH	PHSNAME5	# IS NOT CHANGED IN		OCT 10035
 					# SERVICER.
-
+					
 		CA	EBAOG
 		TS	EBANK
-
+		
 		EBANK=	AOG
 REDOPOSE	EXTEND			# RE-STARTS COME HERE
 		DCA	TEMPROLL
 		DXCH	ROLL/180
 		CA	TEMPBETA
 		TS	BETA/180
-
+		
 		RELINT
-
+		
 		TC	INTPRET		# CANT TC DANZIG AFTER PHASCHNG.
 CM/POSE3	VLOAD	ABVAL		# RETURN FROM CM/ATUP.	(RESTART)
 			VN		# 2(-7) M/CS
 		STORE	VMAGI		# FOR DISPLAY ON CALL.
-
+		
 		GOTO
 			POSEXIT		# ENDEXIT, STARTENT, OR SCALEPOP.
-
+			
 CORANGOV	TS	L
 		TC	Q
 		INDEX	A
-# Page 889
+## Page 889
 		CA	LIMITS
 		ADS	L
 		TC	Q		# COSTS 2 MCT TO USE.  SEE ANGOVCOR.
-
+		
 -KVSCALE	2DEC	-.81491944	# -12800/(2 VS .3048)
 
 TCDU		DEC	.1		# TCDU = .1 SEC.
 
 		EBANK=	AOG
 REPOSADR	2CADR	REDOPOSE
+

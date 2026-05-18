@@ -2,6 +2,12 @@ build/
 filesystem/
 apollo64.z64
 tools/bin2rope
+tests/host_smoke
+
+# yaYUL assembly outputs (regeneratable from .agc)
+agc-software/**/MAIN.agc.bin
+agc-software/**/MAIN.agc.symtab
+agc-software/**/MAIN.agc.lst
 
 # Upstream-leftover ignores
 yaYUL.exe

@@ -1,44 +1,50 @@
-# Copyright:	Public domain.
-# Filename:	THROTTLE_CONTROL_ROUTINES.agc
-# Purpose: 	Part of the source code for Luminary 1A build 099.
-#		It is part of the source code for the Lunar Module's (LM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	HARTMUTH GUTSCHE <hgutsche@xplornet.com>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	793-797
-# Mod history:	2009-05-20 HG	Transcribed from page images.
-#
-# This source code has been transcribed or otherwise adapted from
-# digitized images of a hardcopy from the MIT Museum.  The digitization
-# was performed by Paul Fjeld, and arranged for by Deborah Douglas of
-# the Museum.  Many thanks to both.  The images (with suitable reduction
-# in storage size and consequent reduction in image quality as well) are
-# available online at www.ibiblio.org/apollo.  If for some reason you
-# find that the images are illegible, contact me at info@sandroid.org
-# about getting access to the (much) higher-quality images which Paul
-# actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#	Assemble revision 001 of AGC program LMY99 by NASA 2021112-061
-#	16:27 JULY 14, 1969
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	THROTTLE_CONTROL_ROUTINES.agc
+## Purpose: 	Part of the source code for Luminary 1A build 099.
+##		It is part of the source code for the Lunar Module's (LM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	HARTMUTH GUTSCHE <hgutsche@xplornet.com>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	793-797
+## Mod history:	2009-05-20 HG	Transcribed from page images.
+##		2010-12-31 JL	Fixed page number comments.
+##		2016-12-16 RSB	Proofed text comments with octopus/ProoferComments
+##				and corrected the errors found.
+##		2017-03-16 RSB	Comment-text fixes identified in 5-way
+##				side-by-side diff of Luminary 69/99/116/131/210.
 
-# Page 793
+## This source code has been transcribed or otherwise adapted from
+## digitized images of a hardcopy from the MIT Museum.  The digitization
+## was performed by Paul Fjeld, and arranged for by Deborah Douglas of
+## the Museum.  Many thanks to both.  The images (with suitable reduction
+## in storage size and consequent reduction in image quality as well) are
+## available online at www.ibiblio.org/apollo.  If for some reason you
+## find that the images are illegible, contact me at info@sandroid.org
+## about getting access to the (much) higher-quality images which Paul
+## actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##	Assemble revision 001 of AGC program LMY99 by NASA 2021112-61
+##	16:27 JULY 14, 1969 
+
+## Page 793
 		BANK	31
 		SETLOC	FTHROT
 		BANK
 		EBANK=	PIF
 		COUNT*	$$/THROT
 
-# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 # HERE FC, DESIRED THRUST, AND FP, PRESENT THRUST, UNWEIGHTED, ARE COMPUTED.
 
 THROTTLE	CA	ABDELV		# COMPUTE PRESENT ACCELERATION IN UNITS OF
 		EXTEND			# 2(-4) M/CS/CS, SAVING SERVICER TROUBLE
 		MP	/AF/CNST
  +3		EXTEND
- 		QXCH	RTNHOLD
+		QXCH	RTNHOLD
 AFDUMP		TC	MASSMULT
 		DXCH	FP		# FP = PRESENT THRUST
 		EXTEND
@@ -50,7 +56,7 @@ AFDUMP		TC	MASSMULT
 # IF IT HAS BEEN LESS THAN 3 SECONDS SINCE THE LAST THROTTLING, AUGMENT FP USING THE FWEIGHT CALCULATED THEN.
 
 		CS	TTHROT		# THIS CODING ASSUMES A FLATOUT WITHIN
-		AD	TIME1		#   80 SECONDS BEFORE FIRST THROTTLE CALL
+		AD	TIME1		# 	80 SECONDS BEFORE FIRST THROTTLE CALL
 		MASK	POSMAX
 		COM
 		AD	3SECS
@@ -60,13 +66,13 @@ AFDUMP		TC	MASSMULT
 		DCA	FWEIGHT
 		DAS	FP
 
-# THIS LOGIC DETERMINES THE THROTTLING IN THE REGION 10% - 94%.  THE MANUAL THROTTLE, NOMINALLY SET AT
+#     THIS LOGIC DETERMINES THE THROTTLING IN THE REGION 10% - 94%.  THE MANUAL THROTTLE, NOMINALLY SET AT
 # MINIMUM BY ASTRONAUT OR MISSION CONTROL PROGRAMS, PROVIDES THE LOWER BOUND.  A STOP IN THE THROTTLE HARDWARE
 # PROVIDES THE UPPER.
 
 WHERETO		CA	EBANK5		# INITIALIZE L*WCR*T AND H*GHCR*T FROM
-		TS	EBANK		#   PAD LOADED ERASABLES IN W-MATRIX
-# Page 794
+		TS	EBANK		# 	PAD LOADED ERASABLES IN W-MATRIX
+## Page 794
 		EBANK=	LOWCRIT
 		EXTEND
 		DCA	LOWCRIT
@@ -104,8 +110,8 @@ FLATOUT2	TS	PIFPSET
 # NOTE 1	FC IS SET EQUAL TO FP SO PIF WILL BE ZERO.  THIS IS DESIRABLE
 #		AS THERE IS ACTUALLY NO THROTTLE CHANGE.
 #
-# NOTE 2	HERE, SINCE WE ARE ABOUT TO RETURN TO THE THROTTLEABLE REGION
-#		(BELOW 55%) THE QUANTITY -(FMAXODD - FP) IS COMPUTED AND PUT
+# NOTE2		HERE, SINCE WE ARE ABOUT TO RETURN TO THE THROTTLEABLE REGION
+#		(BELOW 55%) THE QUANTITY -(FMAXODD-FP) IS COMPUTED AND PUT
 #		INTO PIFPSET TO COMPENSATE FOR THE DIFFERENCE BETWEEN THE
 #		NUMBER OF BITS CORRESPONDING TO FULL THROTTLE (FMAXODD) AND THE
 #		NUMBER CORRESPONDING TO ACTUAL THRUST (FP).  THUS THE TOTAL
@@ -117,7 +123,7 @@ DOPIF		TC	FASTCHNG
 		TS	FCOLD
 		DXCH	PIF
 		EXTEND
-# Page 795
+## Page 795
 		DCS	FP
 		DAS	PIF		# PIF = FC - FP, NEVER EQUALS +0
 
@@ -158,7 +164,7 @@ DOIT		CA	PIF
 
 FWCOMP		CAF	2SECS
  +1		TS	Q
- 		EXTEND
+		EXTEND
 		MP	BIT6
 		LXCH	BUF +1
 		CS	BUF		# TIME OF LAST PIPA READING.
@@ -167,7 +173,7 @@ FWCOMP		CAF	2SECS
 		MASK	LOW8		# MAKE SURE SMALL AND POSITIVE
 		ZL
 		EXTEND
-# Page 796
+## Page 796
 		DV	Q
 		EXTEND
 		MP	PIF
@@ -204,7 +210,7 @@ MASSMULT	EXTEND
 		DXCH	MPAC
 		TC	DMP
 		ADRES	MASS
-		TC	DMP		# LEAVES PROPERLY SCALED FORCE IN MPAC
+		TC	DMP		# LEAVES PROPERLY SCALED FORCE IM MPAC
 		ADRES	SCALEFAC
 		TC	TPAGREE
 		CA	MPAC
@@ -214,11 +220,11 @@ MASSMULT	EXTEND
 		TC	BUF
 		DXCH	MPAC +1
 		TC	BUF
-# Page 797
+## Page 797
 # CONSTANTS:-
 
-FEXTRA		=	BIT13		# FEXT +5.13309020E+ 4
+FEXTRA		=	BIT13		# FEXT +5.13309020 E+4
 
 /AF/CNST	DEC	.13107
 
-# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

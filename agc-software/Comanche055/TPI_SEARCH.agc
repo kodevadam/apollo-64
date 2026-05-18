@@ -1,56 +1,64 @@
-# Copyright:	Public domain.
-# Filename:	TPI_SEARCH.agc
-# Purpose:	Part of the source code for Colossus 2A, AKA Comanche 055.
-#		It is part of the source code for the Command Module's (CM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	Ron Burkey <info@sandroid.org>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	551-561
-# Mod history:	2009-05-15 RSB	Adapted from the Colossus249/ file of the
-#				same name, using Comanche055 page images.
-#		2009-05-20 RSB	Corrections:  On p. 551, "SETLOC P17S" -> P17S1.
-#
-# This source code has been transcribed or otherwise adapted from digitized
-# images of a hardcopy from the MIT Museum.  The digitization was performed
-# by Paul Fjeld, and arranged for by Deborah Douglas of the Museum.  Many
-# thanks to both.  The images (with suitable reduction in storage size and
-# consequent reduction in image quality as well) are available online at
-# www.ibiblio.org/apollo.  If for some reason you find that the images are
-# illegible, contact me at info@sandroid.org about getting access to the
-# (much) higher-quality images which Paul actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#	Assemble revision 055 of AGC program Comanche by NASA
-#	2021113-051.  10:28 APR. 1, 1969
-#
-#	This AGC program shall also be referred to as
-#			Colossus 2A
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	TPI_SEARCH.agc
+## Purpose:	Part of the source code for Colossus 2A, AKA Comanche 055.
+##		It is part of the source code for the Command Module's (CM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	Ron Burkey <info@sandroid.org>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	551-561
+## Mod history:	2009-05-15 RSB	Adapted from the Colossus249/ file of the
+##				same name, using Comanche055 page images.
+##		2009-05-20 RSB	Corrections:  On p. 551, "SETLOC P17S" -> P17S1.
+##		2016-12-10 RSB	All of the GOTOPOOH's should have been
+##				GOTOPOOH, and I've changed them back.
+##		2016-12-10 RSB	Proofed comments with octopus/ProoferComments
+##				and fixed the errors found.
+##		2017-01-20 RSB	Fixed comment-text errors noted while diff'ing
+##				vs Colossus 249.
+##
+## This source code has been transcribed or otherwise adapted from digitized
+## images of a hardcopy from the MIT Museum.  The digitization was performed
+## by Paul Fjeld, and arranged for by Deborah Douglas of the Museum.  Many
+## thanks to both.  The images (with suitable reduction in storage size and
+## consequent reduction in image quality as well) are available online at
+## www.ibiblio.org/apollo.  If for some reason you find that the images are
+## illegible, contact me at info@sandroid.org about getting access to the 
+## (much) higher-quality images which Paul actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##	Assemble revision 055 of AGC program Comanche by NASA
+##	2021113-051.  10:28 APR. 1, 1969  
+##
+##	This AGC program shall also be referred to as
+##			Colossus 2A
 
-# Page 551
-# TPI SEARCH
-
+## Page 551
 # PROGRAM DESCRIPTION S17.1 AND S17.2
-
+#
 # FUNCTIONAL DESCRIPTION
-
-# 	THE TPI SEARCH ROUTINE DETERMINES THE MINIMUM TOTAL VELOCITY TRANSFER TRAJECTORY FROM A GIVEN TPI
+#
+# THE TPI SEARCH ROUTINE DETERMINES THE MINIMUM TOTAL VELOCITY TRANSFER TRAJECTORY FROM A GIVEN TPI
 # MANEUVER TIME WITHIN THE CONSTRAINT OF A SAFE PERICENTER.  THIS VELOCITY IS THE SUM OF THE IMPULSIVE VELOCITIES
 # FOR THE TPI AND TPF MANEUVERS.
-# 	THE S17.1 ROUTINE EXTRAPOLATES THE STATE VECTORS OF BOTH VEHICLES TO THE TPI TIME AND COMPUTES THE
-# RELATIVE PHASE ANGLE BETWEEN THE VEHICLES, THE ALTITUDE DIFFERENCE(I.E. THE MAGNITUDE DIFFERENCE OF THE
+#
+# THE S17.1 ROUTINE EXTRAPOLATES THE STATE VECTORS OF BOTH VEHICLES TO THE TPI TIME AND COMPUTES THE
+# RELATIVE PHASE ANGLE BETWEEN THE VEHICLES, THE ALTITUDE DIFFERENCE (I.E. THE MAGNITUDE DIFFERENCE OF THE 
 # POSITION VECTORS) AND SELECTS A SEARCH SECTOR BASED ON THE SIGN OF THE ALTITUDE DIFFERENCE.
-# 	THE S17.2 ROUTINE FURTHER DEFINES THE SEARCH SECTOR BY COMPUTING ANGULAR LIMITS AND USES THE TIME THETA
+#
+# THE S17.2 ROUTINE FURTHER DEFINES THE SEARCH SECTOR BY COMPUTING ANGULAR LIMITS AND USES THE TIME THETA
 # SUBROUTINE TO COMPUTE THE SEARCH START AND END TIMES.  THE SEARCH IS THEN MADE IN AN ITERATIVE LOOP USING THE
 # LAMBERT SUBROUTINE TO COMPUTE THE VELOCITIES REQUIRED AT TPI TIME AND AT TPF TIME.  EXIT FROM THE SEARCH LOOP
 # IS MADE WHEN SOLUTION CRITERIA ARE MET (NORMAL EXIT) OR AS SOON AS IT IS EVIDENT THAT NO SOLUTION EXISTS IN
 # THE SECTOR SEARCHED.
-
+#
 # CALLING SEQUENCE
-
+#
 # 	BOTH ROUTINES ARE CALLED IN INTERPRETIVE CODE AND RETURN VIA QPRET.  S17.1 HAS ONLY A NORMAL EXIT.
-# S17.2 RETURNS VIA QPRET FOR NORMAL EXIT AND TO ALARUMS FOR ERROR EXIT.
+#	S17.2 RETURNS VIA QPRET FOR NORMAL EXIT AND TO ALARUMS FOR ERROR EXIT.
+#
 # SUBROUTINES CALLED
 #
 #	CSMCONIC
@@ -61,16 +69,16 @@
 		BANK	36
 		SETLOC	P17S1
 		BANK
-
+		
 		COUNT	36/TPI
-
+		
 		EBANK=	RACT3
-
-# 	**** TEMPORARY ****
+		
+# **** TEMPORARY ****
 
 HPE		2DEC	157420.0 B-29		# EARTH'S MIN. PERICENTER ALTITUDE 85 N.M.
 
-HPL		2DEC	10668.0213 B-29		# MOON:S MIN. PERICENTER ALTITUDE 35000FT
+HPL		2DEC	10668.0213 B-29		# MOON:S MIN. PERICENTER ALTITUDE 35000 FT
 
 CDSEC		2DEC	40000
 
@@ -80,7 +88,7 @@ PIINVERS	2DEC	.3183098862
 
 SEC1THET	2DEC	.1944444444
 
-# Page 552
+## Page 552
 SEC2THET	2DEC	.9166666667
 
 MANYFEET	2DEC	-1.0 B-2
@@ -131,7 +139,7 @@ S17.1		STQ	DLOAD
 		SL1 	ACOS
 		PDVL
 		VXV	DOT
-# Page 553
+## Page 553		
 			RACT3
 			E2
 		PDDL	SIGN
@@ -151,7 +159,7 @@ S17.2		STQ	VLOAD			# COMPUTE SEARCH SECTOR LIMITS
 		BON	DCOMP			# GIVES CORRECT SINE, COSINE MUST BE
 			KFLAG			# COMP. ADD .5 FOR ANGLE
 			+1
-# PHI(0)=180-(-(THETAZERO +K5IT)), PHI(I)=180-(-THETAZERO+K2IT))
+# PHI(0)=180-(-(THETAZERO +K5IT)), PHI(I)=180-(-(THETAZERO+K2IT))
 # SIN(180-ALPHA)=SIN(ALPHA) ETC
 		DMP	SETPD
 			PIINVERS		# REVOLUTIONARY HERES TWO IT
@@ -182,7 +190,7 @@ S17.2		STQ	VLOAD			# COMPUTE SEARCH SECTOR LIMITS
 			TIMETHET
 		DLOAD				# SAVE START TIME AND GET END TIME
 			T
-# Page 554
+## Page 554			
 		STORE	TF
 		STODL	TFO
 			IT
@@ -194,7 +202,7 @@ S17.2		STQ	VLOAD			# COMPUTE SEARCH SECTOR LIMITS
 		STORE	CSTH
 		LXA,1	CALL
 			XRS
-			TIMETHET
+			TIMETHET	
 # INITIALIZE LOOP
 		DLOAD	CLEAR
 			T
@@ -233,7 +241,7 @@ CONCAUL		DLOAD
 			TTPI
 		DAD	BON
 			TF
-# Page 555
+## Page 555
 			AVFLAG
 			ADVCSM
 		STCALL	TDEC1
@@ -284,7 +292,7 @@ JUNCT3		VLOAD
 			XRS
 		STOVL	X1
 			VIPRIME
-# Page 556
+## Page 556			
 		VSR*
 			0,2
 		STOVL	VVEC
@@ -298,7 +306,7 @@ JUNCT3		VLOAD
 		SL*
 			0,2
 		STORE	HP
-# ITSWICH DENOTES INTERPOLATION--SOLUTION ACCEPTANCE IS FORCED
+# ITSWICH DENOTES INTERPOLATION -- SOLUTION ACCEPTANCE IS FORCED
 		BON	DLOAD
 			ITSWICH
 			ENDEN
@@ -312,7 +320,7 @@ JUNCT3		VLOAD
 		BMN	DSU			# (HPLIM-HPO)-(HPLIM-HP)=HP-HPO
 			INTERP			# SOLUTION AT HAND
 		BMN	DLOAD
-			ALARUMS			# IT'S GETTING WORSE - SOUND THE ALARM
+			ALARUMS			# ITS GETTING WORSE - SOUND THE ALARM
 			CDSEC
 JUNCT1		BOFF	DCOMP			# OFF IS PLUS ON IS MINUS
 			KFLAG
@@ -335,7 +343,7 @@ INTERP		SET	DSU			# HP-HPO
 			X2
 		XSU,2	DDV
 			X1
-# Page 557
+## Page 557			
 		DMP	SR*
 			DELTEE
 			0 	-1,2
@@ -366,7 +374,7 @@ LRGRDVO		DLOAD
 			CLSEC
 		GOTO
 			JUNCT1
-# TIME RAN OUT ASSUME SOLUTION IF SAVE PERICENTER
+# TIME RAN OUT ASSUME SOLUTION IF SAFE PERICENTER
 RNGETEST	DLOAD	DSU
 			HP
 			HPERMIN
@@ -383,10 +391,10 @@ ENDEN		VLOAD
 			RELDELV
 		SIGN	STADR			# NOW SIGN(RELDELV)=SIGN(SG2)
 		STCALL	RELDELV
-			TRANSANG		# COMPUTE OMEGA T , CENTRAL ANGLE
+			TRANSANG		# COMPUTE OMEGA T, CENTRAL ANGLE
 		VLOAD	DOT
 			RACT3
-# Page 558
+## Page 558
 			VIPRIME			# SG1
 		SIGN	BPL			# IF POSITIVE THEN SG1 = SG2 OTHERWISE
 			RELDELV
@@ -402,7 +410,7 @@ USEKAY		SLOAD	BON
 			DECTWO
 			KFLAG
 			NEXUS
-		DSU
+		DSU	
 			P21ONENN
 NEXUS		STODL	NN1
 			HP
@@ -412,9 +420,10 @@ NEXUS		STODL	NN1
 		SETLOC	XANG
 		BANK
 		COUNT	07/XANG
-
+		
 # CENTRAL ANGLE SUBROUTINE
-# 	THIS SUBROUTINE COMPUTES THE CENTRAL ANGLE OF TRAVEL OF THE
+#
+# THIS SUBROUTINE COMPUTES THE CENTRAL ANGLE OF TRAVEL OF THE
 # PASSIVE VEHICLE DURING THE TRANSFER.
 
 TRANSANG	STQ	SETPD
@@ -431,22 +440,22 @@ TRANSANG	STQ	SETPD
 		PDVL	VSR*			# SQRT MU (+18 OR +15)			00D
 			RPASS4
 			0,2
-		ABVAL	PDDL*			# MAGNITUDE OF R (+29 OR +27)		02D
+		ABVAL	PDDL*			# MAGNITUDE OF R 	(+29 OR +27)	02D
 			MUTABLE,1
-		PDVL	VSQ			# 1/MU (+34 OR +28)			04D
+		PDVL	VSQ			# 1/MU 			(+34 OR +28)	04D
 			VVEC
 		NORM	DMPR			# PUSH LIST AT 02D
 			X1
-# Page 559
+## Page 559
 		DMP	SRR*
 			02D
 			0 	-3,1
-		BDSU				# R V**/MU (+6)
+		BDSU				# R V**/MU 		(+6)
 			D1/32
 		NORM	PDDL
 			X1			# (2 - R V**/MU) 	(+6-N)
 		SR1R	DDV			# MAGNITUDE OF R 	(+30 OR +28)
-		SL*	PUSH			# R/(2 - R V**/MU)	(+29 OR +27)02D
+		SL*	PUSH			# R/(2 - R V**/MU)	(+29 OR +27)	02D
 			0 	-5,1
 		SR1	SQRT
 		DMP
@@ -468,12 +477,12 @@ TRANSANG	STQ	SETPD
 		SETLOC	P17S1
 		BANK
 		COUNT	35/P17
+		
+# TPI SEARCH DISPLAY ROUTINE
 
-# TPI SEARCH DISPLAY ROUTNE
-
-P17		TC	AVFLAGA			# AVFLAG = CSM , SET TRACK + UPDATE FLAGS
+P17		TC	AVFLAGA			# AVFLAG = CSM, SET TRACK + UPDATE FLAGS
 		TC	P17.1
-P77		TC	AVFLAGP			# AVFLAG = LEM , SET TRACK + UPDATE FLAGS
+P77		TC	AVFLAGP			# AVFLAG = LEM, SET TRACK + UPDATE FLAGS
 P17.1		TC	P20FLGON		#	SET UPDATE FLAG
 		CAF	V06N37			#	DISPLAY TTPI TIME
 		TC	VNPOOH
@@ -483,15 +492,15 @@ P17.1		TC	P20FLGON		#	SET UPDATE FLAG
 			S17.1			# UPDATE STATE VECTORS TO TTPI
 		SET	AXT,1
 			UPDATFLG
-		DEC	2			# DELTA H = 2	K POSITIVE , KFLAG OFF
+		DEC	2			# DELTA H = 2 K POSITIVE, KFLAG OFF
 		BOFF	AXT,1
 			KFLAG
 			+2
-		DEC	1			# DELTA H = 1	K NEGATIVE , KFLAG ON
-# Page 560
+		DEC	1			# DELTA H = 1 K NEGATIVE, KFLAG ON
+## Page 560
 		SXA,1	EXIT
 			OPTION2
-		CAF	V06N72			# DISPLAY PHI , DELTA H , SEARCH OPTION K
+		CAF	V06N72			# DISPLAY PHI, DELTA H, SEARCH OPTION K
 		TC	VNCOMP17
 		TC	INTPRET
 		CLEAR	SET
@@ -515,9 +524,9 @@ P17.2		STCALL	HPERMIN
 			S17.2
 		SET	EXIT
 			UPDATFLG
-P17.3		CAF	V06N58			# DISPLAY DELTA VTPI , DELTA VTPF , AND H
+P17.3		CAF	V06N58			# DISPLAY DELTA VTPI, DELTA VTPF, AND H
 		TC	VNCOMP17
-		CAF	V06N55			# DISPLAY PERICENTER CODE AND CENTRAL ANG.
+		CAF	V06N55			# DISPLAY PERICENTER CODE AND CENTRAL ANG,
 		TC	BANKCALL
 		CADR	GOFLASHR
 		TC	GOTOPOOH		# TERMINATE PROGRAM
@@ -527,7 +536,7 @@ P17.3		CAF	V06N58			# DISPLAY DELTA VTPI , DELTA VTPF , AND H
 		TC	BLANKET
 		TCF	ENDOFJOB
 		EBANK=	RTRN
-
+		
 VNCOMP17	EXTEND
 		QXCH	QSAVED
 		TS	VERBNOUN
@@ -539,14 +548,15 @@ VNCOMP17	EXTEND
 		CS	MPAC			# RECYCLE WITH NEW TPI TIME
 		AD	BIT6			# OR PROCEED WITH NEW SEARCH OPTION
 		EXTEND
-# Page 561
+## Page 561		
 		BZF	P17.1
 		TC	VNCOMP17 +3
 ALARUMS		SET	EXIT
 			UPDATFLG
 		TC	ALARM
-		OCT	00124			# NO SAFE PERICENTER IN THIS SECTOR
+		OCT	00124			# NO SAFE PERCENTER IN THIS SECTOR
 		CAF	V05N09
 		TC	VNCOMP17
 		TC	GOTOPOOH		# PROCEED ILLEGAL TERMINATE PROGRAM
 V06N72		VN	0672
+

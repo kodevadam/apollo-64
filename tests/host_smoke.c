@@ -1,0 +1,143 @@
+/*
+ * Host-side smoke test for the apollo-64 pipeline.
+ *
+ * Boots the AGC from the embedded CoreRope (src/rope.c) using the same
+ * agc_host_init() code path the N64 build uses, runs the engine for a
+ * configurable number of machine cycles, and dumps:
+ *   - how many channel 010 writes happened
+ *   - the final DSKY panel state, decoded
+ *   - the program counter, time registers, and a few other key bits
+ *
+ * Intent: verify that the engine actually runs real Luminary099 code
+ * without panicking, and that our channel-decode pipeline produces
+ * sensible-looking output (PROG/VERB/NOUN populated with digits, not
+ * gibberish). This is a smoke test, not a correctness test - the AGC
+ * boot sequence depends on peripheral interrupts we haven't wired up
+ * yet, so we'll see it sit in standby/restart loops.
+ *
+ * Build: see tests/Makefile.
+ * Run:   ./tests/host_smoke [cycles]
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "../src/agc_host.h"
+#include "../src/dsky_decode.h"
+#include "../vendor/yaAGC/agc_engine.h"
+
+/* Instrument ChannelOutput to count writes. The real ChannelOutput in
+ * agc_host.c will still fire (we're linking it normally); this just adds
+ * an observation hook via a wrapper symbol. Simplest approach: replace
+ * the engine's call with our own by linker order.
+ *
+ * Actually simpler: just poll g_dsky.generation, which agc_host.c bumps on
+ * every DSKY-relevant write. That's a perfectly good proxy. */
+
+static void
+print_panel(const dsky_panel_t *p)
+{
+  printf("    PROG=%c%c  VERB=%c%c  NOUN=%c%c\n",
+         p->prog[0], p->prog[1], p->verb[0], p->verb[1],
+         p->noun[0], p->noun[1]);
+  printf("    R1=%c%c%c%c%c%c\n", p->s1,
+         p->r1[0], p->r1[1], p->r1[2], p->r1[3], p->r1[4]);
+  printf("    R2=%c%c%c%c%c%c\n", p->s2,
+         p->r2[0], p->r2[1], p->r2[2], p->r2[3], p->r2[4]);
+  printf("    R3=%c%c%c%c%c%c\n", p->s3,
+         p->r3[0], p->r3[1], p->r3[2], p->r3[3], p->r3[4]);
+  printf("    lamps: COMP=%d UPLINK=%d NO_ATT=%d STBY=%d KEY_REL=%d\n",
+         p->comp_acty, p->uplink_acty, p->no_att, p->standby, p->key_rel);
+  printf("           OPR_ERR=%d TEMP=%d RESTART=%d ALARM=%d\n",
+         p->opr_err, p->temp, p->restart, p->prog_alarm);
+}
+
+int
+main(int argc, char **argv)
+{
+  unsigned long cycles = (argc > 1) ? strtoul(argv[1], NULL, 0) : 200000;
+
+  printf("apollo-64 host smoke test\n");
+  printf("=========================\n");
+  printf("Loading CoreRope (%d words) and initialising AGC...\n",
+         AGC_CORE_ROPE_WORDS);
+
+  agc_host_init();
+
+  printf("After init:\n");
+  printf("  Z (PC)        = %06o (expected 04000)\n", g_agc.Erasable[0][RegZ]);
+  printf("  CycleCounter  = %lu\n", (unsigned long)g_agc.CycleCounter);
+  printf("  channel 030   = %06o (expected 037777)\n",
+         (unsigned short)g_agc.InputChannel[030]);
+
+  /* Quick rope sanity check: word at boot vector (bank 2, offset 0). */
+  printf("  Fixed[2][0]   = %06o (boot vector instruction)\n",
+         (unsigned short)g_agc.Fixed[2][0]);
+
+  uint32_t gen0 = g_dsky.generation;
+  printf("\nRunning %lu machine cycles...\n", cycles);
+
+  /* Optional: simulate an RSET press partway through if the user passes a
+   * second arg "rset". Without it the AGC sits in restart forever, which is
+   * the expected behaviour but boring to look at. */
+  bool send_rset = (argc > 2 && strcmp(argv[2], "rset") == 0);
+  unsigned long rset_at = cycles / 2;
+  bool rset_sent = false;
+
+  /* Run in batches so we can show progress for very long runs. */
+  unsigned long batch = (cycles > 50000) ? 50000 : cycles;
+  unsigned long done = 0;
+  while (done < cycles) {
+    unsigned long n = (cycles - done < batch) ? cycles - done : batch;
+    agc_host_tick((uint32_t)n);
+    done += n;
+    if (send_rset && !rset_sent && done >= rset_at) {
+      printf("  *** simulating RSET keypress @ cycle %lu\n", done);
+      agc_host_press_key(022);  /* DSKY_KEY_RSET */
+      rset_sent = true;
+    }
+    printf("  ... %lu / %lu cycles, gen=%u, Z=%06o, T1=%06o, RESTART=%u\n",
+           done, cycles,
+           g_dsky.generation,
+           g_agc.Erasable[0][RegZ],
+           (unsigned short)g_agc.Erasable[0][RegTIME1],
+           g_agc.RestartLight);
+  }
+
+  printf("\nFinal state:\n");
+  printf("  CycleCounter      = %lu\n", (unsigned long)g_agc.CycleCounter);
+  printf("  Z (PC)            = %06o\n", g_agc.Erasable[0][RegZ]);
+  printf("  TIME1             = %06o\n", (unsigned short)g_agc.Erasable[0][RegTIME1]);
+  printf("  TIME2             = %06o\n", (unsigned short)g_agc.Erasable[0][RegTIME2]);
+  printf("  DSKY generations  = %u  (delta %u)\n",
+         g_dsky.generation, g_dsky.generation - gen0);
+  printf("  channel 011       = %06o\n", (unsigned short)g_dsky.channel11);
+  printf("  channel 0163      = %06o\n", (unsigned short)g_dsky.channel163);
+  printf("  AllowInterrupt    = %u\n", g_agc.AllowInterrupt);
+  printf("  Standby           = %u\n", g_agc.Standby);
+  printf("  RestartLight      = %u\n", g_agc.RestartLight);
+
+  printf("\nRaw channel 010 latches (relay rows 1..15):\n");
+  for (int i = 1; i < 16; i++)
+    printf("  row %2d: %06o\n", i, (unsigned short)g_dsky.latch[i]);
+
+  printf("\nDecoded DSKY panel:\n");
+  dsky_panel_t panel;
+  dsky_decode_panel(&g_dsky, &panel);
+  print_panel(&panel);
+
+  /* Pass/fail heuristics: */
+  int ok = 1;
+  if (g_agc.CycleCounter == 0) {
+    printf("\nFAIL: engine never advanced its cycle counter.\n");
+    ok = 0;
+  }
+  if (g_dsky.generation == gen0) {
+    printf("\nWARN: AGC didn't touch the DSKY in %lu cycles. May be normal if it\n"
+           "      never exited standby (PIPA/CDU counters aren't wired up).\n",
+           cycles);
+  }
+
+  return ok ? 0 : 1;
+}

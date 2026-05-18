@@ -1,33 +1,40 @@
-# Copyright:	Public domain.
-# Filename:	MEASUREMENT_INCORPORATION.agc
-# Purpose:	Part of the source code for Colossus 2A, AKA Comanche 055.
-#		It is part of the source code for the Command Module's (CM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	Ron Burkey <info@sandroid.org>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	1252-1261
-# Mod history:	2009-05-14 RSB	Adapted from the Colossus249/ file of the
-#				same name, using Comanche055 page images.
-#
-# This source code has been transcribed or otherwise adapted from digitized
-# images of a hardcopy from the MIT Museum.  The digitization was performed
-# by Paul Fjeld, and arranged for by Deborah Douglas of the Museum.  Many
-# thanks to both.  The images (with suitable reduction in storage size and
-# consequent reduction in image quality as well) are available online at
-# www.ibiblio.org/apollo.  If for some reason you find that the images are
-# illegible, contact me at info@sandroid.org about getting access to the
-# (much) higher-quality images which Paul actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#	Assemble revision 055 of AGC program Comanche by NASA
-#	2021113-051.  10:28 APR. 1, 1969
-#
-#	This AGC program shall also be referred to as
-#			Colossus 2A
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	MEASUREMENT_INCORPORATION.agc
+## Purpose:	Part of the source code for Colossus 2A, AKA Comanche 055.
+##		It is part of the source code for the Command Module's (CM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	Ron Burkey <info@sandroid.org>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	1252-1261
+## Mod history:	2009-05-14 RSB	Adapted from the Colossus249/ file of the
+##				same name, using Comanche055 page images.
+##		2010-08-24 JL	Fixed some indentation.
+##		2016-12-21 RSB	Proofed comment text using octopus/ProoferComments
+##				and corrected the errors found.
+##		2017-01-15 RSB	Fixed comment-text errors identified in 
+##				diff'ing against Colossus 249.
+##		2021-05-30 ABS	ZEROD -> ZEROO
+##
+## This source code has been transcribed or otherwise adapted from digitized
+## images of a hardcopy from the MIT Museum.  The digitization was performed
+## by Paul Fjeld, and arranged for by Deborah Douglas of the Museum.  Many
+## thanks to both.  The images (with suitable reduction in storage size and
+## consequent reduction in image quality as well) are available online at
+## www.ibiblio.org/apollo.  If for some reason you find that the images are
+## illegible, contact me at info@sandroid.org about getting access to the 
+## (much) higher-quality images which Paul actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##	Assemble revision 055 of AGC program Comanche by NASA
+##	2021113-051.  10:28 APR. 1, 1969  
+##
+##	This AGC program shall also be referred to as
+##			Colossus 2A
 
-# Page 1252
+## Page 1252
 #  INCORP1--PERFORMS THE SIX DIMENSIONAL STATE VECTOR DEVIATION FOR POSITI
 # ON AND VELOCITY OR THE NINE DIMENSIONAL DEVIATION OF POSITION,VELOCITY,A
 # ND RADAR OR LANDMARK BIAS.THE OUTPUT OF THE BVECTOR ROUTINE ALONG WITH T
@@ -35,24 +42,25 @@
 # TION IS OBTAINED BY COMPUTING AN ESTIMATED TRACKING MEASUREMENT FROM THE
 # CURRENT STATE VECTOR AND COMPARING IT WITH AN ACTUAL TRACKING MEASUREMEN
 # T AND APPLYING A STATISTICAL WEIGHTING VECTOR.
+#
 # INPUT
-#   DMENFLG = 0 6DIMENSIONAL BVECTOR  1= 9DIMENSIONAL
-#          W = ERROR TRANSITION MATRIX 6X6 OR 9X9
-#   VARIANCE = VARIANCE (SCALAR)
-#     DELTAQ = MEASURED DEVIATION(SCALAR)
-#    BVECTOR = 6 OR 9 DIMENSIONAL BVECTOR
+#	 DMENFLG = 0 6DIMENSIONAL BVECTOR  1= 9DIMENSIONAL
+#	       W = ERROR TRANSITION MATRIX 6X6 OR 9X9
+#	VARIANCE = VARIANCE (SCALAR)
+#	  DELTAQ = MEASURED DEVIATION (SCALAR)
+#	 BVECTOR = 6 OR 9 DIMENSIONAL BVECTOR
 #
 # OUTPUT
-#      DELTAX = STATE VECTOR DEVIATIONS 6 OR 9 DIMENSIONAL
-#	   ZI = VECTOR USED FOR THE INCORPORATION 6 OR 9 DIMENSIONAL
-#     GAMMA = SCALAR
-#     OMEGA = OMEGA WEIGHTING VECTOR 6 OR 9 DIMENSIONAL
+#	  DELTAX = STATE VECTOR DEVIATIONS 6 OR 9 DIMENSIONAL
+#	      ZI = VECTOR USED FOR THE INCORPORATION 6 OR 9 DIMENSIONAL
+#	   GAMMA = SCALAR
+#	   OMEGA = OMEGA WEIGHTING VECTOR 6 OR 9 DIMENTIONAL
 #
 # CALLING SEQUENCE
-#    L  CALL INCORP1
+#	L	CALL 	INCORP1
 #
 # NORMAL EXIT
-#    L+1 OF CALLING SEQUENCE
+#	L+1 OF CALLING SEQUENCE
 
 		BANK	37
 		SETLOC	MEASINC
@@ -74,11 +82,11 @@ INCORP1		STQ
 			6		# IX2 = 18	S2=6
 Z123		VLOAD	MXV*
 			BVECTOR		# BVECTOR (0)
-			W +54D,1
-		STORE	ZI +18D,2
+			W 	+54D,1
+		STORE	ZI 	+18D,2
 		VLOAD
 			BVECTOR +6	# BVECTOR (1)
-# Page 1253
+## Page 1253
 		MXV*	VAD*
 			W +108D,1
 			ZI +18D,2
@@ -86,9 +94,9 @@ Z123		VLOAD	MXV*
 		VLOAD
 			BVECTOR +12D	# BVECTOR (2)
 		MXV*	VAD*
-			W +162D,1
-			ZI +18D,2	# B(0)*W+B(1)*(W+54)+B(2)*(W+108)FIRST PAS
-		STORE	ZI +18D,2	# ZI THEN Z2 THEN Z3
+			W 	+162D,1
+			ZI 	+18D,2	# B(0)*W+B(1)*(W+54)+B(2)*(W+108) FIRST PAS
+		STORE	ZI 	+18D,2	# ZI THEN Z2 THEN Z3
 		TIX,1
 			INCOR1
 INCOR1		TIX,2	BON
@@ -97,18 +105,18 @@ INCOR1		TIX,2	BON
 			INCOR1A
 		VLOAD
 			ZEROVECS
-		STORE	ZI +12D
+		STORE	ZI 	+12D
 INCOR1A		SETPD	VLOAD
 			0
 			ZI
 		VSQ	RTB
 			TPMODE
 		PDVL	VSQ
-			ZI +6
+			ZI 	+6
 		RTB	TAD
 			TPMODE
 		PDVL	VSQ
-			ZI +12D
+			ZI 	+12D
 		RTB	TAD
 			TPMODE
 		TAD	AXT,2
@@ -129,7 +137,7 @@ INCOR1B		SL2	BOV
 			INCOR1B
 INCOR1C		TLOAD	ROUND
 			TRIPA
-# Page 1254
+## Page 1254
 		DMP	SQRT
 			TEMPVAR
 		SL*	TAD
@@ -158,74 +166,75 @@ INCOR1C		TLOAD	ROUND
 		DDV	PUSH		# PD 0-1 = DELTAQ/A
 		GOTO
 			NEWZCOMP
-   -3		SSP
+ -3		SSP
 			S2
 			54D
-INCOR2		VLOAD	VXM*		# COMPUT OMEGA1,2,3
+INCOR2		VLOAD	VXM*		# COMPUTE OMEGA1,2,3
 			ZI
-			W +162D,2
+			W 	+162D,2
 		PUSH	VLOAD
-			ZI +6
+			ZI 	+6
 		VXM*	VAD
-			W +180D,2
+			W 	+180D,2
 		PUSH	VLOAD
-			ZI +12D
+			ZI 	+12D
 		VXM*	VAD
-			W +198D,2
-		PUSH	TIX,2		# PD 2-7=OMEGA1,8-13=OMEGA2,14-19=OMEGA3
+			W 	+198D,2
+		PUSH	TIX,2		# PD 2-7=OMEGA1, 8-13=OMEGA2, 14-19=OMEGA3
 			INCOR2
 		VLOAD	STADR
-		STORE	OMEGA +12D
+		STORE	OMEGA 	+12D
 		VLOAD	STADR
-		STORE	OMEGA +6
+		STORE	OMEGA 	+6
 		VLOAD	STADR
 		STORE	OMEGA
-# Page 1255
+## Page 1255
 		BON	VLOAD
 			DMENFLG
 			INCOR2AB
 			ZEROVECS
-		STORE	OMEGA +12D
+		STORE	OMEGA 	+12D
 INCOR2AB	AXT,2	SSP
 			18D
 			S2
 			6
 INCOR3		VLOAD*
-			OMEGA +18D,2
+			OMEGA 	+18D,2
 		VXSC	VSL*
 			0		# DELTAQ/A
 			0,1
-		STORE	DELTAX +18D,2
+		STORE	DELTAX 	+18D,2
 		TIX,2	VLOAD
 			INCOR3
-			DELTAX +6
+			DELTAX 	+6
 		VSL3
-		STORE	DELTAX +6
+		STORE	DELTAX 	+6
 		GOTO
 			EGRESS
 
-# Page 1256
+## Page 1256
 #  INCORP2 -INCORPORATES THE COMPUTED STATE VECTOR DEVIATIONS INTO THE
 # ESTIMATED STATE VECTOR. THE STATE VECTOR UPDATED MAY BE FOR EITHER THE
 # LEM OR THE CSM.DETERMINED BY FLAG VEHUPFLG.(ZERO = LEM) (1 = CSM)
+#
 # INPUT
-#    PERMANENT STATE VECTOR FOR EITHER THE LEM OR CSM
-#    VEHUPFLG = UPDATE VEHICLE C=LEM  1=CSM
-#    W = 	ERROR TRANSITION MATRIX
-#    DELTAX  = 	COMPUTED STATE VECTOR DEVIATIONS
-#    DMENFLG = 	SIZE OF W MATRIX (ZERO=6X6) (1=9X9)
-#    GAMMA   = 	SCALAR FOR INCORPORATION
-#    ZI      = 	VECTOR USED IN INCORPORATION
-#    OMEGA   = 	WEIGHTING VECTOR
+#	PERMANENT STATE VECTOR FOR EITHER THE LEM OR CSM
+#	VEHUPFLG = UPDATE VEHICLE 0=LEM 1=CSM
+#	W = ERROR TRANSITION MATRIX
+#	DELTAX = COMPUTED STATE VECTOR DEVIATIONS
+# 	DMENFLG = SIZE OF W MATRIX (ZERO=6X6) (1=9X9)
+#	GAMMA = SCALAR FOR INCORPORATION
+# 	ZI = VECTOR USED IN INCORPORATION
+#	OMEGA = WEIGHTING VECTOR
 #
 # OUTPUT
-#    UPDATED PERMANENT STATE VECTOR
+#	UPDATED PERMANENT STATE VECTOR
 #
 # CALLING SEQUENCE
-#    L	 CALL INCORP2
+#	L	CALL	INCORP2
 #
 # NORMAL EXIT
-#    L+1 OF CALLING SEQUENCE
+#	L+1 OF CALLING SEQUENCE
 #
 
 		SETLOC	MEASINC1
@@ -236,7 +245,7 @@ INCOR3		VLOAD*
 INCORP2		STQ	CALL
 			EGRESS
 			INTSTALL
-		VLOAD	VXSC		# CALC. GAMMA * OMEGA1,2,3
+		VLOAD	VXSC		# CALC. GAMMA*OMEGA1,2,3
 			OMEGA
 			GAMMA
 		STOVL	OMEGAM1
@@ -256,12 +265,12 @@ INCORP2		STQ	CALL
 		TS	ZIXA		# INITIAL IX 2 SETTING FOR Z COMPONENT
 		TS	ZIXB
 FAZA		TC	PHASCHNG
-# Page 1257
+## Page 1257
 		OCT	04022
 		TC	UPFLAG
 		ADRES	REINTFLG
 FAZA1		CA	WIXB		# START FIRST PHASE OF INCORP2
-		TS	WIXA		#  TO UPDATE 6 OR 9 DIM. W MATRIX IN TEMP
+		TS	WIXA		# TO UPDATE 6 OR 9 DIM. W MATRIX IN TEMP
 		CA	ZIXB
 		TS	ZIXA
 		TC	INTPRET
@@ -307,7 +316,7 @@ FAZA1		CA	WIXB		# START FIRST PHASE OF INCORP2
 		DLOAD*	DCOMP		# CALC LOWER 3X9 PARTITION OF W MATRIX
 			ZI,2
 		NORM	VXSC
-# Page 1258
+## Page 1258
 			S2
 			OMEGAM3
 		XCHX,2	LXC,2
@@ -324,7 +333,7 @@ FAZB		CALL
 			GRP2PC
 		EXIT
 FAZB1		CA	WIXA		# START 2ND PHASE OF INCORP2 TO TRANSFER
-		AD	6DD		#     TEMP REG TO PERM W MATRIX
+		AD	6DD		# 	TEMP REG TO PERM W MATRIX
 		TS	WIXB
 		CA	ZIXA
 		AD	MINUS2
@@ -347,7 +356,7 @@ FAZB1		CA	WIXA		# START 2ND PHASE OF INCORP2 TO TRANSFER
 		STORE	W +162D,1
 FAZB2		TIX,1	GOTO
 			+2
-			FAZC		# DONE WITH W MATRIX. UPDATE STATE VECTOR
+			FAZC		# DONE WITH W MATRIX.  UPDATE STATE VECTOR
 		RTB
 			FAZA
 FAZB5		SLOAD	DAD
@@ -358,10 +367,10 @@ FAZB5		SLOAD	DAD
 			FAZB2
 FAZC		CALL
 			GRP2PC
-# Page 1259
+## Page 1259
 		VLOAD	VAD		# START 3RD PHASE OF INCORP2
 			X789		# 7TH,8TH,9TH,COMPONENT OF STATE VECTOR
-			DELTAX +12D	# INCORPORATION FOR X789
+			DELTAX 	+12D	# INCORPORATION FOR X789
 		STORE	TX789
 		BON	RTB
 			VEHUPFLG
@@ -381,7 +390,7 @@ FAZAB		BOVB	AXT,2
 			TDELTAV
 			FAZAB1
 		STOVL	TDELTAV
-			DELTAX +6	# B5 IF MOON ORBIT, B7 IF EARTH
+			DELTAX 	+6	# B5 IF MOON ORBIT, B7 IF EARTH
 		VSR*	VAD
 			0 -4,2
 			TNUV
@@ -395,7 +404,7 @@ FAZAB1		VLOAD	VAD
 		STORE	RCV
 FAZAB2		VLOAD	VAD
 			VCV
-			DELTAX +6
+			DELTAX 	+6
 		STORE	VCV
 		SXA,2	CALL
 			PBODY
@@ -409,7 +418,7 @@ FAZAB3		CALL
 		CALL
 			SVDWN2		# STORE DOWNLINK STATE VECTOR
 FAZAB4		CALL
-# Page 1260
+## Page 1260
 			GRP2PC		# PHASE CHANGE
 		BOFF	VLOAD
 			DMENFLG
@@ -430,7 +439,7 @@ DOCSM1		RTB	CALL
 			SVDWN1		# STORE DOWNLINK STATE VECTOR
 		GOTO
 			FAZAB4
-ZEROD		=	ZEROVECS
+ZEROO		=	ZEROVECS
 54DD		DEC	54
 6DD		DEC	-6
 12DD		DEC	12
@@ -457,11 +466,12 @@ NEWZCOMP	VLOAD	ABVAL
 		STADR
 		STCALL	NORMZI		# LARGEST ABVAL
 			NEWZCMP1
-
+			
 		SETLOC	MEASINC3
 		BANK
-# Page 1261
-NEWZCMP1		DLOAD	SXA,1
+
+## Page 1261
+NEWZCMP1	DLOAD	SXA,1
 			NORMZI
 			NORMZI		# SAVE X1
 		NORM	INCR,1

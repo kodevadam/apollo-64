@@ -33,7 +33,15 @@ ls $N64_INST/include/n64.mk
 apollo-64's Makefile picks libdragon up automatically once `$N64_INST` is
 set.
 
-## 2. yaYUL (one-time, runs on the host)
+## 2. yaYUL (optional - only if you're changing the AGC source)
+
+`src/rope.c` is committed with a real assembled Luminary099 image. If you
+just want to build the ROM with the stock flight software, skip this
+section. You only need yaYUL if you want to:
+
+- Swap to a different mission (e.g. Comanche055).
+- Tweak the `.agc` source and re-assemble.
+
 
 ```sh
 git clone https://github.com/virtualagc/virtualagc
@@ -84,8 +92,18 @@ adjust `MISSION=`.
 
 ## Tests
 
-There are no automated tests yet. Manual smoke test plan once
-hardware-ready:
+Host-side smoke test runs the engine on your dev box without libdragon:
+
+```sh
+make -C tests
+tests/host_smoke 2000000        # 2M AGC cycles, ~24s simulated time
+tests/host_smoke 2000000 rset   # ... and simulate an RSET keypress
+```
+
+See `tests/README.md` for what the output means and what it does/doesn't
+prove.
+
+Manual on-hardware smoke test plan once libdragon paths are exercised:
 
 1. Boot. PROG should sit at `00` for a few seconds, then settle as the
    AGC's executive comes up.

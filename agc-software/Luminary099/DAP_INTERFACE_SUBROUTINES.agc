@@ -1,32 +1,37 @@
-# Copyright:	Public domain.
-# Filename:	DAP_INTERFACE_SUBROUTINES.agc
-# Purpose: 	Part of the source code for Luminary 1A build 099.
-#		It is part of the source code for the Lunar Module's (LM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	Ron Burkey <info@sandroid.org>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	1406-1409
-# Mod history:  2009-05-10 SN   (Sergio Navarro).  Started adapting
-#				from the Luminary131/ file of the same
-#				name, using Luminary099 page images.
-#
-# This source code has been transcribed or otherwise adapted from
-# digitized images of a hardcopy from the MIT Museum.  The digitization
-# was performed by Paul Fjeld, and arranged for by Deborah Douglas of
-# the Museum.  Many thanks to both.  The images (with suitable reduction
-# in storage size and consequent reduction in image quality as well) are
-# available online at www.ibiblio.org/apollo.  If for some reason you
-# find that the images are illegible, contact me at info@sandroid.org
-# about getting access to the (much) higher-quality images which Paul
-# actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#	Assemble revision 001 of AGC program LMY99 by NASA 2021112-061
-#	16:27 JULY 14, 1969
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	DAP_INTERFACE_SUBROUTINES.agc
+## Purpose: 	Part of the source code for Luminary 1A build 099.
+##		It is part of the source code for the Lunar Module's (LM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	Ron Burkey <info@sandroid.org>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	1406-1409
+## Mod history: 2009-05-10 SN   (Sergio Navarro).  Started adapting
+##				from the Luminary131/ file of the same
+##				name, using Luminary099 page images.
+##		2011-01-06 JL	Fixed pseudo-label indentation.
+##		2016-12-18 RSB	Proofed text comments with octopus/ProoferComments
+##				and corrected the errors found.
+##		2017-03-10 RSB	Comment-text fixes noted in proofing Luminary 116.
 
-# Page 1406
+## This source code has been transcribed or otherwise adapted from
+## digitized images of a hardcopy from the MIT Museum.  The digitization
+## was performed by Paul Fjeld, and arranged for by Deborah Douglas of
+## the Museum.  Many thanks to both.  The images (with suitable reduction
+## in storage size and consequent reduction in image quality as well) are
+## available online at www.ibiblio.org/apollo.  If for some reason you
+## find that the images are illegible, contact me at info@sandroid.org
+## about getting access to the (much) higher-quality images which Paul
+## actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##	Assemble revision 001 of AGC program LMY99 by NASA 2021112-61
+##	16:27 JULY 14, 1969 
+
+## Page 1406
 		BANK	20
 		SETLOC	DAPS3
 		BANK
@@ -57,17 +62,17 @@
 # DEBRIS
 #	A, L, AND SOMETIMES MDUETEMP			ODE	NOT IN PULSES MODE
 
-# Page 1407
+## Page 1407
 # SUBROUTINE NAMES:
 #	SETMAXDB, SETMINDB, RESTORDB, PFLITEDB
 # MODIFIED:	30 JANUARY 1968 BY P S WEISSMAN TO CREATE RESTORDB.
 # MODIFIED:	1 MARCH 1968 BY P S WEISSMAN TO SAVE EBANK AND CREATE PFLITEDB
 #
 # FUNCTIONAL DESCRIPTION:
-#	SETMAXDB -- SET DEADBAND TO 5.0 DEGREES
-#	SETMINDB -- SET DEADBAND TO 0.3 DEGREE
-#	RESTORDB -- SET DEADBAND TO MAX OR MIN ACCORDING TO SETTINGS OF DBSELECT BIT OF DAPBOOLS
-#	PFLITEDB -- SET DEADBAND TO 1.0 DEGREE AND ZERO THE COMMANDED ATTITUDE CHANGE AND COMMANDED RATE
+#	SETMAXDB - SET DEADBAND TO 5.0 DEGREES
+#	SETMINDB - SET DEADBAND TO 0.3 DEGREE
+#	RESTORDB - SET DEADBAND TO MAX OR MIN ACCORDING TO SETTING OF DBSELECT BIT OF DAPBOOLS
+#	PFLITEDB - SET DEADBAND TO 1.0 DEGREE AND ZERO THE COMMANDED ATTITUDE CHANGE AND COMMANDED RATE
 #
 #	ALL ENTRIES SET UP A NOVAC JOB TO DO 1/ACCS SO THAT THE TJETLAW SWITCH CURVES ARE POSITIONED TO
 #	REFLECT THE NEW DEADBAND.  IT SHOULD BE NOTED THAT THE DEADBAND REFERS TO THE ATTITUDE IN THE P-, U-, AND V-AXES.
@@ -106,7 +111,7 @@ PFLITEDB	EXTEND			# THE RETURN FROM CALLACCS IS TO RUPTREG1.
 		TS	DB
 		TCF	CALLACCS	# SET UP 1/ACCS AND RETURN TO CALLER.
 NARROWDB	OCTAL	00155		# 0.3 DEGREE SCALED AT 45.
-# Page 1408
+## Page 1408
 WIDEDB		OCTAL	03434		# 5.0 DEGREES SCALED AT 45.
 POWERDB		DEC	.02222		# 1.0 DEGREE SCALED AT 45.
 
@@ -138,7 +143,7 @@ STOPRATE	CAF	EBANK6
 		TC	Q
 
 # SUBROUTINE NAME:	ALLCOAST
-# WILL BE CALLED BY FRESH STARTS AND ENGINE OFF ROUTINES.
+# WILL BE CALLED BY FRESH STARTS AND ENGINE OFF ROUTINES.		.
 #
 # CALLING SEQUENCE:	(SAME AS ABOVE)
 #
@@ -148,15 +153,15 @@ STOPRATE	CAF	EBANK6
 #
 # ZERO:			(FOR ALL AXES) AOS, ALPHA, AOSTERM, OMEGAD, DELCDU, DELEROR
 #
-# OUTPUT:		DRIFTBIT/DAPBOOLS, OE, JOB TO DO 1/ACCS
+# OUTPUT:		DRIFTBIT/DAPBOOLS, DB, JOB TO DO 1/ACCS
 #
 # DEBRIS:		A, L, Q, RUPTREG1, RUPTREG2, (ITEMPS IN NOVAC)
 
 ALLCOAST	EXTEND			# SAVE Q FOR RETURN
 		QXCH	RUPTREG2
-# Page 1409
+## Page 1409
 		TC	STOPRATE	# CLEAR RATE INTERFACE.  RETURN WITH A=0
-		LXCH	EBANK		#   AND L=EBANK6.  SAVE CALLER'S EBANK.
+		LXCH	EBANK		# AND L=EBANK6.  SAVE CALLERS EBANK.
 		TS	AOSQ
 		TS	AOSQ +1
 		TS	AOSR

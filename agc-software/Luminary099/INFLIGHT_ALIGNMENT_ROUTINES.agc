@@ -1,32 +1,37 @@
-# Copyright:	Public domain.
-# Filename:	INFLIGHT_ALIGNMENT_ROUTINES.agc
-# Purpose: 	Part of the source code for Luminary 1A build 099.
-#		It is part of the source code for the Lunar Module's (LM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	Ron Burkey <info@sandroid.org>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	1249-1258
-# Mod history:	2009-05-26 RSB	Adapted from the corresponding
-#				Luminary131 file, using page
-#				images from Luminary 1A.
-#
-# This source code has been transcribed or otherwise adapted from
-# digitized images of a hardcopy from the MIT Museum.  The digitization
-# was performed by Paul Fjeld, and arranged for by Deborah Douglas of
-# the Museum.  Many thanks to both.  The images (with suitable reduction
-# in storage size and consequent reduction in image quality as well) are
-# available online at www.ibiblio.org/apollo.  If for some reason you
-# find that the images are illegible, contact me at info@sandroid.org
-# about getting access to the (much) higher-quality images which Paul
-# actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#	Assemble revision 001 of AGC program LMY99 by NASA 2021112-061
-#	16:27 JULY 14, 1969
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	INFLIGHT_ALIGNMENT_ROUTINES.agc
+## Purpose: 	Part of the source code for Luminary 1A build 099.
+##		It is part of the source code for the Lunar Module's (LM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	Ron Burkey <info@sandroid.org>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	1249-1258
+## Mod history:	2009-05-26 RSB	Adapted from the corresponding 
+##				Luminary131 file, using page 
+##				images from Luminary 1A.
+##		2016-12-17 RSB	Proofed text comments with octopus/ProoferComments
+##				and corrected the errors found.
+##		2017-03-17 RSB	Comment-text fixes identified in diff'ing
+##				Luminary 99 vs Comanche 55.
 
-# Page 1249
+## This source code has been transcribed or otherwise adapted from
+## digitized images of a hardcopy from the MIT Museum.  The digitization
+## was performed by Paul Fjeld, and arranged for by Deborah Douglas of
+## the Museum.  Many thanks to both.  The images (with suitable reduction
+## in storage size and consequent reduction in image quality as well) are
+## available online at www.ibiblio.org/apollo.  If for some reason you
+## find that the images are illegible, contact me at info@sandroid.org
+## about getting access to the (much) higher-quality images which Paul
+## actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##	Assemble revision 001 of AGC program LMY99 by NASA 2021112-61
+##	16:27 JULY 14, 1969 
+
+## Page 1249
 		BANK	22
 		SETLOC	INFLIGHT
 		BANK
@@ -38,7 +43,7 @@
 # THE INPUT IS THE DESIRED STABLE MEMBER COORDINATES REFERRED TO PRESENT STABLE MEMBER COORDINATES.  THE THREE
 # HALF-UNIT VECTORS ARE STORED AT XDC, YDC, AND ZDC.
 #
-# THE OUTPUTS ARE THE THREE GYRO TORQUE ANGLES TO BE APPLIED TO THE Y, Z, AND X GYROS AND ARE STORED DP AT IGC,
+# THE OUTPUTS ARE THE THREE GYRO TORQUING ANGLES TO BE APPLIED TO THE Y, Z, AND X GYROS AND ARE STORED DP AT IGC,
 # MGC, AND OGC RESPECTIVELY.
 
 		COUNT*	$$/INFLT
@@ -75,7 +80,7 @@ CALCGTA		ITA	DLOAD		# PUSHDOWN 00-03, 16D-27D, 34D-37D
 		STADR
 		STCALL	COSTH		# COS(MGC) = MPAC - PD00
 			ARCTRIG
-# Page 1250
+## Page 1250
 		STOVL	MGC		# Z GYRO TORQUING ANGLE   FRACTION OF REV.
 			ZPRIME
 		DOT
@@ -90,7 +95,7 @@ CALCGTA		ITA	DLOAD		# PUSHDOWN 00-03, 16D-27D, 34D-37D
 		STCALL	OGC		# X GYRO TORQUING ANGLE   FRACTION OF REV.
 			S2
 
-# Page 1251
+## Page 1251
 # ARCTRIG COMPUTES AN ANGLE GIVEN THE SINE AND COSINE OF THIS ANGLE.
 #
 # THE INPUTS ARE SIN/4 AND COS/4 STORED DP AT SINTH AND COSTH.
@@ -130,12 +135,12 @@ TRIG2		DLOAD	SIGN		# (135,-135)
 		STORE	THETA		# X = .5 WITH SIGN(SIN) - ARCSIN(SIN)
 		RVQ			#	(+) - (+) OR (-) - (-)
 
-# Page 1252
+## Page 1252
 # SMNB, NBSM, AND AXISROT, WHICH USED TO APPEAR HERE, HAVE BEEN
 # COMBINED IN A ROUTINE CALLED AX*SR*T, WHICH APPEARS AMONG THE POWERED
 # FLIGHT SUBROUTINES.
 
-# Page 1253
+## Page 1253
 # CALCGA COMPUTES THE CDU DRIVING ANGLES REQUIRED TO BRING THE STABLE MEMBER INTO THE DESIRED ORIENTATION.
 #
 # THE INPUTS ARE  1) THE NAVIGATION BASE COORDINATES REFERRED TO ANY COORDINATE SYSTEM.  THE THREE HALF-UNIT
@@ -185,7 +190,7 @@ CALCGA1		VLOAD	DOT
 			0
 		STOVL	COSTH		# COS(IG) = ZSM . MGA
 			XSM
-# Page 1254
+## Page 1254
 		DOT	STADR
 		STCALL	SINTH		# SIN(IG) = XSM . MGA
 			ARCTRIG
@@ -200,14 +205,14 @@ CALCGA1		VLOAD	DOT
 GIMLOCK1	EXIT
 		TC	ALARM
 		OCT	00401
-		TC	UPFLAG		# GIMBAL LOCK HAS OCCURRED
+		TC	UPFLAG		# GIMBAL LOCK HAS OCCURED
 		ADRES	GLOKFAIL
 
 		TC	INTPRET
 		GOTO
 			CALCGA1
 
-# Page 1255
+## Page 1255
 # AXISGEN COMPUTES THE COORDINATES OF ONE COORDINATE SYSTEM REFERRED TO ANOTHER COORDINATE SYSTEM.
 #
 # THE INPUTS ARE  1) THE STAR1 VECTOR REFERRED TO COORDINATE SYSTEM A STORED AT STARAD.  2) THE STAR2 VECTOR
@@ -258,7 +263,7 @@ AXISGEN2	XCHX,1	VLOAD*
 			30D		# X1=-6 X2=+6	X1=-6 X2=+4	X1=-6 X2=+2
 			0,1
 
-# Page 1256
+## Page 1256
 		VXSC*	PDVL*		# J=(UA)(UB1)	J=(UA)(UB2)	J=(UA)(UB3)
 			STARAD 	+6,2
 			6,1
@@ -291,10 +296,11 @@ AXISGEN3	TIX,2
 
 		RVQ
 
-# Page 1257
+## Page 1257
 QTSN45		2DEC	.1768
 
 .166...		2DEC	.1666666667
 
-# Page 1258 (empty page)
+## Page 1258
+## Empty page
 

@@ -1,36 +1,47 @@
-# Copyright:	Public domain.
-# Filename:	UPDATE_PROGRAM.agc
-# Purpose: 	Part of the source code for Luminary 1A build 099.
-#		It is part of the source code for the Lunar Module's (LM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	Ron Burkey <info@sandroid.org>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	1386-1396
-# Mod history:  2009-05-10 SN   (Sergio Navarro).  Started adapting
-#				from the Luminary131/ file of the same
-#				name, using Luminary099 page images.
-#		2009-06-07 RSB	Added an SBANK= to account for incompatibilities
-#				between YUL and yaYUL.
-#		2011-01-06 JL	Fixed pseudo-label indentation.
-#		2011-05-07 JL	Flag SBANK= workaround.
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	UPDATE_PROGRAM.agc
+## Purpose: 	Part of the source code for Luminary 1A build 099.
+##		It is part of the source code for the Lunar Module's (LM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	Ron Burkey <info@sandroid.org>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	1386-1396
+## Mod history: 2009-05-10 SN   (Sergio Navarro).  Started adapting
+##				from the Luminary131/ file of the same
+##				name, using Luminary099 page images.
+##		2009-06-07 RSB	Added an SBANK= to account for incompatibilities
+##				between YUL and yaYUL.
+##		2011-01-06 JL	Fixed pseudo-label indentation.
+##		2011-05-07 JL	Flag SBANK= workaround.
+##		2016-12-18 RSB	Proofed text comments with octopus/ProoferComments
+##				and corrected the errors found.
+##		2017-01-28 RSB	Comment-text fixes identified for Luminary 69.
+##		2017-02-09 RSB	Comment-text fixes identified for Artemis 72.
+##		2017-03-14 RSB	Comment-text fixes noted in proofing Luminary 116.
+##		2017-03-16 RSB	Comment-text fixes identified in 5-way
+##				side-by-side diff of Luminary 69/99/116/131/210.
+##		2017-06-17 MAS	Globally removed all SBANK= workarounds.
+##		2021-05-30 ABS	DELTAOK -> DELTATOK
+##		2025-06-11 ZP	Corrections to whitespace in comments.
 
-# This source code has been transcribed or otherwise adapted from
-# digitized images of a hardcopy from the MIT Museum.  The digitization
-# was performed by Paul Fjeld, and arranged for by Deborah Douglas of
-# the Museum.  Many thanks to both.  The images (with suitable reduction
-# in storage size and consequent reduction in image quality as well) are
-# available online at www.ibiblio.org/apollo.  If for some reason you
-# find that the images are illegible, contact me at info@sandroid.org
-# about getting access to the (much) higher-quality images which Paul
-# actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#	Assemble revision 001 of AGC program LMY99 by NASA 2021112-061
-#	16:27 JULY 14, 1969
+## This source code has been transcribed or otherwise adapted from
+## digitized images of a hardcopy from the MIT Museum.  The digitization
+## was performed by Paul Fjeld, and arranged for by Deborah Douglas of
+## the Museum.  Many thanks to both.  The images (with suitable reduction
+## in storage size and consequent reduction in image quality as well) are
+## available online at www.ibiblio.org/apollo.  If for some reason you
+## find that the images are illegible, contact me at info@sandroid.org
+## about getting access to the (much) higher-quality images which Paul
+## actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##	Assemble revision 001 of AGC program LMY99 by NASA 2021112-61
+##	16:27 JULY 14, 1969 
 
-# Page 1386
+## Page 1386
 # PROGRAM NAME:     P27
 # WRITTEN BY:       KILROY/ DE WOLF
 #
@@ -79,7 +90,7 @@
 #                     IS ADDED TO TEPHEM, SUBTRACTED FROM AGC CLOCK(TIME2,TIME1), SUBTRACTED FROM CSM STATE
 #                     VECTOR TIME(TETCSM) AND SUBTRACTED FROM LEM STATE VECTOR TIME(TETLEM).
 #                     THE DP OCTAL TIME INCREMENT IS SCALED AT 2(28).
-# Page 1387
+## Page 1387
 #  V71EIIEAAAAE     (CONTIGUOUS BLOCK UPDATE) II-2 OCTAL COMPONENTS,XXXXX,
 #  XXXXXE           ARE LOADED INTO ERASABLE STARTING AT ECADR, AAAA.
 # XXXXXE            IT IS .GE. 3 .AND. .LE. 200.,
@@ -129,7 +140,7 @@
 #
 # 2. REFSMMAT(ALL DATA ENTRIES IN OCTAL)
 # ENTRIES:        DATA DEFINITITIONS:                                     SCALE FACTORS:
-# Page 1388
+## Page 1388
 # V71E            CONTIGUOUS BLOCK UPDATE VERB
 #    24E          NUMBER OF COMPONENTS FOR REFSMMAT UPDATE
 #  AAAAE          ECADR OF 'REFSMMAT'
@@ -180,7 +191,7 @@ UPERROR		TC	POSTJUMP	# TURN ON 'OPERATOR ERROR' LIGHT
 		CAE	MODREG		# UPDATE ALLOWED.
 CKMDMORE	=	UPERROR
 		TS	UPOLDMOD	# SAVE CURRENT MAJOR MODE
-# Page 1389
+## Page 1389
 		CAE	UPVERBSV	# SET UPVERB TO INDICDATE TO P27
 		TS	UPVERB		# WHICH EXTENDED VERB CALLED IT.
 
@@ -231,7 +242,7 @@ OHWELL1		CAF	ADUPBUFF	# * REQUEST USER TO SEND NUMBER *
 		TS	MPAC +2		# * OF COMPONENTS PARAMETER(II).*
  +2		CAF	UPLOADNV	# (CK4V32 RETURNS HERE IF V32 ENCOUNTERED)
 		TC	BANKCALL	# DISPLAY A FLASHING V21N01
-# Page 1390
+## Page 1390
 		CADR	GOXDSPF		# TO REQUEST II.
 		TCF	UPOUT4		# V34 TERMINATE UPDATE(P27) RETURN
 		TCF	OHWELL1 +2
@@ -280,7 +291,7 @@ UPVERIFY	CAF	ADUPTEMP	# PLACE ECADR WHERE COMPONENT NO. INDEX
 		BZMF	UPVERIFY	# NO, IT IS NOT POSITIVE NONZERO
 		CS	UPTEMP
 		AD	COMPNUMB
-# Page 1391
+## Page 1391
 		AD	BIT1
 		EXTEND
 		BZMF	UPVERIFY	# NO
@@ -329,7 +340,7 @@ UPSTORE		EQUALS			# GROUND HAS VERIFIED UPDATE.  STORE DATA.
 		BZMF	UPFNDVAC
 
 # VERB 73 BRANCH
-# Page 1392
+## Page 1392
 UPEND73		EXTEND			# V73-PERFORM DP OCTAL AGC CLOCK INCREMENT
 
 		DCA	UPBUFF
@@ -379,7 +390,7 @@ TIMEDIDL	EXTEND
 		TS	L		# A
 		COM			# QUICK
 		DXCH	-PHASE6		# PHASCHNG
-# Page 1393
+## Page 1393
 TIMEDIDR	INHINT
 
 		CAF	ZERO
@@ -431,7 +442,7 @@ UPEND71		CAE	UPBUFF +1	# SET EBANK
 		CA	NEG3		# NO- CALCULATE NUMBER OF
 		AD	COMPNUMB	# WORDS TO BE STORED MINUS ONE
 STORLP71	TS	MPAC		# SAVE NO. OF WORDS REMAINING MINUS ONE
-# Page 1394
+## Page 1394
 		INDEX	A		# TAKE NEXT UPDATE WORD FROM
 		CA	UPBUFF +2	# UPBUFF AND
 		TS	L		# SAVE IT IN L
@@ -480,7 +491,7 @@ UPOUT		EQUALS
  +1		CAE	UPOLDMOD	# RESTORE PRIOR P27 MODE
 		TC	NEWMODEX +3
 		CAF	ZERO
-# Page 1395
+## Page 1395
 		TS	DNLSTCOD
 		TC	UPACTOFF	# TURN OFF 'UPLINK ACTIVITY' LIGHT
 
@@ -490,7 +501,7 @@ UPOUT		EQUALS
 
 		TC	ENDEXT		# EXTENDED VERB EXIT
 
-# VERB 7O BRANCH
+# VERB 70 BRANCH
 
 UPEND70		EXTEND			# V70 DOES THE FOLLOWING WITH DP DELTA
 		DCS	UPBUFF		# TIME IN UPBUFF
@@ -530,7 +541,7 @@ UPEND70		EXTEND			# V70 DOES THE FOLLOWING WITH DP DELTA
 		OCT 	04026
 
 		EBANK=	UPBUFF
-# Page 1396
+## Page 1396
 		TC	UPOUT		# GO TO STANDARD UPDATE PROGRAM EXIT
 
 

@@ -13,25 +13,35 @@ MIPS to spend on it.
 
 ## Status
 
-Scaffolded, not yet running on hardware.
+End-to-end pipeline validated on host. Not yet running on N64 hardware.
 
-- [x] yaAGC engine vendored (`vendor/yaAGC/`)
+- [x] yaAGC engine vendored (`vendor/yaAGC/`), pinned to upstream
 - [x] Two-line patch documented under `vendor/yaAGC/PATCHES.md` to enable an
       N64 build (no socket headers, picks up `<stdint.h>`)
 - [x] Host glue (`src/agc_host.c`): channel callbacks, embedded ROM loader
       with the canonical 2,3,0,1,4..35 bank reordering, DSKY snapshot bridge
-- [x] DSKY renderer (`src/dsky.c`): decodes channel 010 relay rows into
-      PROG/VERB/NOUN + R1/R2/R3 + status lamps using the same 5-bit table
-      yaDSKY2 uses
+- [x] DSKY decoder (`src/dsky_decode.c`): pure-C channel 010 -> PROG/VERB/
+      NOUN/R1/R2/R3 + status lamps, using the same 5-bit table yaDSKY2 uses.
+      Split from the renderer so it's libdragon-free and unit-testable.
+- [x] DSKY renderer (`src/dsky.c`): libdragon-specific paint layer over the
+      decoder.
 - [x] N64 controller -> DSKY keypad mapping (`src/input.c`)
-- [x] Host tool `tools/bin2rope` to convert a yaYUL `.bin` into an embedded C
-      array
-- [ ] Actually built and tested on hardware/emulator. The scaffold has not
-      been compiled in this repo - libdragon and the N64 toolchain weren't
-      installed at scaffold time. See BUILDING.md.
+- [x] Host tool `tools/bin2rope` to convert a yaYUL `.bin` into an embedded
+      C array.
+- [x] `src/rope.c` committed as a real assembled Luminary099 binary
+      (regenerable via `make rope`). Builds work out of the box without
+      installing yaYUL.
+- [x] Host smoke test (`tests/host_smoke`) that boots the AGC on real
+      Luminary099 and runs the engine. Confirms: PC at 04000, scaler ticks,
+      channel writes fire, decoder doesn't crash, ~33M AGC cycles/sec on
+      x86 (so N64 has ample real-time budget). See `tests/README.md`.
+- [ ] Actually built on libdragon and run on hardware/emulator. The N64
+      paths (`main.c`, `dsky.c`, `input.c`) aren't covered by the host test;
+      they need a MIPS cross-toolchain. See BUILDING.md.
 - [ ] Real-time pacing via timer ISR (currently runs frame-batched)
 - [ ] DSKY artwork (uses libdragon built-in font for now)
-- [ ] IMU/PIPA/CDU counter wiring
+- [ ] IMU/PIPA/CDU counter wiring - without these, the AGC sits in
+      RESTART forever, which is exactly what the host smoke test reproduces.
 - [ ] Audio (1202 alarm beep, key clicks)
 
 ## Layout
@@ -48,18 +58,17 @@ agc-software/        Original Apollo 11 flight source (.agc files), kept
 
 ## Quick start
 
-See [BUILDING.md](BUILDING.md). Roughly:
-
 ```sh
-# 1. Build libdragon, set $N64_INST. (See libdragon README.)
-# 2. Assemble a mission once on the host (needs yaYUL from virtualagc):
-yaYUL agc-software/Luminary099/MAIN.agc
-# 3. Embed the output in the ROM:
-make rope MISSION=Luminary099
-# 4. Build the N64 ROM:
+# Without N64 hardware - run the AGC on your machine and see it boot:
+make -C tests && tests/host_smoke 2000000
+
+# To build the N64 ROM (see BUILDING.md for libdragon setup):
 make
-# 5. Flash apollo64.z64 to a flashcart, or run in cen64/ares/Mupen64Plus.
 ```
+
+The committed `src/rope.c` already contains a real assembled Luminary099
+core rope, so you don't need yaYUL to make a runnable ROM. You only need
+yaYUL if you want to swap missions or modify the flight code.
 
 ## License
 

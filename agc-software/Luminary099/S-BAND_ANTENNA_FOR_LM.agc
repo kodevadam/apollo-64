@@ -1,33 +1,36 @@
-# Copyright:	Public domain.
-# Filename:	S-BAND_ANTENNA_FOR_LM.agc
-# Purpose: 	Part of the source code for Luminary 1A build 099.
-#		It is part of the source code for the Lunar Module's (LM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	Ron Burkey <info@sandroid.org>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	486-489
-# Mod history:	2009-05-17 RSB	Adapted from the corresponding
-#				Luminary131 file, using page
-#				images from Luminary 1A.
-#		2009-06-07 RSB	Corrected a misprint.
-#
-# This source code has been transcribed or otherwise adapted from
-# digitized images of a hardcopy from the MIT Museum.  The digitization
-# was performed by Paul Fjeld, and arranged for by Deborah Douglas of
-# the Museum.  Many thanks to both.  The images (with suitable reduction
-# in storage size and consequent reduction in image quality as well) are
-# available online at www.ibiblio.org/apollo.  If for some reason you
-# find that the images are illegible, contact me at info@sandroid.org
-# about getting access to the (much) higher-quality images which Paul
-# actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#	Assemble revision 001 of AGC program LMY99 by NASA 2021112-061
-#	16:27 JULY 14, 1969
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	S-BAND_ANTENNA_FOR_LM.agc
+## Purpose: 	Part of the source code for Luminary 1A build 099.
+##		It is part of the source code for the Lunar Module's (LM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	Ron Burkey <info@sandroid.org>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	486-489
+## Mod history:	2009-05-17 RSB	Adapted from the corresponding 
+##				Luminary131 file, using page 
+##				images from Luminary 1A.
+##		2009-06-07 RSB	Corrected a misprint.
+##		2016-12-14 RSB	Proofed text comments with octopus/ProoferComments
+##				and corrected the errors found.
+##
+## This source code has been transcribed or otherwise adapted from
+## digitized images of a hardcopy from the MIT Museum.  The digitization
+## was performed by Paul Fjeld, and arranged for by Deborah Douglas of
+## the Museum.  Many thanks to both.  The images (with suitable reduction
+## in storage size and consequent reduction in image quality as well) are
+## available online at www.ibiblio.org/apollo.  If for some reason you
+## find that the images are illegible, contact me at info@sandroid.org
+## about getting access to the (much) higher-quality images which Paul
+## actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##	Assemble revision 001 of AGC program LMY99 by NASA 2021112-61
+##	16:27 JULY 14, 1969 
 
-# Page 486
+## Page 486
 # SUBROUTINE NAME: R05 - S-BAND ANTENNA FOR LM
 #
 # MOD0 BY T. JAMES
@@ -35,17 +38,17 @@
 #
 # FUNCTIONAL DESCRIPTION
 #
-#     THE S-BAND ANTENNA ROUTINE, R05, COMPUTES AND DISPLAYS THE PITCH AND
+# THE S-BAND ANTENNA ROUTINE, R05, COMPUTES AND DISPLAYS THE PITCH AND
 # YAW ANTENNA GIMBAL ANGLES REQUIRED TO POINT THE LM STEERABLE ANTENNA
-# TOWARD THE CENTER OF THE EARTH. THIS ROUTINE IS SELECTED BY THE ASTRO-
+# TOWARD THE CENTER OF THE EARTH.  THIS ROUTINE IS SELECTED BY THE ASTRO-
 # NAUT VIA DSKY ENTRY DURING COASTING FLIGHT OR WHEN THE LM IS ON THE MOON
-# SURFACE. THE EARTH OR MOON REFERENCE COORDINATE SYSTEM IS USED DEPENDING
+# SURFACE.  THE EARTH OR MOON REFERENCE COORDINATE SYSTEM IS USED DEPENDING
 # ON WHETHER THE LM IS ABOUT TO ENTER OR HAS ALREADY ENTERED THE MOON
 # SPHERE OF INFLUENCE, RESPECTIVELY
 #
 # TO CALL SUBROUTINE, ASTRONAUT KEYS IN V 64 E
 #
-# SUBROUTINES CALLED-
+# SUBROUTINES CALLED -
 #	R02BOTH
 #	INTPRET
 #	LOADTIME
@@ -54,7 +57,7 @@
 #	CDUTRIG
 #	*SMNB*
 #	BANKCALL
-#	B50OFF
+#	B5OFF
 #	ENDOFJOB
 #	BLANKET
 #
@@ -71,11 +74,11 @@
 		BANK	41
 		SETLOC	SBAND
 		BANK
-
+		
 		EBANK=	WHOCARES
 		COUNT*	$$/R05
 SBANDANT	TC	BANKCALL
-# Page 487
+## Page 487
 		CADR	R02BOTH		# CHECK IF IMU IS ON AND ALIGNED
 		TC	INTPRET
 		SETPD	RTB
@@ -100,13 +103,13 @@ CONV3		CALL
 		GOTO
 			CONV5
 CONV4		VLOAD
-			RATT		# UE = -UNIT(RATT)  EARTH SPHERE
-CONV5		SETPD	UNIT		# UE = -UNIT((REM)(UEM) + RL)  MOON SPHERE
+			RATT		# UE = -UNIT(RATT)		EARTH SPHERE
+CONV5		SETPD	UNIT		# UE = -UNIT((REM)(UEM) + RL)	MOON SPHERE
 			0D		# SET PL POINTER TO 0
 		VCOMP	CALL
 			CDUTRIG		# COMPUTE SINES AND COSINES OF CDU ANGLES
 		MXV	VSL1		# TRANSFORM REF. COORDINATE SYSTEM TO
-			REFSMMAT	# STABLE MEMBER  B-1 X B-1 X B+1 = B-1
+			REFSMMAT	# STABLE MEMBER B-1 X B-1 X B+1 = B-1
 		PUSH	DLOAD		# 8D
 			HI6ZEROS
 		STORE	PITCHANG
@@ -123,10 +126,10 @@ CONV5		SETPD	UNIT		# UE = -UNIT((REM)(UEM) + RL)  MOON SPHERE
 		DAD	DMP
 			RLM
 			1OVSQRT2
-		STOVL	RLM		# R  B-1
+		STOVL	RLM		# R B-1
 			RLM
 		UNIT	PDVL
-# Page 488
+## Page 488		
 			RLM
 		VPROJ	VSL2		# PROJECTION OF R ONTO LM XZ PLANE
 			HIUNITY
@@ -135,15 +138,15 @@ CONV5		SETPD	UNIT		# UE = -UNIT((REM)(UEM) + RL)  MOON SPHERE
 			COVCNV
 COVCNV		UNIT	BOV		# EXIT ON OVERFLOW
 			SBANDEX
-		PUSH	VXV		# URP VECTOR  B-1
+		PUSH	VXV		# URP VECTOR B-1
 			HIUNITZ
 		VSL1	VCOMP		# UZ X URP = -(URP X UZ)
-		STORE	RLM		# X VEC  B-1
+		STORE	RLM		# X VEC B-1
 		DOT	PDVL		# SGN(X.UY) UNSCALED
 			HIUNITY
 			RLM
 		ABVAL	SIGN
-		ASIN			# ASIN((SGN(X.UY))ABV(X)) REV B0
+		ASIN			# ASIN((SGN(X.UY))ABV(X))	REV B0
 		STOVL	PITCHANG
 			URP
 		DOT	BPL
@@ -157,7 +160,7 @@ NOADJUST	VLOAD	VXV
 			UR		# Z = (UR X URP)
 			URP
 		VSL1
-		STODL	RLM		# Z VEC  B-1
+		STODL	RLM		# Z VEC B-1
 			PITCHANG
 		SIN	VXSC
 			HIUNITZ
@@ -177,7 +180,7 @@ SBANDEX		EXIT
 		EXTEND
 		BZF	ENDEXT		# NO
 		CAF	PRIO5
-# Page 489
+## Page 489		
 		TC	PRIOCHNG
 		CAF	V06N51		# DISPLAY ANGLES
 		TC	BANKCALL
@@ -196,5 +199,4 @@ V06N51		VN	0651
 UR		EQUALS	0D
 URP		EQUALS	6D
 		SBANK=	LOWSUPER
-
-# *** END OF LNYAIDE .001 ***
+		

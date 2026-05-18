@@ -1,32 +1,37 @@
-# Copyright:	Public domain.
-# Filename:	R63.agc
-# Purpose: 	Part of the source code for Luminary 1A build 099.
-#		It is part of the source code for the Lunar Module's (LM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	Ron Burkey <info@sandroid.org>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	338-341
-# Mod history:	2009-05-16 RSB	Adapted from the corresponding
-#				Luminary131 file, using page
-#				images from Luminary 1A.
-#
-# This source code has been transcribed or otherwise adapted from
-# digitized images of a hardcopy from the MIT Museum.  The digitization
-# was performed by Paul Fjeld, and arranged for by Deborah Douglas of
-# the Museum.  Many thanks to both.  The images (with suitable reduction
-# in storage size and consequent reduction in image quality as well) are
-# available online at www.ibiblio.org/apollo.  If for some reason you
-# find that the images are illegible, contact me at info@sandroid.org
-# about getting access to the (much) higher-quality images which Paul
-# actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#	Assemble revision 001 of AGC program LMY99 by NASA 2021112-061
-#	16:27 JULY 14, 1969
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	R63.agc
+## Purpose: 	Part of the source code for Luminary 1A build 099.
+##		It is part of the source code for the Lunar Module's (LM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	Ron Burkey <info@sandroid.org>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	338-341
+## Mod history:	2009-05-16 RSB	Adapted from the corresponding 
+##				Luminary131 file, using page 
+##				images from Luminary 1A.
+##		2016-12-14 RSB	Proofed text comments with octopus/ProoferComments
+##				and corrected the errors found.
+##		2017-01-26 RSB	Back-ported a comment-text fix from Luminary 69.
+##		2017-03-07 RSB	Comment-text fixes noted in proofing Luminary 116.
 
-# Page 338
+## This source code has been transcribed or otherwise adapted from
+## digitized images of a hardcopy from the MIT Museum.  The digitization
+## was performed by Paul Fjeld, and arranged for by Deborah Douglas of
+## the Museum.  Many thanks to both.  The images (with suitable reduction
+## in storage size and consequent reduction in image quality as well) are
+## available online at www.ibiblio.org/apollo.  If for some reason you
+## find that the images are illegible, contact me at info@sandroid.org
+## about getting access to the (much) higher-quality images which Paul
+## actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##	Assemble revision 001 of AGC program LMY99 by NASA 2021112-61
+##	16:27 JULY 14, 1969 
+
+## Page 338
 # SUBROUTINE NAME:	V89CALL
 # MOD NO:	0			DATE:		9 JAN 1968
 # MOD BY:	DIGITAL DEVEL GROUP	LOG SECTION:	R63
@@ -44,7 +49,7 @@
 #
 # 3. FLASH DISPLAY V 04 N 06.  R2 INDICATES WHICH SPACECRAFT AXIS IS TO
 # BE POINTED AT CSM.  INITIAL CHOICE IS PREFERRED (+Z) AXIS (R2=1).
-# ASTRONAUT CAN CHANGE TO (+X) AXIS (R2 NOT = 1) BY V 22 E 2 E.  CONTINUE
+# ASTRONAUT CAN CHANGE TO (+X) AXIS (R2 NOT =1) BY V 22 E 2 E.  CONTINUE
 # AFTER KEYING IN PROCEED.
 #
 # 4. BOTH VEHICLE STATE VECTORS UPDATED BY CONIC EQS.
@@ -56,9 +61,9 @@
 # 6. GIMBAL ANGLES FROM VECPOINT TRANSFORMED INTO FDAI BALL ANGLES BY
 # BALLANGS.  FLASH DISPLAY V 06 N 18 AND AWAIT RESPONSE.
 #
-# 7. RECYCLE - RETURN TO STEP 4.
-#    TERMINATE - EXIT R63.
-#    PROCEED - RESET 3AXISFLG AND CALL R60LEM FOR ATTITUDE MANEUVER.
+# 7. 	RECYCLE - RETURN TO STEP 4.
+#	TERMINATE - EXIT R63.
+#	PROCEED - RESET 3AXISFLG AND CALL R60LEM FOR ATTITUDE MANEUVER.
 #
 # CALLING SEQUENCE:	V 89 E.
 #
@@ -75,15 +80,15 @@
 #
 # ERASABLE INITIALIZATION REQUIRED:  NONE
 #
-# DEBRIS:	OPTION1, +1, TDEC1, PDINTVSM, SCAXIS, CPHI, CTHETA, CPSI,
-# Page 339
+# DEBRIS:	OPTION1, +1, TDEC1, POINTVSM, SCAXIS, CPHI, CTHETA, CPSI,
+## Page 339
 #		3AXISFLG.
 
 		EBANK=	RONE
 		BANK	32
 		SETLOC	BAWLANGS
 		BANK
-
+		
 		COUNT*	$$/R63
 V89CALL		TC	BANKCALL	# IMU STATUS CHECK.  RETURNS IF ORIENTATION
 		CADR	R02BOTH		# KNOWN.  ALARMS IF NOT.
@@ -96,8 +101,8 @@ V89CALL		TC	BANKCALL	# IMU STATUS CHECK.  RETURNS IF ORIENTATION
 		CADR	GOFLASH
 		TC	ENDEXT		# TERMINATE
 		TC 	+2		# PROCEED
-		TC	-5		# DATA IN.  OPTION1+1 = 1 FOR Z AXIS
-V89RECL		TC	INTPRET		#			= 2 FOR X AXIS
+		TC	-5		# DATA IN. OPTION1+1 = 1 FOR Z AXIS
+V89RECL		TC	INTPRET		#		    = 2 FOR X AXIS
 		RTB	DAD
 			LOADTIME	# READ PRESENT TIME
 			DP1MIN
@@ -113,10 +118,10 @@ V89RECL		TC	INTPRET		#			= 2 FOR X AXIS
 		VLOAD	VSU		# CSM POSITION - LEM POSITION = LOS
 			RONE		# LOS VECTOR LEFT IN MPAC
 			RATT
-		MXV	RTB		# (REFSMAT X LOS).  TRANSFORMS LOS FROM
+		MXV	RTB		# (REFSMMAT X LOS).  TRANSFORMS LOS FROM
 			REFSMMAT	# REFERENCE COORD TO STAB MEMB COORD.
 			NORMUNIT
-		STORE	POINTVSM	# STORE LOS FOR VECPOINT CALCULATION
+		STORE	POINTVSM	# STORE LOS FOR VECPOINT CALL
 		EXIT
 		CS	OPTIONX +1	# 1 FOR Z AXIS.  2 FOR X AXIS.
 		AD	ONE
@@ -125,13 +130,13 @@ V89RECL		TC	INTPRET		#			= 2 FOR X AXIS
 ALINEX		TC	INTPRET		# X AXIS ALIGNMENT
 		VLOAD
 			UNITX		# READ (.5, 0, 0)
-# Page 340
+## Page 340
 V89CALL1	STCALL	SCAXIS		# STORE SELECTED ALIGNMENT AXIS
 			VECPOINT	# PUTS DESIRED GIM ANG (OG,IG,MG) IN TMPAC
 		STORE	CPHI		# STORE GIMBAL ANGLES FOR BALLANGS CALL.
 		EXIT
 		TC	BANKCALL
-		CADR	BALLANGS	# PUTS DESIRED BALL ANGLE IN FDAIX,Y,Z
+		CADR	BALLANGS	# PUTS DESIRED BALL ANGLES IN FDAIX,Y,Z
 		CAF	VB06N18		# V 06 N 18
 		TC	BANKCALL	# NOUN 18 REFERS TO FDAIX,Y,Z
 		CADR	GOFLASH
@@ -143,14 +148,14 @@ V89CALL1	STCALL	SCAXIS		# STORE SELECTED ALIGNMENT AXIS
 		TC	BANKCALL	# PERFORMS LEM MANEUVER TO ALIGN SELECTED
 		CADR	R60LEM		# SPACECRAFT AXIS TO CSM.
 		TCF	ENDEXT		# TERMINATE R63
-
+		
 ALINEZ		TC	INTPRET		# Z AXIS ALIGNMENT
 		VLOAD	GOTO
 			UNITZ		# READ (0, 0, .5)
 			V89CALL1
-
+			
 VB04N12		VN	412
 VB06N18		VN	0618
-# Page 341
+## Page 341
 DP1MIN		2DEC	6000
 

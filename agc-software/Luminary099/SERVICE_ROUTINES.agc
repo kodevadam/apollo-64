@@ -1,32 +1,37 @@
-# Copyright:	Public domain.
-# Filename:	SERVICE_ROUTINES.agc
-# Purpose: 	Part of the source code for Luminary 1A build 099.
-#		It is part of the source code for the Lunar Module's (LM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	Ron Burkey <info@sandroid.org>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	1374-1380
-# Mod history:  2009-05-10 SN   (Sergio Navarro).  Started adapting
-#				from the Luminary131/ file of the same
-#				name, using Luminary099 page images.
-#
-# This source code has been transcribed or otherwise adapted from
-# digitized images of a hardcopy from the MIT Museum.  The digitization
-# was performed by Paul Fjeld, and arranged for by Deborah Douglas of
-# the Museum.  Many thanks to both.  The images (with suitable reduction
-# in storage size and consequent reduction in image quality as well) are
-# available online at www.ibiblio.org/apollo.  If for some reason you
-# find that the images are illegible, contact me at info@sandroid.org
-# about getting access to the (much) higher-quality images which Paul
-# actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#	Assemble revision 001 of AGC program LMY99 by NASA 2021112-061
-#	16:27 JULY 14, 1969
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	SERVICE_ROUTINES.agc
+## Purpose: 	Part of the source code for Luminary 1A build 099.
+##		It is part of the source code for the Lunar Module's (LM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	Ron Burkey <info@sandroid.org>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	1374-1380
+## Mod history: 2009-05-10 SN   (Sergio Navarro).  Started adapting
+##				from the Luminary131/ file of the same
+##				name, using Luminary099 page images.
+##		2016-12-18 RSB	Proofed text comments with octopus/ProoferComments
+##				and corrected the errors found.
+##		2017-03-16 RSB	Comment-text fixes identified in 5-way
+##				side-by-side diff of Luminary 69/99/116/131/210.
 
-# Page 1374
+## This source code has been transcribed or otherwise adapted from
+## digitized images of a hardcopy from the MIT Museum.  The digitization
+## was performed by Paul Fjeld, and arranged for by Deborah Douglas of
+## the Museum.  Many thanks to both.  The images (with suitable reduction
+## in storage size and consequent reduction in image quality as well) are
+## available online at www.ibiblio.org/apollo.  If for some reason you
+## find that the images are illegible, contact me at info@sandroid.org
+## about getting access to the (much) higher-quality images which Paul
+## actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##	Assemble revision 001 of AGC program LMY99 by NASA 2021112-61
+##	16:27 JULY 14, 1969 
+
+## Page 1374
 		BANK	10
 		SETLOC	DISPLAYS
 		BANK
@@ -50,21 +55,21 @@ DOWNENT2	INHINT
 
 OCT7		EQUALS	SEVEN
 
-# Page 1375
-#     UPFLAG AND DOWNFLAG ARE ENTIRELY GENERAL FLAG SETTING AND CLEARING SUBROUTINES.   USING THEM, WHETHER OR
+## Page 1375
+# UPFLAG AND DOWNFLAG ARE ENTIRELY GENERAL FLAG SETTING AND CLEARING SUBROUTINES.  USING THEM, WHETHER OR
 # NOT IN INTERRUPT, ONE MAY SET OR CLEAR ANY SINGLE, NAMED BIT IN ANY ERASABLE REGISTER, SUBJECT OF COURSE TO
-# EBANK SETTING.   A "NAMED" BIT, AS THE WORD IS USED HERE, IS ANY BIT WITH A NAME FORMALLY ASSIGNED BY THE YUL
+# EBANK SETTING.  A "NAMED" BIT, AS THE WORD IS USED HERE, IS ANY BIT WITH A NAME FORMALLY ASSIGNED BY THE YUL
 # ASSEMBLER.
 #
-#     AT PRESENT THE ONLY NAMED BITS ARE THOSE IN THE FLAGWORDS.   ASSEMBLER CHANGES WILL MAKE IT POSSIBLE TO
+# AT PRESENT THE ONLY NAMED BITS ARE THOSE IN THE FLAGWORDS.  ASSEMBLER CHANGES WILL MAKE IT POSSIBLE TO
 # NAME ANY BIT IN ERASABLE MEMORY.
 #
-#     CALLING SEQUENCES ARE AS FOLLOWS :-
+# CALLING SEQUENCES ARE AS FOLLOWS :-
 #		TC	UPFLAG			TC	DOWNFLAG
 #		ADRES	NAME OF FLAG		ADRES	NAME OF FLAG
 #
-#     RETURN IS TO THE LOCATION FOLLOWING THE "ADRES" ABOUT .58 MS AFTER THE "TC".
-#     UPON RETURN A CONTAINS THE CURRENT FLAGWRD SETTING.
+# RETURN IS TO THE LOCATION FOLLOWING THE "ADRES" ABOUT .58 MS AFTER THE "TC".
+# UPON RETURN A CONTAINS THE CURRENT FLAGWRD SETTING.
 
 		BLOCK	02
 		SETLOC	FFTAG1
@@ -87,7 +92,7 @@ DOWNFLAG	CA	Q
 		MASK	L		# RESET BIT
 		TCF	COMFLAG
 
-DEBIT		AD	ONE		# CET DE BITS
+DEBIT		AD	ONE		# GET DE BITS
 		INHINT
 		TS	ITEMP3
 		CA	LOW4		# DEC15
@@ -96,7 +101,7 @@ DEBIT		AD	ONE		# CET DE BITS
 		CA	0 -1		# ADRES
 		TS	L
 		CA	ZERO
-# Page 1376
+## Page 1376
 		EXTEND
 		DV	ITEMP1		# A = FLAGWRD, L = (15 - BIT)
 		DXCH	ITEMP1
@@ -107,11 +112,11 @@ DEBIT		AD	ONE		# CET DE BITS
 		CS	BIT15		# -(15 - BIT)
 		TC	Q
 
-# Page 1377
-# DELAYJOB- A GENERAL ROUTINE TO DELAY A JOB A SPECIFIC AMOUNT OF TIME BEFORE PICKING UP AGAIN.
+## Page 1377
+# DELAYJOB - A GENERAL ROUTINE TO DELAY A JOB A SPECIFIC AMOUNT OF TIME BEFORE PICKING UP AGAIN.
 #
-# ENTRANCE REQUIREMENTS...
-#		CAF	DT		# DELAY JOB FOR DT CENTISECS
+# ENTRANCE REQUIREMENTS ...
+#		CAF	DT		DELAY JOB FOR DT CENTISECS
 #		TC	BANKCALL
 #		CADR	DELAYJOB
 
@@ -158,7 +163,7 @@ TCGETCAD	TC	MAKECADR	# GET CALLERS FCADR
 WAKER		CAF	ZERO
 		INDEX	BBANK
 		XCH	DELAYLOC	# MAKE DELAYLOC AVAILABLE
-# Page 1378
+## Page 1378
 		TC	JOBWAKE
 
 		TC	TASKOVER
@@ -166,24 +171,24 @@ WAKER		CAF	ZERO
 TCSLEEP		GENADR	TCGETCAD -2
 WAKECAD		GENADR	WAKER
 
-# Page 1379
+## Page 1379
 # GENTRAN, A BLOCK TRANSFER ROUTINE.
 # WRITTEN BY D. EYLES
-# MOD 1 BY KERNAN						UTILITYM REV 17 11/18/67
-# MOD 2 BY SCHULENBERG (REMOVE RELINT)   SKIPPER REV 4 2/28/68
+# MOD 1 BY KERNAN				UTILITYM REV 17 11/18/67
+# MOD 2 BY SCHULENBERG (REMOVE RELINT) SKIPPER REV 4 2/28/68
 #
-# 	   THIS ROUTINE IS USEFULL FOR TRANSFERING N CONSECUTIVE ERASABLE OR FIXED QUANTITIES TO SOME OTHER N
+# THIS ROUTINE IS USEFULL FOR TRANSFERING N CONSECUTIVE ERASABLE OR FIXED QUANTITIES TO SOME OTHER N
 # CONSECUTIVE ERASABLE LOCATIONS.  IF BOTH BLOCKS OF DATA ARE IN SWITCHABLE EBANKS, THEY MUST BE IN THE SAME ONE.
 #
-# 	   GENTRAN IS CALLABLE IN A JOB AS WELL AS A RUPT.  THE CALLING SEQUENCE IS:
-#	I	CA	N-1		# # OF QUANTITIES MINUS ONE.
-#	I +1	TC	GENTRAN		# IN FIXED-FIXED.
-#	I +2	ADRES	L		# STARTING ADRES OF DATA TO BE MOVED.
-#	I +3	ADRES	M		# STARTING ADRES OF DUPLICATION BLOCK.
-#	I +4				# RETURNS HERE.
+# GENTRAN IS CALLABLE IN A JOB AS WELL AS A RUPT.  THE CALLING SEQUENCE IS:
+#	I	CA	N-1		# OF QUANTITIES MINUS ONE.
+#	I +1	TC	GENTRAN		IN FIXED-FIXED.
+#	I +2	ADRES	L		STARTING ADRES OF DATA TO BE MOVED.
+#	I +3	ADRES	M		STARTING ADRES OF DUPLICATION BLOCK.
+#	I +4				RETURNS HERE.
 #
-# 	   GENTRAN TAKES 25 MCT'S (300 MICROSECONDS) PER ITEM + 5 MCT'S (60 MICS) FOR ENTERING AND EXITING.
-# 	   A, L, AND ITEMP1 ARE NOT PRESERVED.
+# GENTRAN TAKES 25 MCT'S (300 MICROSECONDS) PER ITEM + 5 MCT'S (60 MICS) FOR ENTERING AND EXITING.
+# A, L AND ITEMP1 ARE NOT PRESERVED.
 
 		BLOCK	02
 		SETLOC	FFTAG4
@@ -209,9 +214,9 @@ GENTRAN		INHINT
 		TCF	GENTRAN +1
 		TCF	Q+2		# RETURN TO CALLER.
 
-# Page 1380
-# B5OFF   ZERO BIT 5 OF EXTVBACT, WHICH IS SET BY TESTXACT.
-# 	   MAY BE USED AS NEEDED BY ANY EXTENDED VERB WHICH HAS DONE TESTXACT
+## Page 1380
+# B5OFF		ZERO BIT 5 OF EXTVBACT, WHICH IS SET BY TESTXACT.
+# MAY BE USED AS NEEDED BY ANY EXTENDED VERB WHICH HAS DONE TESTXACT
 
 		COUNT*	$$/EXTVB
 
@@ -219,3 +224,6 @@ B5OFF		CS	BIT5
 		MASK	EXTVBACT
 		TS	EXTVBACT
 		TC	ENDOFJOB
+
+
+

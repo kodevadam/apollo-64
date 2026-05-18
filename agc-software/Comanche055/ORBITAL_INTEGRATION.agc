@@ -1,37 +1,43 @@
-# Copyright:	Public domain.
-# Filename:	ORBITAL_INTEGRATION.agc
-# Purpose:	Part of the source code for Colossus 2A, AKA Comanche 055.
-#		It is part of the source code for the Command Module's (CM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	Ron Burkey <info@sandroid.org>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	1334-1354
-# Mod history:	2009-05-14 RSB	Adapted from the Colossus249/ file of the
-#				same name, using Comanche055 page images.
-#		2009-05-20 RSB	Corrections:  DAT -> DAD in one place,
-#				BWM -> BMN, DEFEQCNT -> DIFEQCNT.
-#
-# This source code has been transcribed or otherwise adapted from digitized
-# images of a hardcopy from the MIT Museum.  The digitization was performed
-# by Paul Fjeld, and arranged for by Deborah Douglas of the Museum.  Many
-# thanks to both.  The images (with suitable reduction in storage size and
-# consequent reduction in image quality as well) are available online at
-# www.ibiblio.org/apollo.  If for some reason you find that the images are
-# illegible, contact me at info@sandroid.org about getting access to the
-# (much) higher-quality images which Paul actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#	Assemble revision 055 of AGC program Comanche by NASA
-#	2021113-051.  10:28 APR. 1, 1969
-#
-#	This AGC program shall also be referred to as
-#			Colossus 2A
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	ORBITAL_INTEGRATION.agc
+## Purpose:	Part of the source code for Colossus 2A, AKA Comanche 055.
+##		It is part of the source code for the Command Module's (CM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	Ron Burkey <info@sandroid.org>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	1334-1354
+## Mod history:	2009-05-14 RSB	Adapted from the Colossus249/ file of the
+##				same name, using Comanche055 page images.
+##		2009-05-20 RSB	Corrections:  DAT -> DAD in one place, 
+##				BWM -> BMN, DEFEQCNT -> DIFEQCNT.
+##		2010-08-27 JL	Fixed some indentation, whitespace.
+##		2016-12-22 RSB	Proofed comment text using octopus/ProoferComments
+##				and corrected the errors found.
+##		2017-01-15 RSB	Fixed comment-text errors noted while diff'ing vs
+##				Colossus 249.
+##		2017-03-17 RSB	Comment-text fixes identified in diff'ing
+##				Luminary 99 vs Comanche 55.
 
-# Page 1334
-# ORBITAL INTEGRATION
+## This source code has been transcribed or otherwise adapted from digitized
+## images of a hardcopy from the MIT Museum.  The digitization was performed
+## by Paul Fjeld, and arranged for by Deborah Douglas of the Museum.  Many
+## thanks to both.  The images (with suitable reduction in storage size and
+## consequent reduction in image quality as well) are available online at
+## www.ibiblio.org/apollo.  If for some reason you find that the images are
+## illegible, contact me at info@sandroid.org about getting access to the 
+## (much) higher-quality images which Paul actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##	Assemble revision 055 of AGC program Comanche by NASA
+##	2021113-051.  10:28 APR. 1, 1969  
+##
+##	This AGC program shall also be referred to as
+##			Colossus 2A
 
+## Page 1334
 # DELETE
 		BANK	13
 		SETLOC	ORBITAL
@@ -42,15 +48,15 @@
 KEPPREP		LXA,2	SETPD
 			PBODY
 			0
-		DLOAD*	SQRT		# SQRT(MU) (+18 OR +15) 0D		PL 2D
+		DLOAD*	SQRT		# SQRT(MU) (+18 OR +15)		0D	PL 2D
 			MUEARTH,2
 		PDVL	UNIT		#					PL 8D
 			RCV
-		PDDL	NORM		# NORM R (+29 OR +27 - N1) 2D		PL 4D
+		PDDL	NORM		# NORM R (+29 OR +27 - N1)	2D	PL 4D
 			36D
 			X1
 		PDVL
-		DOT	PDDL		# F*SQRT(MU)(+7 OR +5) 4D	PL 6D
+		DOT	PDDL		# F*SQRT(MU) (+7 OR +5) 	4D	PL 6D
 			VCV
 			TAU.		# (+28)
 		DSU	NORM
@@ -59,34 +65,34 @@ KEPPREP		LXA,2	SETPD
 		SR1
 		DDV	PDDL
 			2D
-		DMP	PUSH		# FS(+6 +N1-N2) 6D		PL 8D
+		DMP	PUSH		# FS (+6 +N1-N2) 		6D	PL 8D
 			4D
-		DSQ	PDDL		# (FS)SQ(+12 +2(N1-N2)) 8D	PL 10D
+		DSQ	PDDL		# (FS)SQ (+12 +2(N1-N2))	8D	PL 10D
 			4D
-		DSQ	PDDL*		# SSQ/MU(-2OR +2(N1-N2)) 10D		PL 12D
+		DSQ	PDDL*		# SSQ/MU (-2 OR +2(N1-N2))	10D	PL 12D
 			MUEARTH,2
 		SR3	SR4
-		PDVL	VSQ		# PREALIGN MU (+43 OR +37) 12D	PL 14D
+		PDVL	VSQ		# PREALIGN MU (+43 OR +37) 	12D	PL 14D
 			VCV
-		DMP	BDSU		#				PL 12D
+		DMP	BDSU		#					PL 12D
 			36D
-		DDV	DMP		#				PL 10D
-			2D		# -(1/R-ALPHA)(+12 +3N1-2N2)
+		DDV	DMP		#					PL 10D
+			2D		# -(1/R-ALPHA) (+12 +3N1-2N2)
 		DMP	SL*
 			DP2/3
-			0 	-3,1	# 10L(1/R-ALPHA)(+13 +2(N1-N2))
-		XSU,1	DAD		# 2(FS)SQ - ETCETERA	PL 8D
+			0 	-3,1	# 10L(1/R-ALPHA) (+13 +2(N1-N2))
+		XSU,1	DAD		# 2(FS)SQ - ETCETRA			PL 8D
 			S1		# X1 = N2-N1
-		SL*	DSU		# -FS+2(FS)SQ ETC (+6 +N1-N2)	PL 6D
+		SL*	DSU		# -FS+2(FS)SQ ETC (+6 +N1-N2)		PL 6D
 			8D,1
 		DMP	DMP
 			0D
 			4D
 		SL*	SL*
-# Page 1335
+## Page 1335
 			8D,1
-			0,1		# S(-FS(1-2FS)-1/6...)(+17 OR +16)
-		DAD	PDDL		#				PL 6D
+			0,1		# S(-FS(1-2FS)-1/6...) (+17 OR +16)
+		DAD	PDDL		#					PL 6D
 			XKEP
 		DMP	SL*		# S(+17 OR +16)
 			0D
@@ -105,7 +111,7 @@ KEPPREP		LXA,2	SETPD
 		GOTO
 			KEPLERN
 
-# Page 1336
+## Page 1336
 FBR3		LXA,1	SSP
 			DIFEQCNT
 			S1
@@ -123,7 +129,7 @@ FBR3		LXA,1	SSP
 		STCALL	TET
 			KEPPREP
 
-# Page 1337
+## Page 1337
 # AGC ROUTINE TO COMPUTE ACCELERATION COMPONENTS.
 
 ACCOMP		LXA,1	LXA,2
@@ -173,7 +179,7 @@ ACCOMP		LXA,1	LXA,2
 			0
 		STORE	BETAV
 		STOVL	RPQV
-# Page 1338
+## Page 1338
 			2D
 		STORE	RPSV
 		BOF	VLOAD
@@ -224,7 +230,7 @@ GAMCOMP		VLOAD	VSR1
 			BETAV		# C(PDL+2) = ALMOST NORMED ALPHA
 		UNIT
 		STODL	BETAV
-# Page 1339
+## Page 1339
 			36D
 		STORE	BETAM
 		NORM	BDDV		# FORM NORMALIZED QUOTIENT ALPHAM/BETAM
@@ -267,15 +273,15 @@ GAMCOMP		VLOAD	VSR1
 			14D
 		DMPR	VXSC
 			6
-			BETAV
+			BETAV		#		-
 		PDVL	VSR3		# (G/2)(C(PD+4))B/2 TO PD+16D
 			ALPHAV
 		VAD	PUSH		# A12 + C(PD+16D) TO PD+16D
 		DLOAD	DMP
 			0
-			12D
+			12D		# -
 		NORM	ROUND
-# Page 1340
+## Page 1340
 			30D
 		BDDV	DMP*
 			2
@@ -321,10 +327,11 @@ INT-ABRT	EXIT
 		TC	POODOO
 		OCT	00430
 
-# Page 1341
+## Page 1341
 # THE OBLATE ROUTINE COMPUTES THE ACCELERATION DUE TO OBLATENESS.  IT USES THE UNIT OF THE VEHICLE
 # POSITION VECTOR FOUND IN ALPHAV AND THE DISTANCE TO THE CENTER IN ALPHAM.  THIS IS ADDED TO THE SUM OF THE
 # DISTURBING ACCELERATIONS IN FV AND THE PROPER DIFEQ STAGE IS CALLED VIA X1.
+
 OBLATE		LXA,2	DLOAD
 			PBODY
 			ALPHAM
@@ -372,12 +379,12 @@ COMTERM		STORE	UZ
 		PDDL	DMPR
 			2
 			5/128
-# Page 1342
+## Page 1342
 		BDSU
 		DMP*
 			J4REQ/J3,2
 		DDV	DAD		#              -3
-			ALPHAM		# (((P5/256)B 2 /R+P4/32)  /R+P3/8)ALPHAV
+			ALPHAM		# (((P5/256)B 2  /R+P4/32)  /R+P3/8)ALPHAV
 			4		#            4             3
 		DMPR*	DDV
 			2J3RE/J2,2
@@ -389,19 +396,19 @@ COMTERM		STORE	UZ
 		DMP*	SR1
 			J4REQ/J3,2
 		DDV	DAD
-			ALPHAM		#			-3
-		DMPR*	SR3
-			2J3RE/J2,2	#	3	4
-		DDV	DAD
+			ALPHAM		#		 -3
+		DMPR*	SR3	           
+			2J3RE/J2,2	#  3	       4
+		DDV	DAD	
 			ALPHAM
-		VXSC	VSL1
-			UZ
-		BVSU
-			TVEC
-		STODL	TVEC
-			ALPHAM
-		NORM	DSQ
-			X1
+		VXSC	VSL1	      
+			UZ	
+		BVSU		
+			TVEC	        
+		STODL	TVEC	
+			ALPHAM	
+		NORM	DSQ	
+			X1	
 		DSQ	NORM
 			S1		#         4
 		PUSH	BDDV*		# NORMED R  TO 0D
@@ -420,10 +427,10 @@ COMTERM		STORE	UZ
 			GOBAQUE
 		STCALL	FV
 			QUALITY1
-QUALITY3	DSQ			# J22 TERM X R**4 IN 2D.  SCALED B61
+QUALITY3	DSQ			# J22 TERM X R**4 IN 2D,  SCALED B61
 					# AS VECTOR.
 		PUSH	DMP		# STORE COSPHI**2 SCALED B2 IN 8D
-# Page 1343
+## Page 1343		
 			5/8		# 5 SCALED B3
 		PDDL	SR2		# PUT 5 COSPHI**2, D5, IN 8D. GET
 					# COSPHI**2 D2 FROM 8D
@@ -465,7 +472,7 @@ QUALITY3	DSQ			# J22 TERM X R**4 IN 2D.  SCALED B61
 					# FOR RESULT.
 		PDDL	PDDL
 			TET
-				5/8	# ANY NON-ZERO CONSTANT
+			5/8		# ANY NON-ZERO CONSTANT
 		LXA,2	CALL		# POSITION IN 0D, TIME IN 6D. X2 LEFT
 					# ALONE.
 			PBODY
@@ -474,7 +481,7 @@ QUALITY3	DSQ			# J22 TERM X R**4 IN 2D.  SCALED B61
 			FV
 			GOBAQUE
 		STORE	FV
-# Page 1344
+## Page 1344
 NBRANCH		SLOAD	LXA,1
 			DIFEQCNT
 			MPAC
@@ -491,14 +498,14 @@ COSPHIE		DLOAD
 DIFEQTAB	CADR	DIFEQ+0
 		CADR	DIFEQ+1
 		CADR	DIFEQ+2
-
+		
 TIMESTEP	BOF	CALL
 			MIDFLAG
 			RECTEST		# SKIP ORIGIN CHANGE LOGIC
 			CHKSWTCH
 		BMN
 			DOSWITCH
-
+			
 RECTEST		VLOAD	ABVAL		# RECTIFY IF
 			TDELTAV
 		BOV
@@ -525,7 +532,7 @@ CALLRECT	CALL
 			RECTIFY
 INTGRATE	VLOAD
 			TNUV
-# Page 1345
+## Page 1345			
 		STOVL	ZV
 			TDELTAV
 		STORE	YV
@@ -557,29 +564,29 @@ CHKSWTCH	STQ	BOF
 
 RPQOK		LXA,2	VLOAD		# RESTORE X2 AFTER USING LUNPOS
 			PBODY
-			TDELTAV		#  _
+			TDELTAV		#  -
 		VSL*	VAD		# |RQC|-RSPHERE WHEN OUTSIDE THE SPHERE.
-			0	-7,2	# _   _            _
+			0	-7,2	# -   -            -
 			RCV		# R = RDEVIATION + RCONIC
 		BOF	ABVAL
 			MOONFLAG
 			EARSPH
 		SR2	BDSU		# INSIDE
 			RSPHERE
-		GOTO
+		GOTO	
 			ORIGEX
 EARSPH		VSU	ABVAL		# OUTSIDE
 			RPQV
 		DSU	GOTO
 			RSPHERE
 			ORIGEX
-
+			
 DOSWITCH	CALL
 			ORIGCHNG
 		GOTO
 			INTGRATE
 
-# Page 1346
+## Page 1346			
 ORIGCHNG	STQ	CALL
 			ORIGEX
 			RECTIFY
@@ -612,10 +619,9 @@ ORIGCHNG	STQ	CALL
 			MOONFLAG
 			CLRMOON
 			SETMOON
-# Page 1347
+## Page 1347
 # THE RECTIFY SUBROUTINE IS CALLED BY THE INTEGRATION PROGRAM AND OCCASIONALLY BY THE MEASUREMENT INCORPORATION
 # ROUTINES TO ESTABLISH A NEW CONIC.
-
 
 RECTIFY		LXA,2	VLOAD
 			PBODY
@@ -639,9 +645,10 @@ MINIRECT	STORE	VRECT
 		STORE	XKEP
 		RVQ
 
-# Page 1348
-# THE THREE DIFEQ ROUTINES - DIFEQ+0, DIFEQ+12, DIFEQ+24 - ARE ENTEREDTO PROCESS THE CONTRIBUTIONS AT THE
+## Page 1348
+# THE THREE DIFEQ ROUTINES - DIFEQ+0, DIFEQ+12, AND DIFEQ+24 - ARE ENTEREDTO PROCESS THE CONTRIBUTIONS AT THE
 # BEGINNING, MIDDLE, AND END OF THE TIMESTEP, RESPECTIVELY.  THE UPDATING IS DONE BY THE NYSTROM METHOD.
+
 DIFEQ+0		VLOAD	VSR3
 			FV
 		STCALL	PHIV
@@ -690,7 +697,7 @@ DIFEQ+2		DLOAD	DMPR
 
 		CALL
 			GRP2PC
-# Page 1349
+## Page 1349
 		LXA,2	SSP
 			COLREG
 			S2
@@ -741,7 +748,7 @@ ENDSTATE	BOV	VLOAD
 			AMOVED
 		BON	GOTO
 			VINTFLAG
-# Page 1350
+## Page 1350
 			ATOPCSM
 			ATOPLEM
 AMOVED		SET	SSP
@@ -790,14 +797,15 @@ WMATEND		CLEAR	CLEAR
 		TC	ALARM
 		OCT	421
 		TC	INTPRET
-# Page 1351
+## Page 1351
 		GOTO
 			TESTLOOP	# FINISH INTEGRATING STATE VECTOR
 
-# Page 1352
+## Page 1352
 # ORBITAL ROUTINE FOR EXTRAPOLATION OF THE W MATRIX.  IT COMPUTES THE SECOND DERIVATIVE OF EACH COLUMN POSITION
-# VECTOR OF THE MATRIX AND CALLS THE NYSTROM INTEGRATION ROUTINES TO SOLVETHE DIFFERENTIAL EQUATIONS.  THE PROGRAM
+# VECTOR OF THE MATRIX AND CALLS THE NYSTROM INTEGRATION ROUTINES TO SOLVE THE DIFFERENTIAL EQUATIONS.  THE PROGRAM
 # USES A TABLE OF VEHICLE POSITION VECTORS COMPUTED DURING THE INTEGRATION OF THE VEHICLES POSITION AND VELOCITY.
+
 DOW..		LXA,2	DLOAD*
 			PBODY
 			MUEARTH,2
@@ -845,42 +853,30 @@ DOW..1		VLOAD	VSR4
 			S2
 			34D
 		VSL*	RVQ
-# Page 1353
-			0 -8D,2
+## Page 1353
+			0 -8D,2	
 
 		SETLOC	ORBITAL1
 		BANK
 
 3/5		2DEC	.6 B-2
-
 THREE/8		2DEC	.375
-
 .3D		2DEC	.3 B-2
-
 3/64		2DEC	3 B-6
-
 DP1/4		2DEC	.25
-
 DQUARTER	EQUALS	DP1/4
 POS1/4		EQUALS	DP1/4
 3/32		2DEC	3 B-5
-
 15/16		2DEC	15. B-4
-
 3/4		2DEC	3.0 B-2
-
 7/12		2DEC	.5833333333
-
 9/16		2DEC	9 B-4
-
 5/128		2DEC	5 B-7
-
 DPZERO		EQUALS	ZEROVEC
 DP2/3		2DEC	.6666666667
-
 2/3		EQUALS	DP2/3
 OCT27		OCT	27
-
+# LM504 IS TEMPORARY
 		BANK	13
 		SETLOC	ORBITAL2
 		BANK
@@ -897,40 +893,24 @@ OCT27		OCT	27
 		DEC	-4
 ASCALE		DEC	-7
 		DEC	-6
-# Page 1354
+## Page 1354
 		2DEC*	1.32715445 E16 B-54*	# S
-
 		2DEC*	4.9027780 E8 B-30*	# M
-
 MUEARTH		2DEC*	3.986032 E10 B-36*
-
 		2DEC	0
-
 J4REQ/J3	2DEC*	.4991607391 E7 B-26*
-
 		2DEC	-176236.02 B-25
-
 2J3RE/J2	2DEC*	-.1355426363 E5 B-27*
-
 		2DEC*	.3067493316 E18 B-60*
-
 J2REQSQ		2DEC*	1.75501139 E21 B-72*
-
 3J22R2MU	2DEC*	9.20479048 E16 B-58*
-
 5/8		2DEC	5 B-3
-
 -1/12		2DEC	-.1
-
 MUM		=	MUEARTH -2
 RECRATIO	2DEC	.01
-
 RSPHERE		2DEC	64373.76 E3 B-29
-
 RDM		2DEC	16093.44 E3 B-27
-
 RDE		2DEC	80467.20 E3 B-29
-
 RATT		EQUALS 	00
 VATT		EQUALS	6D
 TAT		EQUALS	12D
@@ -942,3 +922,6 @@ URPV		EQUALS	14D
 COSPHI/2	EQUALS	URPV 	+4
 UZ		EQUALS	20D
 TVEC		EQUALS	26D
+
+
+

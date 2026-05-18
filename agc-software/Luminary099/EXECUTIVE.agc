@@ -1,34 +1,39 @@
-# Copyright:	Public domain.
-# Filename:	EXECUTIVE.agc
-# Purpose: 	Part of the source code for Luminary 1A build 099.
-#		It is part of the source code for the Lunar Module's (LM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	Ron Burkey <info@sandroid.org>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	1103-1114
-# Mod history:	2009-05-25 RSB	Adapted from the corresponding
-#				Luminary131 file, using page
-#				images from Luminary 1A.
-#		2011-01-06 JL	Fixed pseudo-label indentation.
-#		2011-05-08 JL	Removed workaround.
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	EXECUTIVE.agc
+## Purpose: 	Part of the source code for Luminary 1A build 099.
+##		It is part of the source code for the Lunar Module's (LM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	Ron Burkey <info@sandroid.org>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	1103-1114
+## Mod history:	2009-05-25 RSB	Adapted from the corresponding 
+##				Luminary131 file, using page 
+##				images from Luminary 1A.
+##		2011-01-06 JL	Fixed pseudo-label indentation.
+##		2011-05-08 JL	Removed workaround.
+##		2016-12-17 RSB	Proofed text comments with octopus/ProoferComments
+##				and corrected the errors found.
+##		2017-03-15 RSB	Comment-text fixes identified in 5-way
+##				side-by-side diff of Luminary 69/99/116/131/210.
 
-# This source code has been transcribed or otherwise adapted from
-# digitized images of a hardcopy from the MIT Museum.  The digitization
-# was performed by Paul Fjeld, and arranged for by Deborah Douglas of
-# the Museum.  Many thanks to both.  The images (with suitable reduction
-# in storage size and consequent reduction in image quality as well) are
-# available online at www.ibiblio.org/apollo.  If for some reason you
-# find that the images are illegible, contact me at info@sandroid.org
-# about getting access to the (much) higher-quality images which Paul
-# actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#	Assemble revision 001 of AGC program LMY99 by NASA 2021112-061
-#	16:27 JULY 14, 1969
+## This source code has been transcribed or otherwise adapted from
+## digitized images of a hardcopy from the MIT Museum.  The digitization
+## was performed by Paul Fjeld, and arranged for by Deborah Douglas of
+## the Museum.  Many thanks to both.  The images (with suitable reduction
+## in storage size and consequent reduction in image quality as well) are
+## available online at www.ibiblio.org/apollo.  If for some reason you
+## find that the images are illegible, contact me at info@sandroid.org
+## about getting access to the (much) higher-quality images which Paul
+## actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##	Assemble revision 001 of AGC program LMY99 by NASA 2021112-61
+##	16:27 JULY 14, 1969 
 
-# Page 1103
+## Page 1103
 		BLOCK	02
 
 # TO ENTER A JOB REQUEST REQUIRING NO VAC AREA:
@@ -47,7 +52,7 @@ NOVAC		INHINT
 		TS	EXECTEM1
 		TCF	NOVAC2		# ENTER EXECUTIVE BANK.
 
-# TO ENTER A JOB REQUEST REQUIREING A VAC AREA -- E.G., ALL (PARTIALLY) INTERPRETIVE JOBS.
+# TO ENTER A JOB REQUEST REQUIRING A VAC AREA - E.G., ALL (PARTIALLY) INTERPRETIVE JOBS.
 
 FINDVAC		INHINT
 		TS	NEWPRIO
@@ -77,14 +82,14 @@ CHANG1		LXCH	Q
 # TO SUSPEND AN INTERPRETIVE JOB:
 
 CHANG2		CS	LOC		# NEGATIVE LOC SHOWS JOB = INTERPRETIVE.
-# ITRACE (4) REFERS TO "CHANG2"
+# ITRACE (4) REFERS TO "CHANG2".
 		TS	L
-# Page 1104
+## Page 1104
  +2		CAF	EXECBANK
 		TS	BBANK
 		TCF	CHANJOB -1
 
-# Page 1105
+## Page 1105
 # TO VOLUNTARILY SUSPEND A JOB UNTIL THE COMPLETION OF SOME ANTICIPATED EVENT (I/O EVENT ETC.):
 
 JOBSLEEP	TS	LOC
@@ -125,8 +130,8 @@ EXECBANK	CADR	FINDVAC2
 
 FAKEPRET	ADRES	MPAC -36D	# LOC(MPAC +6) - LOC(QPRET)
 
-# Page 1106
-# LOCATE AN AVAILABLE VAC AREA
+## Page 1106
+# LOCATE AN AVAILABLE VAC AREA.
 
 		BANK	01
 		COUNT*	$$/EXEC
@@ -158,18 +163,18 @@ NOVAC2		CAF	ZERO		# NOVAC ENTERS HERE.  FIND A CORE SET.
 NOVAC3		TS	EXECTEM2
 		INDEX	LOCCTR
 		CCS	PRIORITY	# EACH PRIORITY REGISTER CONTAINS -0 IF
-		TCF	NEXTCORE	# THE CORESPONDING CORE SET IS AVAILABLE.
+		TCF	NEXTCORE	# THE CORRESPONDING CORE SET IS AVAILABLE.
 NO.CORES	DEC	7
 		TCF	NEXTCORE	# AN ACTIVE JOB HAS A POSITIVE PRIORITY
 					# BUT A DORMANT JOB'S PRIORITY IS NEGATIVE
 
-# Page 1107
+## Page 1107
 CORFOUND	CA	NEWPRIO		# SET THE PRIORITY OF THIS JOB IN THE CORE
 		INDEX	LOCCTR		# SET'S PRIORITY REGISTER AND SET THE
 		TS	PRIORITY	# JOB'S PUSH-DOWN POINTER AT THE BEGINNING
-		MASK	LOW9		# OF THE WORK AREA AND OVERFLOW INDICATOR.
+		MASK	LOW9		# OF THE WORK AREA AND OVERFLOW INDICATOR
 		INDEX	LOCCTR
-		TS	PUSHLOC		# OFF TO PREPARE FOR INTERPRETIVE PROGRAMS.
+		TS	PUSHLOC		# OFF TO PREPARE FOR INTERPRETIVE PROGRAMS
 
 		CCS	LOCCTR		# IF CORE SET ZERO IS BEING LOADED, SET UP
 		TCF	SETLOC		# OVFIND AND FIXLOC IMMEDIATELY.
@@ -178,7 +183,7 @@ CORFOUND	CA	NEWPRIO		# SET THE PRIORITY OF THIS JOB IN THE CORE
 		TS	FIXLOC
 
 SPECTEST	CCS	NEWJOB		# SEE IF ANY ACTIVE JOBS WAITING (RARE).
-		TCF	SETLOC		# MUST BE AWAKENED OUT UNCHANGED JOB.
+		TCF	SETLOC		# MUST BE AWAKENED BUT UNCHANGED JOB.
 		TC	CCSHOLE
 		TC	CCSHOLE
 		TS	NEWJOB		# +0 SHOWS ACTIVE JOB ALREADY SET.
@@ -206,7 +211,7 @@ NEXTCORE	CAF	COREINC
 		CA	Q
 		TC	BAILOUT1	# NO CORE SETS AVAILABLE.
 		OCT	1202
-# Page 1108
+## Page 1108
 # THE FOLLOWING ROUTINE SWAPS CORE SET 0 WITH THAT WHOSE RELATIVE ADDRESS IS IN NEWJOB.
 
  -2		LXCH	LOC
@@ -258,7 +263,7 @@ CHANJOB		INHINT
 		CAF	ZERO
 		TCF	ENDPRCHG -1
 
-# Page 1109
+## Page 1109
 		CS	PUSHLOC
 		TS	PUSHLOC
 		CAF	ONE
@@ -270,10 +275,10 @@ ENDPRCHG	RELINT
 		EXTEND			# DISPATCH WITH A DTCB.
 		BZMF	+2		# IF INTERPRETIVE, SET UP EBANK, ETC.
 		DTCB
-# Page 1110
+## Page 1110
 		COM			# EPILOGUE TO JOB CHANGE FOR INTERPRETIVE
 		AD	ONE
-		TS	LOC		# RESUME
+		TS	LOC		# RESUME.
 		TCF	INTRSM
 
 # COMPLETE JOBSLEEP PREPARATIONS.
@@ -287,10 +292,10 @@ JOBSLP1		INHINT
 		ROR	SUPERBNK	# SAVE OLD SUPERBANK VALUE.
 		TS	BANKSET
 		CS	ZERO
-JOBSLP2		TS	BUF 	+1	# HOLDS -- HIGHEST PRIORITY.
+JOBSLP2		TS	BUF 	+1	# HOLDS - HIGHEST PRIORITY.
 		TCF	EJSCAN		# SCAN FOR HIGHEST PRIORITY ALA ENDOFJOB.
 
-NUCHANG2	INHINT			# QUICK... DON'T LET NEWJOB CHANGE TO +0.
+NUCHANG2	INHINT			# QUICK... DONT LET NEWJOB CHANGE TO +0.
 		CCS	NEWJOB
 		TCF	+3		# NEWJOB STILL PNZ
 		RELINT			# NEW JOB HAS CHANGED TO +0.  WAKE UP JOB
@@ -300,29 +305,29 @@ NUCHANG2	INHINT			# QUICK... DON'T LET NEWJOB CHANGE TO +0.
 		EXTEND
 		WOR	DSALMOUT	# TURN ON ACTIVITY LIGHT
 		DXCH	LOC		# AND SAVE ADDRESS INFO FOR BENEFIT OF
-		TCF	CHANJOB +4	# 	POSSIBLE SLEEPINT JOB.
+		TCF	CHANJOB +4	# 	POSSIBLE SLEEPING JOB.
 
-# Page 1111
+## Page 1111
 # TO WAKE UP A JOB, EACH CORE SET IS FOUND TO LOCATE ALL JOBS WHICH ARE ASLEEP.  IF THE FCADR IN THE
 # LOC REGISTER OF ANY SUCH JOB MATCHES THAT SUPPLIED BY THE CALLER, THAT JOB IS AWAKENED.  IF NO JOB IS FOUND,
 # LOCCTR IS SET TO -1 AND NO FURTHER ACTION TAKES PLACE.
 
 JOBWAKE2	TS	EXECTEM1
-		CAF	ZERO		# BEGIN CORE SET SCAN
+		CAF	ZERO		# BEGIN CORE SET SCAN.
 		TS	LOCCTR
 		CAF	NO.CORES
 JOBWAKE4	TS	EXECTEM2
 		INDEX	LOCCTR
 		CCS	PRIORITY
-		TCF	JOBWAKE3	# ACTIVE JOB -- CHECK NEXT CORE SET.
+		TCF	JOBWAKE3	# ACTIVE JOB - CHECK NEXT CORE SET.
 COREINC		DEC	12		# 12 REGISTERS PER CORE SET.
-		TCF	WAKETEST	# SLEEPING JOB -- SEE IF CADR MATCHES.
+		TCF	WAKETEST	# SLEEPING JOB - SEE IF CADR MATCHES.
 
 JOBWAKE3	CAF	COREINC
 		ADS	LOCCTR
 		CCS	EXECTEM2
 		TCF	JOBWAKE4
-		CS	ONE		# EXIT IF SLEEPIN JOB NOT FOUND.
+		CS	ONE		# EXIT IF SLEEPING JOB NOT FOUND.
 		TS	LOCCTR
 		TCF	ENDFIND
 
@@ -352,7 +357,7 @@ WAKETEST	CS	NEWLOC
 		TCF	SETLOC		# ALREADY IN THE RUN (0) POSITION.
 		TCF	SPECTEST
 
-# Page 1112
+## Page 1112
 # PRIORITY CHANGE.  CHANGE THE CONTENTS OF PRIORITY AND SCAN FOR THE JOB OF HIGHEST PRIORITY.
 
 PRIOCH2		TS	LOC
@@ -365,7 +370,7 @@ PRIOCH2		TS	LOC
 		COM
 		TCF	JOBSLP2		# AND TO EJSCAN.
 
-# Page 1113
+## Page 1113
 # RELEASE THIS CORE SET AND VAC AREA AND SCAN FOR THE JOB OF HIGHEST ACTIVE PRIORITY.
 
 ENDJOB1		INHINT
@@ -416,12 +421,12 @@ EJSCAN		CCS	PRIORITY +12D
 		TCF	+1
 
 		CCS	PRIORITY +84D
-# Page 1114
+## Page 1114
 		TC	EJ1
 		TC	CCSHOLE
 		TCF	+1
 
-# Page 1115
+## Page 1115
 # EVALUATE THE RESULTS OF THE SCAN.
 
 		CCS	BUF 	+1	# SEE IF THERE ARE ANY ACTIVE JOBS WAITING
@@ -430,7 +435,7 @@ EJSCAN		CCS	PRIORITY +12D
 
 		TCF	+2
 		TCF	DUMMYJOB
-		CCS	BUF		# BUF IS ZERO IS THIS IS A PRIOCHNG AND
+		CCS	BUF		# BUF IS ZERO IF THIS IS A PRIOCHNG AND
 		TCF	+2		# CHANGED PRIORITY IS STILL HIGHEST.
 		TCF	ENDPRCHG -1
 
@@ -455,7 +460,7 @@ EJ2		TS	BUF 	+1
 		INDEX	BUF
 		TC	2
 
-# Page 1116
+## Page 1116
 # IDLING AND COMPUTER ACTIVITY (GREEN) LIGHT MAINTENANCE. THE IDLING ROUTINE IS NOT A JOB IN ITSELF,
 # BUT RATHER A SUBROUTINE OF THE EXECUTIVE.
 
@@ -467,10 +472,10 @@ DUMMYJOB	CS	ZERO		# SET NEWJOB TO -0 FOR IDLING.
 		CS	TWO		# TURN OFF THE ACTIVITY LIGHT.
 		EXTEND
 		WAND	DSALMOUT
-ADVAN		CCS	NEWJOB		# IS THE NEWJOB ACTIVE?
+ADVAN		CCS	NEWJOB		# IS A NEWJOB ACTIVE?
 		TCF	NUCHANG2	# YES... ONE REQUIRING A CHANGE JOB.
 		CAF	TWO		# NEW JOB ALREADY IN POSITION FOR
-		TCF	NUDIRECT	# EXECUTION
+		TCF	NUDIRECT	# EXECUTION.
 
 		CA	SELFRET
 		TS	L		# PUT RETURN ADDRESS IN L.
@@ -489,9 +494,9 @@ NUDIRECT	EXTEND			# TURN THE GREEN LIGHT BACK ON.
 
 		COUNT*	$$/EXEC
 
-# SUPDXCHZ -- ROUTINE TO TRANSFER TO SUPEBANK.
-# CALLING SEQUENCE:
-#		TCF	SUPDXCHZ	# WITH 2CADR OF DESIRED LOCATION IN A + L.
+# SUPDXCHZ - ROUTINE TO TRANSFER TO SUPERBANK.
+# CALLING SEQUENCE
+#		TCF	SUPDXCHZ	WITH 2CADR OF DESIRED LOCATION IN A + L.
 
 SUPDXCHZ	XCH	L		# BASIC.
  +1		EXTEND

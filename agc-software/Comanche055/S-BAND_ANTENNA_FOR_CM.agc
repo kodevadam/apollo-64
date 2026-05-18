@@ -1,43 +1,44 @@
-# Copyright:	Public domain.
-# Filename:	S-BAND_ANTENNA_FOR_CM.agc
-# Purpose:	Part of the source code for Colossus 2A, AKA Comanche 055.
-#		It is part of the source code for the Command Module's (CM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	Jim Lawton <jim.lawton@gmail.com>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	934-935
-# Mod history:	2009-05-11 JVL	Adapted from the Colossus249/ file
-#				of the same name, using Comanche055 page
-#				images.
-#
-# This source code has been transcribed or otherwise adapted from digitized
-# images of a hardcopy from the MIT Museum.  The digitization was performed
-# by Paul Fjeld, and arranged for by Deborah Douglas of the Museum.  Many
-# thanks to both.  The images (with suitable reduction in storage size and
-# consequent reduction in image quality as well) are available online at
-# www.ibiblio.org/apollo.  If for some reason you find that the images are
-# illegible, contact me at info@sandroid.org about getting access to the
-# (much) higher-quality images which Paul actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#    Assemble revision 055 of AGC program Comanche by NASA
-#    2021113-051.  10:28 APR. 1, 1969
-#
-#    This AGC program shall also be referred to as
-#            Colossus 2A
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	S-BAND_ANTENNA_FOR_CM.agc
+## Purpose:	Part of the source code for Colossus 2A, AKA Comanche 055.
+##		It is part of the source code for the Command Module's (CM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	Jim Lawton <jim.lawton@gmail.com>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	934-935
+## Mod history:	2009-05-11 JVL	Adapted from the Colossus249/ file
+##				of the same name, using Comanche055 page
+##				images.
+##		2016-12-21 RSB	Proofed comment text using octopus/ProoferComments
+##				and corrected the errors found.
+##
+## This source code has been transcribed or otherwise adapted from digitized
+## images of a hardcopy from the MIT Museum.  The digitization was performed
+## by Paul Fjeld, and arranged for by Deborah Douglas of the Museum.  Many
+## thanks to both.  The images (with suitable reduction in storage size and
+## consequent reduction in image quality as well) are available online at
+## www.ibiblio.org/apollo.  If for some reason you find that the images are
+## illegible, contact me at info@sandroid.org about getting access to the
+## (much) higher-quality images which Paul actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##    Assemble revision 055 of AGC program Comanche by NASA
+##    2021113-051.  10:28 APR. 1, 1969 
+##
+##    This AGC program shall also be referred to as
+##            Colossus 2A
 
-# Page 934
-# S-BAND ANTENNA FOR CM
-
+## Page 934
 		BANK	23
 		SETLOC	SBAND
 		BANK
-
+		
 		COUNT*	$$/R05
 		EBANK=	EMSALT
-
+		
 SBANDANT	TC	BANKCALL	# V 64 E GETS US HERE
 		CADR	R02BOTH		# CHECK IF IMU IS ON AND ALIGNED
 		TC	INTPRET
@@ -81,14 +82,14 @@ EISOI		VLOAD	VCOMP		# EARTH, R= -RCM
 COVCNV		UNIT	BOV		# TEST OVERFLOW FOR INDICATION OF NULL
 			NOADJUST	# VECTOR
 		PUSH	DOT		# 20D
-# Page 935
+## Page 935
 			HIUNITX		# COMPUTE YAW ANGLE = ACOS (URP.UX)
 		SL1	ACOS		# REVOLUTIONS SCALED B0
 		PDVL	DOT		# 22D YAWANG
 			URP
 			HIUNITY		# COMPUTE FOLLOWING- URP.UY
 		SL1	BPL		# POSITIVE
-			NOADJUST	# YES, 0- 180 DEGREES
+			NOADJUST	# YES, 0-180 DEGREES
 		DLOAD	DSU		# NO, 181-360 DEGREES 20D
 			DPPOSMAX	# COMPUTE 2 PI MINUS YAW ANGLE
 		PUSH			# 22D YAWANG
@@ -126,3 +127,4 @@ YAWANG		EQUALS	20D
 PITCHANG	EQUALS	22D
 R		EQUALS	RCM
 		SBANK=	LOWSUPER
+

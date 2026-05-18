@@ -1,41 +1,46 @@
-# Copyright:	Public domain.
-# Filename:	ALARM_AND_ABORT.agc
-# Purpose: 	Part of the source code for Luminary 1A build 099.
-#		It is part of the source code for the Lunar Module's (LM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	Ron Burkey <info@sandroid.org>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	1381-1385
-# Mod history:  2009-05-10 SN   (Sergio Navarro).  Started adapting
-#				from the Luminary131/ file of the same
-#				name, using Luminary099 page images.
-#		2009-06-05 RSB	Fixed a type.
-#		2011-01-06 JL	Fixed pseudo-label indentation.
-#
-# This source code has been transcribed or otherwise adapted from
-# digitized images of a hardcopy from the MIT Museum.  The digitization
-# was performed by Paul Fjeld, and arranged for by Deborah Douglas of
-# the Museum.  Many thanks to both.  The images (with suitable reduction
-# in storage size and consequent reduction in image quality as well) are
-# available online at www.ibiblio.org/apollo.  If for some reason you
-# find that the images are illegible, contact me at info@sandroid.org
-# about getting access to the (much) higher-quality images which Paul
-# actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#	Assemble revision 001 of AGC program LMY99 by NASA 2021112-061
-#	16:27 JULY 14, 1969
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	ALARM_AND_ABORT.agc
+## Purpose: 	Part of the source code for Luminary 1A build 099.
+##		It is part of the source code for the Lunar Module's (LM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	Ron Burkey <info@sandroid.org>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	1381-1385
+## Mod history: 2009-05-10 SN   (Sergio Navarro).  Started adapting
+##				from the Luminary131/ file of the same
+##				name, using Luminary099 page images.
+##		2009-06-05 RSB	Fixed a type.
+##		2011-01-06 JL	Fixed pseudo-label indentation.
+##		2016-12-13 RSB	GOTOP00H -> GOTOPOOH
+##		2016-12-18 RSB	Proofed text comments with octopus/ProoferComments
+##				and corrected the errors found.
+##		2021-05-30 ABS	OCT21103 -> OCT1103
+##
+## This source code has been transcribed or otherwise adapted from
+## digitized images of a hardcopy from the MIT Museum.  The digitization
+## was performed by Paul Fjeld, and arranged for by Deborah Douglas of
+## the Museum.  Many thanks to both.  The images (with suitable reduction
+## in storage size and consequent reduction in image quality as well) are
+## available online at www.ibiblio.org/apollo.  If for some reason you
+## find that the images are illegible, contact me at info@sandroid.org
+## about getting access to the (much) higher-quality images which Paul
+## actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##	Assemble revision 001 of AGC program LMY99 by NASA 2021112-61
+##	16:27 JULY 14, 1969 
 
-# Page 1381
+## Page 1381
 # THE FOLLOWING SUBROUTINE MAY BE CALLED TO DISPLAY A NON-ABORTIVE ALARM CONDITION.  IT MAY BE CALLED
 # EITHER IN INTERRUPT OR UNDER EXECUTIVE CONTROL.
 #
 # CALLING SEQUENCE IS AS FOLLOWS:
 #		TC	ALARM
-#		OCT	AAANN		# ALARM NO. NN IN GENERAL AREA AAA.
-#					# (RETURNS HERE)
+#		OCT	AAANN		ALARM NO. NN IN GENERAL AREA AAA.
+#					(RETURNS HERE)
 
 		BLOCK	02
 		SETLOC	FFTAG7
@@ -80,7 +85,7 @@ FAIL3		CA	FAILREG +2
 		LXCH	FAILREG +2
 		TCF	MULTEXIT
 
-# Page 1382
+## Page 1382
 
 PROGLARM	CS	DSPTAB +11D
 		MASK	OCT40400
@@ -100,14 +105,14 @@ MULTFAIL	CA	L
 
 # PRIOLARM DISPLAYS V05N09 VIA PRIODSPR WITH 3 RETURNS TO THE USER FROM THE ASTRONAUT AT CALL LOC +1,+2,+3 AND
 # AN IMMEDIATE RETURN TO THE USER AT CALL LOC +4.  EXAMPLE FOLLOWS,
-#		CAF	OCTXX		# ALARM CODE
+#		CAF	OCTXX		ALARM CODE
 #		TC	BANKCALL
 #		CADR	PRIOLARM
 #		...	...
 #		...	...
-#		...	...		# ASTRONAUT RETURN
-#		TC	PHASCHNG	# IMMEDIATE RETURN TO USER.  RESTART
-#		OCT	X.1		# PHASE CHANGE FOR PRIO DISPLAY
+#		...	...		ASTRONAUT RETURN
+#		TC	PHASCHNG	IMMEDIATE RETURN TO USER.  RESTART
+#		OCT	X.1		PHASE CHANGE FOR PRIO DISPLAY
 
 		BANK	10
 		SETLOC	DISPLAYS
@@ -132,7 +137,7 @@ PRIOLARM	INHINT			# * * * KEEP IN DISPLAY ROUTINES BANK
 		COUNT*	$$/ALARM
 BAILOUT		INHINT
 		CA	Q
-# Page 1383
+## Page 1383
 		TS	ALMCADR
 
 		INDEX	Q
@@ -174,7 +179,7 @@ GOPOODOO	INHINT
 STRTIDLE	CAF	BBSERVDL
 		TC	SUPERSW
 		TC	BANKCALL	# PUT SERVICER INTO ITS "GROUND" STATE
-		CADR	SERVIDLE	# AND PROCED TO GOTOPOOH.
+		CADR	SERVIDLE	# AND PROCEED TO GOTOPOOH.
 CCSHOLE		INHINT
 		CA	Q
 		TC	ABORT2
@@ -183,7 +188,7 @@ CURTAINS	INHINT
 		CA	Q
 		TC	ALARM2
 OCT217		OCT	00217
-# Page 1384
+## Page 1384
 		TC	ALMCADR		# RETURN TO USER
 
 BAILOUT1	INHINT
@@ -235,7 +240,7 @@ ABORT		EQUALS	WHIMPER
 		BANK	13
 		SETLOC	ABTFLGS
 		BANK
-# Page 1385
+## Page 1385
 		COUNT*	$$/ALARM
 
 FLAGS		CS	STATEBIT
@@ -248,4 +253,4 @@ FLAGS		CS	STATEBIT
 		MASK	FLAGWRD2
 		TS	FLAGWRD2
 		TC	Q
-
+		

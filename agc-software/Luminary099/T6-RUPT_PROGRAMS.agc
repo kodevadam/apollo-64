@@ -1,35 +1,40 @@
-# Copyright:	Public domain.
-# Filename:	T6-RUPT_PROGRAMS.agc
-# Purpose: 	Part of the source code for Luminary 1A build 099.
-#		It is part of the source code for the Lunar Module's (LM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	Ron Burkey <info@sandroid.org>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	1403-1405
-# Mod history:  2009-05-10 SN   (Sergio Navarro).  Started adapting
-#				from the Luminary131/ file of the same
-#				name, using Luminary099 page images.
-#
-# This source code has been transcribed or otherwise adapted from
-# digitized images of a hardcopy from the MIT Museum.  The digitization
-# was performed by Paul Fjeld, and arranged for by Deborah Douglas of
-# the Museum.  Many thanks to both.  The images (with suitable reduction
-# in storage size and consequent reduction in image quality as well) are
-# available online at www.ibiblio.org/apollo.  If for some reason you
-# find that the images are illegible, contact me at info@sandroid.org
-# about getting access to the (much) higher-quality images which Paul
-# actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#	Assemble revision 001 of AGC program LMY99 by NASA 2021112-061
-#	16:27 JULY 14, 1969
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	T6-RUPT_PROGRAMS.agc
+## Purpose: 	Part of the source code for Luminary 1A build 099.
+##		It is part of the source code for the Lunar Module's (LM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	Ron Burkey <info@sandroid.org>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	1403-1405
+## Mod history: 2009-05-10 SN   (Sergio Navarro).  Started adapting
+##				from the Luminary131/ file of the same
+##				name, using Luminary099 page images.
+##		2016-12-18 RSB	Proofed text comments with octopus/ProoferComments
+##				and corrected the errors found.
+##              2017-08-29 MAS  Fixed a comment-text error found while transcribing
+##				Zerlina 56.
+##
+## This source code has been transcribed or otherwise adapted from
+## digitized images of a hardcopy from the MIT Museum.  The digitization
+## was performed by Paul Fjeld, and arranged for by Deborah Douglas of
+## the Museum.  Many thanks to both.  The images (with suitable reduction
+## in storage size and consequent reduction in image quality as well) are
+## available online at www.ibiblio.org/apollo.  If for some reason you
+## find that the images are illegible, contact me at info@sandroid.org
+## about getting access to the (much) higher-quality images which Paul
+## actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##	Assemble revision 001 of AGC program LMY99 by NASA 2021112-61
+##	16:27 JULY 14, 1969 
 
-# Page 1403
+## Page 1403
 # PROGRAM NAMES:	(1) T6JOBCHK	MOD. NO. 5	OCTOBER 2, 1967
 #			(2) DOT6RUPT
-# MODIFICATION BY:	LOWELL G. HULL (A.C.ELECTRONICS)
+# MODIFICATION BY:	LOWELL G HULL (A.C.ELECTRONICS)
 #
 # THESE PROGRAMS ENABLE THE LM DAP TO CONTROL THE THRUST TIMES OF THE REACTION CONTROL SYSTEM JETS BY USING TIME6.
 # SINCE THE LM DAP MAINTAINS EXCLUSIVE CONTROL OVER TIME6 AND ITS INTERRUPTS, THE FOLLOWING CONVENTIONS HAVE BEEN
@@ -47,7 +52,7 @@
 #				A.	A T6RUPT IS ABOUT TO OCCUR AT THE NEXT DINC, OR
 #				B.	A T6RUPT IS WAITING IN THE PRIORITY CHAIN, OR
 #				C.	A T6RUPT IS IN PROCESS NOW.
-#	4.	ALL PROGRAMS WHICH OPERATE IN EITHER INTERRUPT MODE OR WITH INTERRUPT INHIBITED MUST CALL T6JOBCHK
+#	4)	ALL PROGRAMS WHICH OPERATE IN EITHER INTERRUPT MODE OR WITH INTERRUPT INHIBITED MUST CALL T6JOBCHK
 #		EVERY 5 MILLISECONDS TO PROCESS A POSSIBLE WAITING T6RUPT BEFORE IT CAN BE HONORED BY THE HARDWARE.
 #      (5.	PROGRAM JTLST, IN Q,R-AXES, HANDLES THE INPUT LIST.)
 #
@@ -56,7 +61,7 @@
 #		L+1	(RETURN)
 #
 # DOT6RUPT CALLING SEQUENCE:
-#			DXCH	ARUPT		# T6RUPT LEAD IN AT LOCATION 4004.
+#			DXCH	ARUPT		T6RUPT LEAD IN AT LOCATION 4004.
 #			EXTEND
 #			DCA	T6ADR
 #			DTCB
@@ -75,7 +80,7 @@
 # DEBRIS:	T6JOBCHK CLOBBERS A.  DOT6RUPT CLOBBERS NOTHING.
 
 		BLOCK	02
-# Page 1404
+## Page 1404
 		BANK	17
 		SETLOC	DAPS2
 		BANK
@@ -83,11 +88,11 @@
 		COUNT*	$$/DAPT6
 
 T6JOBCHK	CCS	TIME6		# CHECK TIME6 FOR WAITING T6RUPT:
-		TC	Q		# NONE: CLOCK COUNTING DOWN.
+		TC	Q		# NONE: CLOCK COUTING DOWN.
 		TC	CCSHOLE
 		TC	T6JOBCHK +3
 
-# CONTROL PASSES TO T6JOB ONLY WHEN C(TIME6) = -0 (I.E., WHEN A T6RUPT MUST BE PROCESSED).
+# CONTROL PASSES TO T6JOB ONLY WHEN C(TIME6) = -0 (I.E. WHEN A T6RUPT MUST BE PROCESSED).
 
 T6JOB		CAF	POSMAX		# DISABLE CLOCK: NEEDED SINCE RUPT OCCURS
 		EXTEND			# 1 DINC AFTER T6 = 77777. FOR 625 MUSECS
@@ -127,7 +132,7 @@ GOCH56		INDEX	L
 		CA	NEXTP
 WRITEP		EXTEND
 		WRITE	CHAN6
-# Page 1405
+## Page 1405
 		TC	Q
 
 		CA	NEXTU

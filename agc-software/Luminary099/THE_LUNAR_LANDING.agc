@@ -1,39 +1,46 @@
-# Copyright:	Public domain.
-# Filename:	THE_LUNAR_LANDING.agc
-# Purpose: 	Part of the source code for Luminary 1A build 099.
-#		It is part of the source code for the Lunar Module's (LM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	Hartmuth Gutsche<hgutsche@xplornet.com>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	785-792
-# Mod history:	2009-05-20 HG	Transcribed from page images.
-#
-# This source code has been transcribed or otherwise adapted from
-# digitized images of a hardcopy from the MIT Museum.  The digitization
-# was performed by Paul Fjeld, and arranged for by Deborah Douglas of
-# the Museum.  Many thanks to both.  The images (with suitable reduction
-# in storage size and consequent reduction in image quality as well) are
-# available online at www.ibiblio.org/apollo.  If for some reason you
-# find that the images are illegible, contact me at info@sandroid.org
-# about getting access to the (much) higher-quality images which Paul
-# actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#	Assemble revision 001 of AGC program LMY99 by NASA 2021112-061
-#	16:27 JULY 14, 1969
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	THE_LUNAR_LANDING.agc
+## Purpose: 	Part of the source code for Luminary 1A build 099.
+##		It is part of the source code for the Lunar Module's (LM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	Hartmuth Gutsche<hgutsche@xplornet.com>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	785-792
+## Mod history:	2009-05-20 HG	Transcribed from page images.
+##		2016-12-13 RSB	GOTOP00H -> GOTOPOOH
+##		2016-12-16 RSB	Proofed text comments with octopus/ProoferComments
+##				and corrected the errors found.
+##		2017-03-13 RSB	Comment-text fixes noted in proofing Luminary 116.
+##		2017-03-16 RSB	Comment-text fixes identified in 5-way
+##				side-by-side diff of Luminary 69/99/116/131/210.
 
-# Page 785
+## This source code has been transcribed or otherwise adapted from
+## digitized images of a hardcopy from the MIT Museum.  The digitization
+## was performed by Paul Fjeld, and arranged for by Deborah Douglas of
+## the Museum.  Many thanks to both.  The images (with suitable reduction
+## in storage size and consequent reduction in image quality as well) are
+## available online at www.ibiblio.org/apollo.  If for some reason you
+## find that the images are illegible, contact me at info@sandroid.org
+## about getting access to the (much) higher-quality images which Paul
+## actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##	Assemble revision 001 of AGC program LMY99 by NASA 2021112-61
+##	16:27 JULY 14, 1969 
+
+## Page 785
 		BANK	32
 		SETLOC	F2DPS*32
 		BANK
 
 		EBANK=	E2DPS
 
-#	*************************************
+#	****************************************
 #	P63: THE LUNAR LANDING, BRAKING PHASE
-#	*************************************
+#	****************************************
 
 		COUNT*	$$/P63
 
@@ -51,7 +58,7 @@ P63LM		TC	PHASCHNG
 		CAF	FOUR
 		TS	DVCNTR
 
-		CS	ONE		# INITIALIZE WCHPHASE AND FLPASS0
+		CS	ONE		# INITIALIZE WCHPHASE AND FLPASSO
 		TS	WCHPHASE
 
 		CA	ZERO
@@ -72,13 +79,13 @@ FLAGORGY	TC	INTPRET		# DIONYSIAN FLAG WAVING
 			P25FLAG		# TERMINATE P25 IF IT IS RUNNING.
 			RNDVZFLG	# TERMINATE P20 IF IT IS RUNNING
 
-					# ********************************
+					# ****************************************
 
 IGNALG		SETPD	VLOAD		# FIRST SET UP INPUTS FOR RP-TO-R:-
-# Page 786
-			0		#   AT 0D LANDING SITE IN MOON FIXED FRAME
-			RLS		#   AT 6D ESTIMATED TIME OF LANDING
-		PDDL	PUSH		#   MPAC NON-ZERO TO INDICATE LUNAR CASE
+## Page 786
+			0		# 	AT 0D LANDING SITE IN MOON FIXED FRAME
+			RLS		#	AT 6D ESTIMATED TIME OF LANDING
+		PDDL	PUSH		#	MPAC NON-ZERO TO INDICATE LUNAR CASE
 			TLAND
 		STCALL	TPIP		# ALSO SET TPIP FOR FIRST GUIDANCE PASS
 			RP-TO-R
@@ -119,15 +126,14 @@ IGNALOOP	DLOAD
 			?GUIDSUB	# WHICH DELIVERS N PASSES OF GUIDANCE
 
 # DDUMCALC IS PROGRAMMED AS FOLLOWS:-
-#                                         2                                           ___
+#                                         2                                           -
 #              (RIGNZ - RGU )/16 + 16(RGU  )KIGNY/B8 + (RGU - RIGNX)KIGNX/B4 + (ABVAL(VGU) - VIGN)KIGNV/B4
 #                          2             1                 0
 #	DDUM = -------------------------------------------------------------------------------------------
 #                                                10
 #                                               2   (VGU - 16 VGU KIGNX/B4)
+## Page 787
 #                                                       2        0
-# Page 787 new page is actually one line earlier but this would put the indices on a separate line
-# disconnected from their respective variables
 # THE NUMERATOR IS SCALED IN METERS AT 2(28).  THE DENOMINATOR IS A VELOCITY IN UNITS OF 2(10) M/CS.
 # THE QUOTIENT IS THUS A TIME IN UNITS OF 2(18) CENTISECONDS.  THE FINAL SHIFT RESCALES TO UNITS OF 2(28) CS.
 # THERE IS NO DAMPING FACTOR.  THE CONSTANTS KIGNX/B4, KIGNY/B8 AND KIGNV/B4 ARE ALL NEGATIVE IN SIGN.
@@ -175,8 +181,8 @@ DDUMCALC	TS	NIGNLOOP
 		DLOAD
 			PIPTIME1
 		STOVL	TET		# HOPEFULLY ?GUIDSUB DID NOT
-			RATT1		#   CLOBBER RATT1 AND VATT1
-# Page 788
+			RATT1		#	CLOBBER RATT1 AND VATT1
+## Page 788
 		STOVL	RCV
 			VATT1
 		STCALL	VCV
@@ -190,16 +196,16 @@ DDUMGOOD	SLOAD	SR
 		BDSU
 			TDEC1
 		STOVL	TIG		# COMPUTE DISTANCE LANDING SITE WILL BE
-			V		#   OUT OF LM'S ORBITAL PLANE AT IGNITION:
-		VXV	UNIT		#   SIGN IS + IF LANDING SITE IS TO THE
-			R		#   RIGHT, NORTH; - IF TO THE LEFT, SOUTH.
+			V		#	OUT OF LM'S ORBITAL PLANE AT IGNITION:
+		VXV	UNIT		#	SIGN IS + IF LANDING SITE IS TO THE
+			R		#	RIGHT, NORTH; - IF TO THE LEFT, SOUTH.
 		DOT	SL1
 			LAND
 R60INIT		STOVL	OUTOFPLN	# INITIALIZATION FOR CALCMANU
 			UNFC/2
 		STORE	R60VSAVE	# STORE UNFC/2 TEMPORARILY IN R60SAVE
 		EXIT
-					# *******************************************
+					# ****************************************
 
 IGNALGRT	TC	PHASCHNG	# PREVENT REPEATING IGNALG
 		OCT	04024
@@ -211,8 +217,8 @@ ASTNCLOK	CS	ASTNDEX
 
 ASTNRET		TC	INTPRET
 		SSP	RTB		# GO PICK UP DISPLAY AT END OF R51:
-			QMAJ		#   "PROCEED" WILL DO A FINE ALIGNMENT
-		FCADR	P63SPOT2	#   " ENTER " WILL RETURN TO P63SPOT2
+			QMAJ		#	"PROCEED" WILL DO A FINE ALIGNMENT
+		FCADR	P63SPOT2	#	"ENTER" WILL RETURN TO P63SPOT2
 			R51P63
 P63SPOT2	VLOAD	UNIT		# INITIALIZE KALCMANU FOR BURN ATTITUDE
 			R60VSAVE
@@ -227,7 +233,7 @@ P63SPOT2	VLOAD	UNIT		# INITIALIZE KALCMANU FOR BURN ATTITUDE
 		INHINT
 		TC	IBNKCALL
 		CADR	PFLITEDB
-# Page 789
+## Page 789
 		RELINT
 
 		TC	BANKCALL
@@ -251,31 +257,31 @@ P63SPOT3	CA	BIT6		# IS THE LR ANTENNA IN POSITION 1 YET
 P63SPOT4	TC	BANKCALL	# ENTER		INITIALIZE LANDING RADAR
 		CADR	SETPOS1
 
-		TC	POSTJUMP	# OFF TO SEE THE WIZARD...
+		TC	POSTJUMP	# OFF TO SEE THE WIZARD ...
 		CADR	BURNBABY
 
-#	---------------------------------
+#       ----------------------------------------
 
-#	CONSTANTS FOR P63LM AND IGNALG
+# CONSTANTS FOR P63LM AND IGNALG
 
 P63ADRES	GENADR	P63TABLE
 
-ASTNDEX		=	MD1		# OCT 25:  INDEX FOR CLOKTASK
+ASTNDEX		=	MD1		# OCT 25; INDEX FOR CLOKTASK
 
 CODE500		OCT	00500
 
 99999CON	2DEC	30479.7 B-24
 
-GUIDDURN	2DEC	+66440		# GUIDDURN	+6.64400314 E+2
+GUIDDURN	2DEC	+66440		# GUIDDURN +6.64400314 E+2
 DDUMCRIT	2DEC	+8 B-28		# CRITERION FOR IGNALG CONVERGENCE
 
-# Page 790
-#	--------------------------------
+## Page 790
+#       ----------------------------------------
 
-# Page 791
-#	*************************
+## Page 791
+#	****************************************
 #	P68: LANDING CONFIRMATION
-#	*************************
+#	****************************************
 
 		BANK	31
 		SETLOC	F2DPS*31
@@ -291,8 +297,8 @@ LANDJUNK	TC	PHASCHNG
 		CADR	ZATTEROR
 
 		TC	BANKCALL	# SET 5 DEGREE DEADBAND
-		CADR	SETMAXDB
-
+		CADR	SETMAXDB	
+					
 		TC	INTPRET		# TO INTERPRETIVE AS TIME IS NOT CRITICAL
 		SET	CLEAR
 			SURFFLAG
@@ -322,9 +328,9 @@ LANDJUNK	TC	PHASCHNG
 		TCF	-5		# RECYCLE
 
 		TC	INTPRET
-# Page 792
+## Page 792
 		VLOAD			# INITIALIZE GSAV AND (USING REFMF)
-			UNITX		#   YNBSAV, ZNBSAV AND ATTFLAG FOR P57
+			UNITX		# YNBSAV, ZNBSAV AND ATTFLAG FOR P57
 		STCALL	GSAV
 			REFMF
 		EXIT

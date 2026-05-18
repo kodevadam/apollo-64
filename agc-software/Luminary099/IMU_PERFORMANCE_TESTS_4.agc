@@ -1,35 +1,39 @@
-# Copyright:	Public domain.
-# Filename:	IMU_PERFORMANCE_TESTS_4.agc
-# Purpose: 	Part of the source code for Luminary 1A build 099.
-#		It is part of the source code for the Lunar Module's (LM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	Ron Burkey <info@sandroid.org>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	382-389
-# Mod history:	2009-05-17 RSB	Adapted from the corresponding
-#				Luminary131 file, using page
-#				images from Luminary 1A.
-#
-# This source code has been transcribed or otherwise adapted from
-# digitized images of a hardcopy from the MIT Museum.  The digitization
-# was performed by Paul Fjeld, and arranged for by Deborah Douglas of
-# the Museum.  Many thanks to both.  The images (with suitable reduction
-# in storage size and consequent reduction in image quality as well) are
-# available online at www.ibiblio.org/apollo.  If for some reason you
-# find that the images are illegible, contact me at info@sandroid.org
-# about getting access to the (much) higher-quality images which Paul
-# actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#	Assemble revision 001 of AGC program LMY99 by NASA 2021112-061
-#	16:27 JULY 14, 1969
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	IMU_PERFORMANCE_TESTS_4.agc
+## Purpose: 	Part of the source code for Luminary 1A build 099.
+##		It is part of the source code for the Lunar Module's (LM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	Ron Burkey <info@sandroid.org>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	382-389
+## Mod history:	2009-05-17 RSB	Adapted from the corresponding 
+##				Luminary131 file, using page 
+##				images from Luminary 1A.
+##		2016-12-14 RSB	Proofed text comments with octopus/ProoferComments
+##				and corrected the errors found.
+##		2017-03-07 RSB	Comment-text error-fixes noted in proofing Luminary 116.
 
-# Page 382
-# PROGRAM --	IMU PERFORMANCE TESTS 4
-# DATE --	NOV 15, 1966
-# BY --		GEORGE SCHMIDT IL7-146 EXT 1126
+## This source code has been transcribed or otherwise adapted from
+## digitized images of a hardcopy from the MIT Museum.  The digitization
+## was performed by Paul Fjeld, and arranged for by Deborah Douglas of
+## the Museum.  Many thanks to both.  The images (with suitable reduction
+## in storage size and consequent reduction in image quality as well) are
+## available online at www.ibiblio.org/apollo.  If for some reason you
+## find that the images are illegible, contact me at info@sandroid.org
+## about getting access to the (much) higher-quality images which Paul
+## actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##	Assemble revision 001 of AGC program LMY99 by NASA 2021112-61
+##	16:27 JULY 14, 1969 
+
+## Page 382
+# PROGRAM -	IMU PERFORMANCE TESTS 4
+# DATE -	NOV 15, 1966
+# BY -		GEORGE SCHMIDT IL7-146 EXT 1126
 # MOD NO-ZERO
 #
 # FUNCTIONAL DESCRIPTION
@@ -42,7 +46,7 @@
 #
 # NORMAL EXIT
 #
-# LENGTHOT GOES TO ZERO -- RETURN TO IMU PERF TESTS 2 CONTROL
+# LENGTHOT GOES TO ZERO - RETURN TO IMU PERF TESTS 2 CONTROL
 #
 # ALARMS
 #
@@ -50,20 +54,20 @@
 # 1601	BAD IMU MODING IN ANY ROUTINE THAT USES IMUSTALL
 #	OUTPUT
 #
-# FLASHING DISPLAY OF RESULTS -- CONTROLLED IN IMU PERF TESTS 2
+# FLASHING DISPLAY OF RESULTS - CONTROLLED IN IMU PERF TESTS 2
 #
 # DEBRIS
 #
-# ALL CENTRALS -- ALL OF EBANK XSM
+# ALL CENTRALS - ALL OF EBANK XSM
 
-# Page 383
+## Page 383
 		BANK	33
 		SETLOC	IMU4
 		BANK
 		COUNT*	$$/P07
-
+		
 		EBANK=	XSM
-
+		
 ESTIMS		INHINT
 		CAE	1SECXT
 		TC	TWIDDLE
@@ -91,12 +95,12 @@ ESTIMS		INHINT
 			TORQNDX
 		DCOMP	BMN
 			VERTSKIP
-		CALL
+		CALL	
 			ERTHRVSE
 VERTSKIP	EXIT
 		TC	SLEEPIE +1
-
-# Page 384
+		
+## Page 384
 ALLOOP		CA	OVFLOWCK
 		EXTEND
 		BZF	+2
@@ -130,10 +134,10 @@ SPECSTS		CAF	PRIO20
 		TC	FINDVAC
 		EBANK=	XSM
 		2CADR	ALFLT		# START THE JOB
-
+		
 		TC	TASKOVER
-
-# Page 385
+		
+## Page 385
 ALFLT		CCS	GEOCOMPS
 		TC	+2
 		TC	NORMLOP
@@ -151,13 +155,13 @@ NORMLOP		TC	INTPRET
 		STODL	DPIPAY
 			MPAC +5
 		STORE	DPIPAZ
-
+		
 		SETPD	AXT,1
 			0
 			8D
 		SLOAD	DCOMP
 			GEOCOMPS
-		BMN
+		BMN	
 			PERFERAS
 ALCGKK		SLOAD	BMN
 			ALTIMS
@@ -172,7 +176,7 @@ ALKCG2		DLOAD*	INCR,1
 		TIX,2	SXA,1
 			ALKCG2
 			ALX1S
-
+			
 ALFLT3		AXT,1
 			8D
 DELMLP		DLOAD*	DMP
@@ -184,7 +188,7 @@ DELMLP		DLOAD*	DMP
 		STORE	INTY 	+8D,1
 		PDDL	DMP*
 			VELSC
-# Page 386
+## Page 386
 			VLAUN 	+8D,1
 		SL2R
 		DSU	STADR
@@ -226,7 +230,7 @@ ALKLP		LXC,1	SXA,1
 		TIX,2	AXT,1
 			ALKLP
 			8D
-
+			
 LOOSE		DLOAD*	PDDL*
 			ACCWD 	+8D,1
 			VLAUN 	+8D,1
@@ -234,7 +238,7 @@ LOOSE		DLOAD*	PDDL*
 			POSNV 	+8D,1
 		MXV	VSL1
 			TRANSM1
-# Page 387
+## Page 387
 		DLOAD
 			MPAC
 		STORE	POSNV	 +8D,1
@@ -246,7 +250,7 @@ LOOSE		DLOAD*	PDDL*
 		STORE	ACCWD 	+8D,1
 		TIX,1
 			LOOSE
-
+			
 		AXT,2	AXT,1		# EVALUATE SINES AND COSINES
 			6
 			2
@@ -263,17 +267,17 @@ BOOP		DLOAD*	DMPR
 		STORE	22D,2		# COSINES
 		TIX,2
 			BOOP
-
+			
 PERFERAS	EXIT
 		CA	EBANK7
 		TS	EBANK
 		EBANK=	ATIGINC
 		TC	ATIGINC		# GOTO ERASABLE TO CALCULATE ONLY TO RETN
-
+		
 # 			     CAUTION
 #
 # THE ERASABLE PROGRAM THAT DOES THE CALCULATIONS MUST BE LOADED
-# BEFORE ANY ATTEMPT IS MAKE TO RUN THE IMU PERFORMANCE TEST
+# BEFORE ANY ATTEMPT IS MADE TO RUN THE IMU PERFORMANCE TEST
 
 		EBANK=	AZIMUTH
 		CCS	LENGTHOT
@@ -283,8 +287,8 @@ PERFERAS	EXIT
 		TC	SETUPER1
 		CA	CDUX
 		TS	LOSVEC	 +1	# FOR TROUBLESHOOTING VD POSNS 2$4
-
-# Page 388
+		
+## Page 388
 SETUPER1	TC	INTPRET
 		DLOAD	PDDL		# ANGLES FROM DRIFT TEST ONLY
 			ANGZ
@@ -297,7 +301,7 @@ SETUPER1	TC	INTPRET
 			XSM
 		STORE	OGC
 		EXIT
-
+		
 		CA	OGCPL
 		TC	BANKCALL
 		CADR	IMUPULSE
@@ -309,12 +313,12 @@ GEOSTRT4	CCS	TORQNDX		# ONLY POSITIVE IF IN VERTICAL DRIFT TEST
 			ERTHRVSE
 		EXIT
 		TC	TORQUE
-
+		
 SLEEPIE		TS	LENGTHOT	# TEST NOT OVER-DECREMENT LENGTHOT
 		CCS	TORQNDX		# ARE WE DOING VERTDRIFT
 		TC	EARTHR*
 		TC	ENDOFJOB
-
+		
 SOMEERRR	CA	EBANK5
 		TS	EBANK
 		CA	ONE
@@ -327,17 +331,17 @@ SOMERR2		CAF	OCT1601
 		TC	DOWNFLAG
 		ADRES	IMUSE
 		TC	ENDOFJOB
-
+		
 OCT1601		OCT	01601
 DEC585		OCT	06200		# 3200 B+14 ORDER IS IMPORTANT
 SCHZEROS	2DEC	.00000000
-# Page 389
+## Page 389
 		2DEC	.00000000
-
+		
 		OCT	00000
 ONEDPP		OCT	00000		# ORDER IS IMPORTANT
 		OCT	00001
-
+		
 INTVAL		OCT	4
 		OCT	2
 		DEC	144
@@ -345,7 +349,7 @@ INTVAL		OCT	4
 SOUPLY		2DEC	.93505870	# INITIAL GAINS FOR PIP OUTPUTS
 
 		2DEC	.26266423	# INITIAL GAINS/4 FOR ERECTION ANGLES
-
+		
 77DECML		DEC	77
 ALXXXZ		GENADR	ALX1S 	-1
 PIPASC		2DEC	.13055869
@@ -355,7 +359,7 @@ VELSC		2DEC	-.52223476	# 512/980.402
 ALSK		2DEC	.17329931	# SSWAY VEL GAIN X 980.402/4096
 
 		2DEC	-.00835370	# SSWAY ACCEL GAIN X 980.402/4096
-
+		
 GEORGEJ		2DEC	.63661977
 
 GEORGEK		2DEC	.59737013

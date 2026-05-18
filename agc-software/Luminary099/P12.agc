@@ -1,30 +1,37 @@
-# Copyright:	Public domain.
-# Filename:	P12.agc
-# Purpose: 	Part of the source code for Luminary 1A build 099.
-#		It is part of the source code for the Lunar Module's (LM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	Hartmuth Gutsche <hgutsche@xplornet.com>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	838-842
-# Mod history:	2009-05-23 HG	Transcribed from page images.
-#
-# This source code has been transcribed or otherwise adapted from
-# digitized images of a hardcopy from the MIT Museum.  The digitization
-# was performed by Paul Fjeld, and arranged for by Deborah Douglas of
-# the Museum.  Many thanks to both.  The images (with suitable reduction
-# in storage size and consequent reduction in image quality as well) are
-# available online at www.ibiblio.org/apollo.  If for some reason you
-# find that the images are illegible, contact me at info@sandroid.org
-# about getting access to the (much) higher-quality images which Paul
-# actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#	Assemble revision 001 of AGC program LMY99 by NASA 2021112-061
-#	16:27 JULY 14, 1969
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	P12.agc
+## Purpose: 	Part of the source code for Luminary 1A build 099.
+##		It is part of the source code for the Lunar Module's (LM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	Hartmuth Gutsche <hgutsche@xplornet.com>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	838-842
+## Mod history:	2009-05-23 HG	Transcribed from page images.
+##		2016-12-13 RSB	GOTOP00H -> GOTOPOOH
+##		2016-12-17 RSB	Proofed text comments with octopus/ProoferComments
+##				and corrected the errors found.
+##		2017-01-28 RSB	Back-ported a comment fix from Luminary 69.
+##		2017-08-26 MAS	Fixed a comment-text error found while transcribing
+##				Zerlina 56.
+##
+## This source code has been transcribed or otherwise adapted from
+## digitized images of a hardcopy from the MIT Museum.  The digitization
+## was performed by Paul Fjeld, and arranged for by Deborah Douglas of
+## the Museum.  Many thanks to both.  The images (with suitable reduction
+## in storage size and consequent reduction in image quality as well) are
+## available online at www.ibiblio.org/apollo.  If for some reason you
+## find that the images are illegible, contact me at info@sandroid.org
+## about getting access to the (much) higher-quality images which Paul
+## actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##	Assemble revision 001 of AGC program LMY99 by NASA 2021112-61
+##	16:27 JULY 14, 1969 
 
-# Page 838
+## Page 838
 		BANK	24
 		SETLOC	P12
 		BANK
@@ -37,21 +44,21 @@ P12LM		TC	PHASCHNG
 
 		TC	BANKCALL
 		CADR	R02BOTH		# CHECK THE STATUS OF THE IMU.
-
-		TC	UPFLAG
+		
+		TC	UPFLAG		
 		ADRES	MUNFLAG
-
+		
 		TC	UPFLAG		# INSURE 4-JET TRANSLATION CAPABILITY.
 		ADRES	ACC4-2FL
-
+		
 		TC	UPFLAG		# PREVENT R10 FROM ISSUING CROSS-POINTER
 		ADRES	R10FLAG		# OUTPUTS.
-
+		
 		TC	CLRADMOD	# INITIALIZE RADMODES FOR R29.
-
-		TC	DOWNFLAG	# CLEAR RENDEZVOUS FLAG FOR P22
+		
+		TC	DOWNFLAG	# CLEAR RENDEZVOUS FLAG  FOR P22
 		ADRES	RNDVZFLG
-
+		
 		CAF	THRESH2		# INITIALIZE DVMON
 		TS	DVTHRUSH
 		CAF	FOUR
@@ -70,12 +77,12 @@ P12LM		TC	PHASCHNG
 		OCT	04024
 
 		TC	INTPRET
-		CALL			# INITIALZE WM AND /LAND/
+		CALL			# INITIALIZE WM AND /LAND/
 			GUIDINIT
 		SET	CALL
 			FLPI
 			P12INIT
-# Page 839
+## Page 839
 P12LMB		DLOAD
 			(TGO)A		# SET TGO TO AN INITIAL NOMINAL VALUE.
 		STODL	TGO
@@ -86,11 +93,11 @@ P12LMB		DLOAD
 			VATT
 			REFSMMAT
 		VSL1
-		STOVL	V1S		# COMPUTE V1S = VEL(TIG)*2(-7)M/CS.
+		STOVL	V1S		# COMPUTE V1S = VEL(TIG)*2(-7) M/CS.
 			RATT
 		MXV	VSL6
 			REFSMMAT
-		STCALL	R		# COMPUTE R = POS(TIG)*2(-24)M.
+		STCALL	R		# COMPUTE R = POS(TIG)*2(-24) M.
 			MUNGRAV		# COMPUTE GDT1/2(TIG)*2(-7)M/CS.
 		VLOAD	UNIT
 			R
@@ -108,7 +115,7 @@ P12LMB		DLOAD
 		TC	PHASCHNG
 		OCT	04024
 
-NEWLOAD		CAF	V06N76		# FLASH CROSS-RANGE, AND APOLUNE VALUES.
+NEWLOAD		CAF	V06N76		# FLASH CROSS-RANGE AND APOLUNE VALUES.
 		TC	BANKCALL
 		CADR	GOFLASH
 		TCF	GOTOPOOH
@@ -126,7 +133,7 @@ NEWLOAD		CAF	V06N76		# FLASH CROSS-RANGE, AND APOLUNE VALUES.
 			XRANGE
 			5D
 		DAD
-# Page 840
+## Page 840
 			Y
 		STOVL	YCO
 			UNIT/R/
@@ -167,7 +174,7 @@ YAWDUN		STOVL	YAW
 
 		TC	DOWNFLAG
 		ADRES	FLPI
-
+		
 		INHINT
 		TC	IBNKCALL
 		CADR	PFLITEDB
@@ -177,7 +184,7 @@ YAWDUN		STOVL	YAW
 		CADR	BURNBABY
 
 P12INIT		DLOAD			# INITIALIZE ENGINE DATA.  USED FOR P12 AND
-# Page 841
+## Page 841
 			(1/DV)A		# P71.
 		STORE	1/DV3
 		STORE	1/DV2
@@ -228,7 +235,7 @@ GUIDINIT	STQ	SETPD
 			LOADTIME
 		CALL
 			RP-TO-R
-# Page 842
+## Page 842
 		MXV	VXSC
 			REFSMMAT
 			MOONRATE
@@ -241,3 +248,5 @@ GUIDINIT	STQ	SETPD
 49FPS		2DEC	.149352 B-6	# EXPECTED RDOT AT TIPOVER
 VINJNOM		2DEC	16.7924 B-7	# 5509.5 FPS(APO=30NM WITH RDOT=19.5FPS)
 RDOTDNOM	2DEC	.059436 B-7	# 19.5 FPS
+
+

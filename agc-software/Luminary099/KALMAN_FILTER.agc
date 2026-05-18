@@ -1,32 +1,35 @@
-# Copyright:	Public domain.
-# Filename:	KALMAN_FILTER.agc
-# Purpose: 	Part of the source code for Luminary 1A build 099.
-#		It is part of the source code for the Lunar Module's (LM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	Ron Burkey <info@sandroid.org>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	1470-1471
-# Mod history:	2009-05-27 RSB	Adapted from the corresponding
-#				Luminary131 file, using page
-#				images from Luminary 1A.
-#
-# This source code has been transcribed or otherwise adapted from
-# digitized images of a hardcopy from the MIT Museum.  The digitization
-# was performed by Paul Fjeld, and arranged for by Deborah Douglas of
-# the Museum.  Many thanks to both.  The images (with suitable reduction
-# in storage size and consequent reduction in image quality as well) are
-# available online at www.ibiblio.org/apollo.  If for some reason you
-# find that the images are illegible, contact me at info@sandroid.org
-# about getting access to the (much) higher-quality images which Paul
-# actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#	Assemble revision 001 of AGC program LMY99 by NASA 2021112-061
-#	16:27 JULY 14, 1969
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	KALMAN_FILTER.agc
+## Purpose: 	Part of the source code for Luminary 1A build 099.
+##		It is part of the source code for the Lunar Module's (LM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	Ron Burkey <info@sandroid.org>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	1470-1471
+## Mod history:	2009-05-27 RSB	Adapted from the corresponding 
+##				Luminary131 file, using page 
+##				images from Luminary 1A.
+##		2016-12-18 RSB	Proofed text comments with octopus/ProoferComments
+##				but no errors found.
+##
+## This source code has been transcribed or otherwise adapted from
+## digitized images of a hardcopy from the MIT Museum.  The digitization
+## was performed by Paul Fjeld, and arranged for by Deborah Douglas of
+## the Museum.  Many thanks to both.  The images (with suitable reduction
+## in storage size and consequent reduction in image quality as well) are
+## available online at www.ibiblio.org/apollo.  If for some reason you
+## find that the images are illegible, contact me at info@sandroid.org
+## about getting access to the (much) higher-quality images which Paul
+## actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##	Assemble revision 001 of AGC program LMY99 by NASA 2021112-61
+##	16:27 JULY 14, 1969 
 
-# Page 1470
+## Page 1470
 		EBANK=	NO.UJETS
 		BANK	16
 		SETLOC	DAPS1
@@ -68,7 +71,7 @@ LOOPRATE	EXTEND
 		EXTEND
 		BZMF	NEGTORK
 STORTORK	INDEX	Q		# INCREMENT DOWNLIST REGISTER.
-		ADS	DOWNTORK	#   NOTE: NOT INITIALIZED; OVERFLOWS.
+		ADS	DOWNTORK	#	NOTE:  NOT INITIALIZED; OVERFLOWS.
 
 		CCS	DAPTEMP6
 		TCF	RATELOOP +1
@@ -77,7 +80,7 @@ SMALLTJU	CA	ZERO
 		INDEX	DAPTEMP6
 		XCH	TJP
 		EXTEND
-# Page 1471
+## Page 1471
 		MP	ELEVEN		# 10.24 PLUS
 		CA	L
 		TCF	LOOPRATE
@@ -97,5 +100,5 @@ ROTORQUE	CA	DAPTEMP2
 NEGTORK		COM
 		INCR	Q
 		TCF	STORTORK
-
+		
 

@@ -1,31 +1,37 @@
-# Copyright:	Public domain.
-# Filename:	P70-P71.agc
-# Purpose: 	Part of the source code for Luminary 1A build 099.
-#		It is part of the source code for the Lunar Module's (LM)
-#		Apollo Guidance Computer (AGC), for Apollo 11.
-# Assembler:	yaYUL
-# Contact:	Hartmuth Gutsche <hgutsche@xplornet.com>.
-# Website:	www.ibiblio.org/apollo.
-# Pages:	829-837
-# Mod history:	2009-05-23 HG	Transcribed from page images.
-#		2009-06-05 RSB	Fixed a typo.
-#
-# This source code has been transcribed or otherwise adapted from
-# digitized images of a hardcopy from the MIT Museum.  The digitization
-# was performed by Paul Fjeld, and arranged for by Deborah Douglas of
-# the Museum.  Many thanks to both.  The images (with suitable reduction
-# in storage size and consequent reduction in image quality as well) are
-# available online at www.ibiblio.org/apollo.  If for some reason you
-# find that the images are illegible, contact me at info@sandroid.org
-# about getting access to the (much) higher-quality images which Paul
-# actually created.
-#
-# Notations on the hardcopy document read, in part:
-#
-#	Assemble revision 001 of AGC program LMY99 by NASA 2021112-061
-#	16:27 JULY 14, 1969
+### FILE="Main.annotation"
+## Copyright:	Public domain.
+## Filename:	P70-P71.agc
+## Purpose: 	Part of the source code for Luminary 1A build 099.
+##		It is part of the source code for the Lunar Module's (LM)
+##		Apollo Guidance Computer (AGC), for Apollo 11.
+## Assembler:	yaYUL
+## Contact:	Hartmuth Gutsche <hgutsche@xplornet.com>.
+## Website:	www.ibiblio.org/apollo.
+## Pages:	829-837
+## Mod history:	2009-05-23 HG	Transcribed from page images.
+##		2009-06-05 RSB	Fixed a typo.
+##		2011-01-06 JL	Fixed pseudo-labels which were incorrectly real labels.
+##		2016-12-17 RSB	Proofed text comments with octopus/ProoferComments
+##				and corrected the errors found.
+##		2017-03-14 RSB	Comment-text fixes noted in proofing Luminary 116.
+##		2017-08-16 RSB	Comment typo identified in AP11ROPE scans.
 
-# Page 829
+## This source code has been transcribed or otherwise adapted from
+## digitized images of a hardcopy from the MIT Museum.  The digitization
+## was performed by Paul Fjeld, and arranged for by Deborah Douglas of
+## the Museum.  Many thanks to both.  The images (with suitable reduction
+## in storage size and consequent reduction in image quality as well) are
+## available online at www.ibiblio.org/apollo.  If for some reason you
+## find that the images are illegible, contact me at info@sandroid.org
+## about getting access to the (much) higher-quality images which Paul
+## actually created.
+##
+## Notations on the hardcopy document read, in part:
+##
+##	Assemble revision 001 of AGC program LMY99 by NASA 2021112-61
+##	16:27 JULY 14, 1969 
+
+## Page 829
 		BANK	21
 		SETLOC	R11
 		BANK
@@ -60,7 +66,7 @@ FLASHH?		MASK	FLGWRD11	# C(A) = 1 = HFLASH BIT
 		TS	L
 		TC	FLIP		# FLIP H LITE
 
-FLASHV?		CA	VFLSHBIT	# VLASHBIT MUST BE BIT 2.
+FLASHV?		CA	VFLSHBIT	# VFLASHBIT MUST BE BIT 2.
 		MASK	FLGWRD11
 		EXTEND
 		BZF	10,11		# V FLASH OFF
@@ -72,15 +78,15 @@ FLASHV?		CA	VFLSHBIT	# VLASHBIT MUST BE BIT 2.
 10,11		CA	FLAGWRD9	# IS THE LETABORT FLAG SET ?
 		MASK	LETABBIT
 		EXTEND
-		BZF	LANDISP		# NO.  PROCEED TO R10.
+		BZF	LANDISP		# NO. PROCEED TO R10.
 
 P71NOW?		CS	MODREG		# YES.  ARE WE IN P71 NOW?
-# Page 830
+## Page 830
 		AD	1DEC71
 		EXTEND
 		BZF	LANDISP		# YES.  PROCEED TO R10.
-
-		EXTEND			# NO.  IS AN ABORT STAGE COMMANDED?
+		
+		EXTEND			# NO. IS AN ABORT STAGE COMMANDED?
 		READ	CHAN30
 		COM
 		TS	L
@@ -88,7 +94,7 @@ P71NOW?		CS	MODREG		# YES.  ARE WE IN P71 NOW?
 		CCS	A
 		TCF	P71A		# YES.
 
-P70NOW?		CS	MODREG		# NO.  ARE WE IN P70 NOW?
+P70NOW?		CS	MODREG		# NO. ARE WE IN P70 NOW?
 		AD	1DEC70
 		EXTEND
 		BZF	LANDISP		# YES.  PROCEED TO R10.
@@ -107,7 +113,7 @@ P70A		CS	ZERO
 P71		TC	LEGAL?
 P71A		CAF	TWO
  +3		TS	Q
- 		INHINT
+		INHINT
 		EXTEND
 		DCA	CNTABTAD
 		DTCB
@@ -126,7 +132,7 @@ CNTABTAD	2CADR	CONTABRT
 CONTABRT	CAF	ABRTJADR
 		TS	BRUPT
 		RESUME
-# Page 831
+## Page 831
 
 ABRTJADR	TCF	ABRTJASK
 
@@ -167,7 +173,6 @@ ABRTJASK	CAF	OCTAL27
 		MASK	R10FLBIT	# CROSS-POINTER DISPLAY.
 		ADS	FLAGWRD0	# THE FOLLOWING ENEMA WILL REMOVE THE
 					# DISPLAY INERTIAL DATA OUTBIT.
-
 		TC	CLRADMOD	# INSURE RADMODES PROPERLY SET FOR R29.
 
 		EXTEND			# LOAD TEVENT FOR THE DOWNLINK.
@@ -178,27 +183,27 @@ ABRTJASK	CAF	OCTAL27
 		DCA	SVEXITAD
 		DXCH	AVGEXIT
 
-# Page 832
+## Page 832
 		EXTEND
 		DCA	NEG0
 		DXCH	-PHASE1
-
+		
 		EXTEND
 		DCA	NEG0
 		DXCH	-PHASE3
-
+		
 		EXTEND
 		DCA	NEG0
 		DXCH	-PHASE6
-
+		
 		CAF	THREE		# SET UP 4.3SPOT FOR GOABORT
 		TS	L
 		COM
 		DXCH	-PHASE4
 
-		CAF	OCT37774	# SET T5RUPT TO CALL DAPIDLER IN
+		CAF	OCT37774	# SET T5RUPT TO CALL DAPIDLER IN	
 		TS	TIME5		# 40 MILLISECONDS.
-
+		
 		TC	POSTJUMP
 		CADR	ENEMA
 
@@ -229,16 +234,16 @@ GOABORT		TC	INTPRET
 
 		TC	DOWNFLAG
 		ADRES	FLRCS
-# Page 833
+## Page 833
 		TC	DOWNFLAG
 		ADRES	FLUNDISP
-
+		
 		TC	DOWNFLAG
 		ADRES	IDLEFLAG
-
+		
 		TC	UPFLAG		# INSURE 4-JET TRANSLATION CAPABILITY.
 		ADRES	ACC4-2FL
-
+		
 		TC	CHECKMM
 70DEC		DEC	70
 		TCF	P71RET
@@ -280,15 +285,15 @@ INJTARG		AXC,1			# RETURN HERE IN P71, SET X1 FOR APS COEFF
 BOTHPOLY	DLOAD*	DMP		# TGO D
 			ABTCOF,1
 			TGO
-# Page 834
+## Page 834
 		DAD*	DMP
 			ABTCOF +2,1	# TGO(C+TGO D)
 			TGO
 		DAD*	DMP
-			ABTCOF +4,1	# TGO(B+TGO(C+TGO D))
+			ABTCOF +4,1	# TGO(B+TGO(C + TGO D))
 			TGO
 		DAD*
-			ABTCOF +6,1	# A+TGO(B+TGO(C+TGO D))
+			ABTCOF +6,1	# A+TGO(B+TGO(C+TGO D))	
 		STORE	ZDOTD		# STORE TENTATIVELY IN ZDOTD
 		DSU	BPL		# CHECK AGAINST MINIMUM
 			VMIN
@@ -298,7 +303,7 @@ BOTHPOLY	DLOAD*	DMP		# TGO D
 		STORE	ZDOTD		# IF TOO SMALL, REPLACE WITH MINIMUM.
 UPRATE		DLOAD
 			ABTRDOT
-		STCALL	RDOTD		# INITIALZE RDOTD.
+		STCALL	RDOTD		# INITIALIZE RDOTD.
 			YCOMP		# COMPUTE Y
 		ABS	DSU
 			YLIM		# /Y/-DYMAX
@@ -314,24 +319,24 @@ YOK		DLOAD	DSU
 		STORE	XRANGE		# TO LOOK.
 UPTHROT		SET	EXIT
 			FLVR
-
+			
 		TC	UPFLAG		# SET ROTFLAG
 		ADRES	ROTFLAG
-
+		
 		TC	THROTUP
 
 		TC	PHASCHNG
 		OCT	04024
 
- -3		TC	BANKCALL	# VERIFY THAT THE PANEL SWITCHES
+ -3		TC	BANKCALL	# VERIFY THAT THE PANEL SWITCHES 
 		CADR	P40AUTO		# ARE PROPERLY SET.
-
+		
 		TC	THROTUP
 
 UPTHROT1	EXTEND			# SET SERVICER TO CALL ASCENT GUIDANCE.
 		DCA	ATMAGAD
 		DXCH	AVGEXIT
-# Page 835
+## Page 835
 GRP4OFF		TC	PHASCHNG	# TERMINATE USE OF GROUP 4.
 		OCT	00004
 
@@ -352,7 +357,7 @@ P71RET		TC	DOWNFLAG
 			QPRET
 		CADR	INJTARG
 			P12INIT		# WILL EXIT P12INIT TO INJTARG
-OLDTIME		DLOAD	SL1		# IF FLAP=1,GTO=2 TGO
+OLDTIME		DLOAD	SL1		# IF FLAP=1,TGO=2 TGO
 			TGO
 		STCALL	TGO1
 			P12INIT
@@ -366,12 +371,11 @@ OLDTIME		DLOAD	SL1		# IF FLAP=1,GTO=2 TGO
 		TCF	UPTHROT1 -3
 
 TGO1		=	VGBODY
-# *************************************************************************
+# ************************************************************************
 
 		BANK	21
 		SETLOC	R11
 		BANK
-
 		COUNT*	$$/P70
 
 LEGAL?		CS	MMNUMBER	# IS THE DESIRED PGM ALREADY IN PROGRESS?
@@ -382,13 +386,13 @@ LEGAL?		CS	MMNUMBER	# IS THE DESIRED PGM ALREADY IN PROGRESS?
 		CS	FLAGWRD9	# ARE THE ABORTS ENABLED?
 		MASK	LETABBIT
 		CCS	A
-# Page 836
+## Page 836
 		TCF	ABORTALM
 
 		CA	FLAGWRD7	# IS SERVICER ON THE AIR?
 		MASK	AVEGFBIT
 		CCS	A
-		TC	Q		# YES.  ALL IS WELL.
+		TC	Q		# YES. ALL IS WELL.
 ABORTALM	TC	FALTON
 		TC	RELDSP
 		TC	POSTJUMP
@@ -422,18 +426,14 @@ THROTUP		CAF	BIT13
 # ************************************************************************
 
 10SECS		2DEC	1000
-
 HINJECT		2DEC	18288 B-24	# 60,000 FEET EXPRESSED IN METERS.
-
 (TGO)A		2DEC	37000 B-17
-
 K(AT)		2DEC	.02		# SCALING CONSTANT
-
 WHICHADR	REMADR	ABRTABLE
 
 # ************************************************************************
-# Page 837
+## Page 837
 		EBANK=	DVCNTR
 ATMAGAD		2CADR	ATMAG
-
 ORBMANAD	ADRES	ORBMANUV
+
