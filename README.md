@@ -13,7 +13,10 @@ MIPS to spend on it.
 
 ## Status
 
-End-to-end pipeline validated on host. Not yet running on N64 hardware.
+End-to-end pipeline validated. A real `apollo64.z64` builds, links, and
+loads cleanly in mupen64plus (CIC boot chip check passes, ROM header
+parses, plugins attach). Not yet smoke-tested on real hardware or a
+GL-capable emulator.
 
 - [x] yaAGC engine vendored (`vendor/yaAGC/`), pinned to upstream
 - [x] Two-line patch documented under `vendor/yaAGC/PATCHES.md` to enable an
@@ -35,9 +38,15 @@ End-to-end pipeline validated on host. Not yet running on N64 hardware.
       Luminary099 and runs the engine. Confirms: PC at 04000, scaler ticks,
       channel writes fire, decoder doesn't crash, ~33M AGC cycles/sec on
       x86 (so N64 has ample real-time budget). See `tests/README.md`.
-- [ ] Actually built on libdragon and run on hardware/emulator. The N64
-      paths (`main.c`, `dsky.c`, `input.c`) aren't covered by the host test;
-      they need a MIPS cross-toolchain. See BUILDING.md.
+- [x] Real N64 ROM built end-to-end: vendored yaAGC + all `src/` files +
+      libdragon compile and link with `mips64-elf-gcc` into a 224 KB
+      `apollo64.z64`. ROM header is valid (z64 magic, title, region N).
+      Mupen64plus accepts it - CIC type detected, video/RSP plugins
+      attach, MIPS interpreter starts. Documented build path via the
+      `ghcr.io/dragonminded/libdragon` docker image; see BUILDING.md.
+- [ ] Confirmed booting on a real display (GL emulator like ares, or
+      hardware via flashcart). The headless test env can't render output
+      so we know it loads but not what it draws.
 - [ ] Real-time pacing via timer ISR (currently runs frame-batched)
 - [ ] DSKY artwork (uses libdragon built-in font for now)
 - [ ] IMU/PIPA/CDU counter wiring - without these, the AGC sits in

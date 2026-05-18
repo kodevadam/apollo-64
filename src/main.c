@@ -17,6 +17,7 @@
 #include "agc_host.h"
 #include "dsky.h"
 #include "input.h"
+#include "rope.h"
 
 /* AGC cycles per video frame at 60 Hz, targeting real-time fidelity:
  *   AGC_PER_SECOND (from agc_engine.h) / 60 ~= 1422 cycles/frame.

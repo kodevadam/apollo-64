@@ -12,8 +12,32 @@ in tree.
 
 ## 1. libdragon
 
-Follow the upstream README at https://github.com/DragonMinded/libdragon.
-The short version:
+Two paths. The Docker one is faster (5-10 min) if you don't already have
+the toolchain. Native install is better for iterating because you don't
+pay container startup per build.
+
+### Path A: Docker (recommended for first-time builds)
+
+The upstream `ghcr.io/dragonminded/libdragon` image ships a pre-built
+mips64-elf toolchain. You build libdragon itself once against it, then
+build apollo-64 in the same container invocation:
+
+```sh
+# One-time: clone libdragon source somewhere persistent
+git clone https://github.com/DragonMinded/libdragon /opt/libdragon
+
+# Per build: do libdragon install + apollo-64 build in one container
+docker run --rm -v /opt/libdragon:/libdragon -v "$PWD":/project \
+  ghcr.io/dragonminded/libdragon:latest bash -c '
+    cd /libdragon && make install >/dev/null && \
+                    make tools >/dev/null && make tools-install >/dev/null && \
+    cd /project && make
+  '
+```
+
+Output: `apollo64.z64` in the project root.
+
+### Path B: Native install
 
 ```sh
 git clone https://github.com/DragonMinded/libdragon
@@ -21,7 +45,10 @@ cd libdragon
 ./build-toolchain.sh           # installs gcc-mips64-elf into /opt
 export N64_INST=/opt
 make install
+make tools && make tools-install
 ```
+
+Then in the apollo-64 directory, just `make`.
 
 Verify with:
 
@@ -30,8 +57,8 @@ echo $N64_INST
 ls $N64_INST/include/n64.mk
 ```
 
-apollo-64's Makefile picks libdragon up automatically once `$N64_INST` is
-set.
+apollo-64's Makefile picks libdragon up automatically once `$N64_INST`
+is set.
 
 ## 2. yaYUL (optional - only if you're changing the AGC source)
 
