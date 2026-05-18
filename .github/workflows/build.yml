@@ -13,8 +13,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: Build host tools
         run: make -C tools
-      - name: Build smoke test
+      - name: Build smoke test + decode test
         run: make -C tests
+      - name: Run DSKY decode unit tests
+        run: make -C tests run-decode-test
       - name: Run smoke test (2M cycles, ~24s simulated AGC time)
         run: tests/host_smoke 2000000
 

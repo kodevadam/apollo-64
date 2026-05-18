@@ -16,15 +16,23 @@ SOURCES = \
   ../src/rope.c \
   ../vendor/yaAGC/agc_engine.c
 
-all: host_smoke
+all: host_smoke dsky_decode_test
 
 host_smoke: $(SOURCES)
 	$(CC) $(CFLAGS) -o $@ $(SOURCES)
 
+# The decode test only needs the pure-C decoder + the agc_engine.h header
+# (for DSKY_* constants). No engine link required.
+dsky_decode_test: dsky_decode_test.c ../src/dsky_decode.c
+	$(CC) $(CFLAGS) -o $@ dsky_decode_test.c ../src/dsky_decode.c
+
 run: host_smoke
 	./host_smoke
 
-clean:
-	rm -f host_smoke
+run-decode-test: dsky_decode_test
+	./dsky_decode_test
 
-.PHONY: all run clean
+clean:
+	rm -f host_smoke dsky_decode_test
+
+.PHONY: all run run-decode-test clean

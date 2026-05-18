@@ -3,6 +3,7 @@ filesystem/
 apollo64.z64
 tools/bin2rope
 tests/host_smoke
+tests/dsky_decode_test
 
 # yaYUL assembly outputs (regeneratable from .agc)
 agc-software/**/MAIN.agc.bin
