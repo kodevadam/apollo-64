@@ -1,0 +1,52 @@
+name: build
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  host-smoke:
+    name: Host smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build host tools
+        run: make -C tools
+      - name: Build smoke test
+        run: make -C tests
+      - name: Run smoke test (2M cycles, ~24s simulated AGC time)
+        run: tests/host_smoke 2000000
+
+  n64-rom:
+    name: Build apollo64.z64
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/dragonminded/libdragon:latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Clone libdragon
+        run: git clone --depth 1 https://github.com/DragonMinded/libdragon.git /tmp/libdragon
+      - name: Build & install libdragon library
+        working-directory: /tmp/libdragon
+        run: make install
+      - name: Build & install libdragon tools
+        working-directory: /tmp/libdragon
+        run: |
+          make tools
+          make tools-install
+      - name: Build apollo64.z64
+        run: make
+      - name: Verify ROM header
+        run: |
+          test -s apollo64.z64
+          # First four bytes must be the z64 big-endian magic 80 37 12 40
+          test "$(od -An -t x1 -N 4 apollo64.z64 | tr -d ' \n')" = "80371240"
+          # Title at offset 0x20 should be "Apollo-64"
+          test "$(dd if=apollo64.z64 bs=1 skip=32 count=9 2>/dev/null)" = "Apollo-64"
+          ls -la apollo64.z64
+      - name: Upload ROM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: apollo64.z64
+          path: apollo64.z64
