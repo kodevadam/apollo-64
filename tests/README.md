@@ -74,6 +74,31 @@ key code) is what the N64 build provides, not what this host test does.
   x86 means the N64 (roughly 5-10x slower per clock at this kind of code)
   will still run well above real-time.
 
+## Known limitation: blank DSKY without real-DSKY-handshake
+
+Both our setup and vanilla `yaAGC` running unmodified Luminary099 produce
+a blank DSKY display from cold boot, even when V35E (lamp test) or V36E
+(fresh start) is injected via the canonical keystroke path
+(channel 015 + KEYRUPT). This was verified by running upstream `yaAGC`
+on the same `Luminary099.bin` and sending V35E over its socket protocol -
+the channel 010 packet stream contains row-select bits with zero payload,
+identical to what `tests/host_smoke` observes.
+
+What we know works:
+- KEYRUPT fires (`g_dsky.generation` advances, PC excursion out of
+  DUMMYJOB).
+- 2BLANK runs after VERB key (DSPTAB[9] gets the blank-row pattern,
+  T4RUPT pushes it to channel 010 row 10).
+- DSPOUT cycles through DSPTAB each T4RUPT.
+
+What's missing: some piece of executive state (NEWJOB / WAITLIST /
+specific flag) that makes the AGC's PINBALL handler actually populate
+DSPTAB with digit codes when keys arrive. Real Apollo had a hardware
+DSKY responding to AGC channel writes - it's possible Luminary expects
+a handshake we're not providing. This needs deeper PINBALL-state
+investigation, possibly with side-by-side comparison against
+`yaAGC + yaDSKY2` (the real GUI), to nail down.
+
 ## What this does NOT validate
 
 - Anything libdragon-specific: `display_init`, `joypad_*`, the framebuffer
