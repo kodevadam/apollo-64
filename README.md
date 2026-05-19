@@ -52,11 +52,28 @@ GL-capable emulator.
 - [x] Luminary boots all the way to DUMMYJOB (executive idle loop at
       fixed-memory 006647-006674). Critical init fields - especially
       `AllowInterrupt = 1` - were missing from `agc_host_init`; once
-      added, the TC-trap-storm/GOJAM loop clears, the executive
-      stabilises, and the AGC behaves like real Apollo hardware
-      sitting on the pad. RestartLight staying on is *correct* (the
-      astronaut had to press RSET) - the smoke test demonstrates
-      clearing it.
+      added, the TC-trap-storm/GOJAM loop mostly clears and the AGC
+      behaves like real Apollo hardware sitting on the pad. RestartLight
+      staying on is *correct* (the astronaut had to press RSET) - the
+      smoke test demonstrates clearing it.
+- [x] `tools/trace_yaagc` socket-protocol tracer for capturing golden
+      reference behaviour from upstream `yaAGC`, in the same wire
+      format as the smoke test's optional `trace=<file>` log. Lets us
+      diff our channel-I/O against vanilla line-for-line.
+- [x] Key release timing modelled (300ms hold then synthetic release,
+      matching what `yaDSKY2::OutputKeycode` would produce with a
+      human pressing buttons).
+- [ ] **Get V35E (lamp test) to visibly fire.** Identified via the
+      trace harness: vanilla yaAGC + Luminary099 runs cleanly (0
+      alarms in 30s, V35E correctly emits "all 8s" lamp data) while
+      our setup trips NightWatchman at cycle ~109k (~1.28s
+      simulated), cascading into a GOJAM storm that wipes the pending
+      KEYRUPT. agc_t init state matches vanilla field-for-field, so
+      the divergence is in execution. Root cause: something prevents
+      our AGC from accessing NEWJOB (address 0o67) within the first
+      1.28s, even though `Z` shows it spending time in DUMMYJOB.
+      Next investigation: instrument FindMemoryWord to log when 0o67
+      is accessed, compare timing against a yaAGC trace.
 - [x] PIPA accelerometer pulse generation in `ChannelInput` (~168 Hz
       Z-axis simulating 1g vertical, 4 Hz X/Y bias).
 - [ ] CDU pulses (gimbal angle counter activity).
