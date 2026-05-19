@@ -73,6 +73,11 @@ main(int argc, char **argv)
       InhibitAlarms = 1;
     else if (strcmp(argv[i], "v35e") == 0)
       send_v35e = true;
+    else if (strncmp(argv[i], "trace=", 6) == 0) {
+      g_agc_trace = fopen(argv[i] + 6, "w");
+      if (!g_agc_trace) perror(argv[i] + 6);
+      else fprintf(g_agc_trace, "# apollo-64 trace, t=AGC cycles since boot\n");
+    }
   }
 
   printf("apollo-64 host smoke test\n");
@@ -128,17 +133,21 @@ main(int argc, char **argv)
       rset_sent = true;
     }
 
-    /* V36E (Fresh Start) - the cleanest way to get the AGC into a
-     * displayable state. VB36 -> SLAP1 (PINBALL VERBTAB:1035), which
-     * forcibly re-initialises the executive and shows the standard
-     * V37 N00 idle prompt.
-     *
+    /* V35E (lamp test). Four keypresses, plenty of time between for
+     * the AGC's KEYRUPT handler to process each (and now also the
+     * synthetic key-release we emit a few cycles after each press).
      * Codes are keypad-input codes per the PINBALL CHARIN2 dispatch
-     * table (PINBALL_GAME__BUTTONS_AND_LIGHTS.agc:494). */
-    static const uint8_t v35e_seq[] = { 021, 003, 006, 034 };  /* VERB 3 6 ENTR */
+     * table (PINBALL_GAME__BUTTONS_AND_LIGHTS.agc:494).
+     *
+     * After E, VBTSTLTS fills DSPTAB with "all 8s and +" and DSPOUT
+     * (T4RUPT) pushes it to channel 010 over the next ~10ms simulated.
+     * The test lights stay on for 5s simulated (~425k cycles) before
+     * TSTLTS2 blanks them, so snapshot somewhere between cycles 2.2M
+     * and 2.5M to catch it. */
+    static const uint8_t v35e_seq[] = { 021, 003, 005, 034 };  /* VERB 3 5 ENTR */
     static int v35e_step = 0;
     if (send_v35e && v35e_step < 4 && done >= 1500000 + 200000UL * v35e_step) {
-      printf("  *** V36E step %d: keycode %02o @ cycle %lu\n",
+      printf("  *** V35E step %d: keycode %02o @ cycle %lu\n",
              v35e_step, v35e_seq[v35e_step], done);
       agc_host_press_key(v35e_seq[v35e_step]);
       v35e_step++;

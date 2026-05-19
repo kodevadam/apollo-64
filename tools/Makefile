@@ -2,12 +2,15 @@
 
 CFLAGS ?= -O2 -Wall -Wextra -std=c99
 
-all: bin2rope
+all: bin2rope trace_yaagc
 
 bin2rope: bin2rope.c
 	$(CC) $(CFLAGS) -o $@ $<
 
+trace_yaagc: trace_yaagc.c
+	$(CC) $(CFLAGS) -o $@ $<
+
 clean:
-	rm -f bin2rope
+	rm -f bin2rope trace_yaagc
 
 .PHONY: all clean

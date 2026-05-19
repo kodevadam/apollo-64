@@ -74,6 +74,49 @@ key code) is what the N64 build provides, not what this host test does.
   x86 means the N64 (roughly 5-10x slower per clock at this kind of code)
   will still run well above real-time.
 
+## Trace comparison against vanilla yaAGC
+
+`tools/trace_yaagc` connects to a running upstream `yaAGC` (via socket),
+sends a configurable key sequence, and captures every channel write
+yaAGC emits, in the same format as `tests/host_smoke trace=<file>`.
+
+Workflow for diff-debugging:
+
+```sh
+# 1. Build and run upstream yaAGC on the same Luminary099 binary.
+(cd /path/to/virtualagc && cmake --build build --target yaAGC)
+build/yaAGC/yaAGC --quiet --nodebug --port=29991 \
+  ../apollo-64/agc-software/Luminary099/Luminary099.bin &
+
+# 2. Capture the golden trace.
+tools/trace_yaagc 29991 yaagc.trace V:300 3:300 5:300 E:300
+
+# 3. Run apollo-64 the same way and capture our trace.
+tests/host_smoke 2500000 v35e trace=apollo.trace
+
+# 4. Diff. Both formats are: <timestamp> <DIR> <chan> <val>
+#    yaagc timestamps are ms-since-connect, apollo are AGC cycles.
+#    1 ms ~= 85 cycles.
+```
+
+Findings from this comparison so far:
+
+- Vanilla yaAGC running Luminary099 emits **zero channel 077 (alarm)
+  writes** over 30+ seconds of execution.
+- Our setup emits a NightWatchman alarm at cycle ~109k (~1.28s
+  simulated) followed by repeated TC trap alarms.
+- Vanilla emits VBTSTLTS lamp-test display data (channel 010 payloads
+  with `0o1675` = "8 8") in response to V35E. We don't.
+- Init state matches upstream `agc_engine_init.c` field-for-field.
+
+Root cause unknown but localised: something causes Luminary's executive
+not to access NEWJOB (address 0o67) within the first ~1.28s simulated,
+tripping NightWatchman, which cascades into a GOJAM storm. Without
+NightWatchman tripping, the executive reaches DUMMYJOB and accepts
+keypresses; with it, V35E is never dispatched. Next investigation step
+is to identify what Luminary is doing during cycles 0-100k that
+differs between our setup and vanilla.
+
 ## Known limitation: blank DSKY without real-DSKY-handshake
 
 Both our setup and vanilla `yaAGC` running unmodified Luminary099 produce

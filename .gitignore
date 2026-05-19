@@ -2,6 +2,7 @@ build/
 filesystem/
 apollo64.z64
 tools/bin2rope
+tools/trace_yaagc
 tests/host_smoke
 tests/dsky_decode_test
 

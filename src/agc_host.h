@@ -64,4 +64,11 @@ void agc_host_tick(uint32_t cycles);
  * default. Useful for the smoke test to compare with/without peripherals. */
 void agc_host_set_peripherals(bool on);
 
+/* Optional channel I/O trace logger. If non-NULL, every ChannelOutput /
+ * ChannelInput event is appended in the same format as tools/trace_yaagc
+ * (cycle, OUT|IN, channel, value), so we can diff our behaviour line-for-
+ * line against vanilla yaAGC+yaDSKY2. */
+#include <stdio.h>
+extern FILE *g_agc_trace;
+
 #endif

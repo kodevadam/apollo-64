@@ -7,6 +7,7 @@
  * EmbeddedDemo.c-style ROM load.
  */
 
+#include <stdio.h>
 #include <string.h>
 
 #include "agc_host.h"
@@ -15,11 +16,31 @@
 agc_t g_agc;
 volatile dsky_snapshot_t g_dsky;
 
+/* Optional trace logger. When non-NULL, every relevant channel I/O event
+ * is appended in the same format as tools/trace_yaagc, so we can diff
+ * apollo-64's behaviour against vanilla yaAGC+yaDSKY2 on identical ROMs. */
+FILE *g_agc_trace;
+
 /* Pending keystroke. The AGC reads channel 015 bits 4:0; we hold the value
  * here and clear it after one ChannelInput poll so a held N64 button doesn't
- * register as a repeat. */
-static volatile uint8_t pending_key;
-static volatile bool    pending_key_dirty;
+ * register as a repeat.
+ *
+ * Real DSKY hardware drives ch15 to the key code while held, then back to 0
+ * on release. yaDSKY2 sends both events as separate ch15 packets, and
+ * Luminary's PINBALL handler relies on seeing the release - without it the
+ * VERB+digits+ENTER sequence accumulates "stuck" key state and verbs like
+ * V35E never dispatch properly. We model the same: emit press, then a few
+ * cycles later emit release. */
+#define KEY_RELEASE_DELAY 25500 /* ~300ms simulated hold time, matches the
+                                 * timing yaDSKY2 produces with a human
+                                 * pressing buttons. 200 cycles (2.4ms) was
+                                 * too short - PINBALL's debounce / job
+                                 * scheduling apparently relies on the AGC
+                                 * actually having time to read the key
+                                 * before the release fires. */
+static volatile uint8_t  pending_key;
+static volatile bool     pending_key_dirty;
+static volatile uint16_t key_release_counter;  /* 0 = idle, otherwise countdown */
 
 /* PIPA counter pacing. The AGC's IMU subsystem needs to see PIPA pulses
  * to declare the IMU alive; without them Luminary won't exit its restart
@@ -76,26 +97,15 @@ agc_host_init(void)
    * dispatched until the AGC software performs RELINT, which it never
    * reaches). */
   g_agc.AllowInterrupt = 1;
-  g_agc.InterruptRequests[8] = 1;  /* DOWNRUPT - gives the first ISR a kick. */
   g_agc.DownruptTimeValid = 1;
   g_agc.DownruptTime = 0;
+  /* Note: vanilla agc_engine_init.c sets InterruptRequests[8]=1 then
+   * immediately wipes it to 0 in a clear-all loop. Net effect: 0. We
+   * match that. The earlier comment about it being "the first ISR
+   * kick" was wrong - the comment refers to a different code path
+   * (core-dump load) that doesn't apply at cold boot. */
 
-  /* Step 4: prime RegTIME4 close to overflow so T4RUPT fires within ~10ms
-   * simulated instead of waiting ~82s for natural overflow.
-   *
-   * Why this matters: T4RUPT calls DSPOUT (PINBALL_GAME__BUTTONS_AND_
-   * LIGHTS.agc:164 - "DSPOUT (A PART OF T4RUPT) HANDLES THE PLACING OF
-   * THE DSPTAB INFORMATION INTO OUTPUT CHANNEL 10"). Without T4RUPT,
-   * Luminary builds the DSPTAB buffer correctly in response to VERB/NOUN
-   * keypresses, but the contents never get pushed to channel 010 - so
-   * the screen stays blank no matter what the operator types.
-   *
-   * Once T4RUPT services once, the handler reloads RegTIME4 itself to
-   * keep the cadence (~120 Hz display refresh), so we only need to
-   * bootstrap the first one. */
-  g_agc.Erasable[0][RegTIME4] = 077775;  /* signed 15-bit: 2 ticks from overflow */
-
-  /* Step 5: program counter to the boot vector. */
+  /* Step 4: program counter to the boot vector. */
   g_agc.Erasable[0][RegZ] = 04000;
 
 
@@ -141,6 +151,10 @@ agc_host_set_peripherals(bool on)
 void
 ChannelOutput(agc_t *State, int Channel, int Value)
 {
+  if (g_agc_trace)
+    fprintf(g_agc_trace, "%6lu OUT %03o %06o\n",
+            (unsigned long)State->CycleCounter, Channel, Value & 077777);
+
   /* Channel 010 is the DSKY display latch. The engine has already stored the
    * decoded relay row in State->OutputChannel10[row]; we just mirror the
    * array and bump the generation counter so the renderer redraws. */
@@ -165,6 +179,24 @@ ChannelInput(agc_t *State)
     pending_key_dirty = false;
     State->InputChannel[015] = pending_key;
     State->InterruptRequests[5] = 1;  /* KEYRUPT1 */
+    key_release_counter = KEY_RELEASE_DELAY;
+    if (g_agc_trace)
+      fprintf(g_agc_trace, "%6lu IN  015 %06o   # press\n",
+              (unsigned long)State->CycleCounter, pending_key);
+  } else if (key_release_counter) {
+    if (--key_release_counter == 0) {
+      /* Synthetic key release: ch15 -> 0 with KEYRUPT, exactly what
+       * yaDSKY2 sends on real button-up. PINBALL's CHARIN handler
+       * sees code 0, falls through to CHARALRM which is a no-op for
+       * already-cleared error state - the important effect is that
+       * PINBALL's internal "last key" debounce is reset, so the next
+       * digit doesn't get folded into the previous one. */
+      State->InputChannel[015] = 0;
+      State->InterruptRequests[5] = 1;
+      if (g_agc_trace)
+        fprintf(g_agc_trace, "%6lu IN  015 000000   # release\n",
+                (unsigned long)State->CycleCounter);
+    }
   }
 
   /* Drive PIPA counters. The engine guarantees one instruction between
