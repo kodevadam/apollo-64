@@ -17,6 +17,7 @@
 #include "dsky.h"
 #include "dsky_decode.h"
 #include "agc_host.h"
+#include "sound.h"
 
 static uint32_t      last_generation;
 static dsky_panel_t  panel;
@@ -149,6 +150,11 @@ dsky_render(surface_t *fb)
     dsky_decode_panel(&g_dsky, &panel);
     last_generation = g_dsky.generation;
   }
+
+  /* The caution tone tracks the AGC's OPR ERR state - it sounds exactly
+   * while a real operator-error condition is asserted, and stops when the
+   * operator clears it (RSET). */
+  sound_set_alarm(panel.opr_err);
 
   graphics_fill_screen(fb, col_bg);
 

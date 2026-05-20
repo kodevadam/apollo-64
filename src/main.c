@@ -22,6 +22,7 @@
 #include "dsky.h"
 #include "input.h"
 #include "rope.h"
+#include "sound.h"
 
 /* Don't let a long stall (debugger break, first frame) trigger a huge
  * catch-up burst - cap a single step at a quarter-second of AGC time. */
@@ -55,6 +56,7 @@ main(void)
 
   input_init();
   dsky_init();
+  sound_init();
   agc_host_init();
 
   debugf("apollo-64: AGC initialised, CoreRope @ %p, entry Z=%04o\n",
@@ -89,6 +91,7 @@ main(void)
     if (poweron_step < POWERON_STEPS &&
         iter >= 60 + (unsigned long)POWERON_SPACING * poweron_step) {
       agc_host_press_key(poweron_seq[poweron_step]);
+      sound_key_click();   /* the auto checkout keys click too */
       poweron_step++;
     }
 
@@ -97,6 +100,7 @@ main(void)
     surface_t *fb = display_get();
     dsky_render(fb);
     display_show(fb);
+    sound_update();
     iter++;
   }
 }

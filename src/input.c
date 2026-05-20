@@ -12,6 +12,7 @@
 #include "input.h"
 #include "input_map.h"
 #include "agc_host.h"
+#include "sound.h"
 
 static dsky_buttons_t prev;
 
@@ -41,8 +42,10 @@ input_poll(void)
   dsky_buttons_t now = read_buttons();
 
   uint8_t code = input_map_edge(&now, &prev);
-  if (code != DSKY_KEY_NONE && code != DSKY_KEY_PRO)
+  if (code != DSKY_KEY_NONE && code != DSKY_KEY_PRO) {
     agc_host_press_key(code);
+    sound_key_click();
+  }
 
   /* PROCEED is not a keypad key - it is a held discrete on channel 032.
    * Drive it by level (Z-shift + A held), not by edge. */
