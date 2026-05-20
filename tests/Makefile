@@ -16,7 +16,7 @@ SOURCES = \
   ../src/rope.c \
   ../vendor/yaAGC/agc_engine.c
 
-all: host_smoke dsky_decode_test input_map_test
+all: host_smoke dsky_decode_test input_map_test input_poll_test
 
 host_smoke: $(SOURCES)
 	$(CC) $(CFLAGS) -o $@ $(SOURCES)
@@ -30,6 +30,11 @@ dsky_decode_test: dsky_decode_test.c ../src/dsky_decode.c
 input_map_test: input_map_test.c ../src/input_map.c
 	$(CC) $(CFLAGS) -o $@ input_map_test.c ../src/input_map.c
 
+# The input-poll test compiles the real src/input.c against a mock
+# libdragon joypad (tests/mock/libdragon.h takes precedence via -Imock).
+input_poll_test: input_poll_test.c ../src/input.c ../src/input_map.c
+	$(CC) $(CFLAGS) -Imock -o $@ input_poll_test.c ../src/input.c ../src/input_map.c
+
 run: host_smoke
 	./host_smoke
 
@@ -39,7 +44,10 @@ run-decode-test: dsky_decode_test
 run-input-test: input_map_test
 	./input_map_test
 
-clean:
-	rm -f host_smoke dsky_decode_test input_map_test
+run-input-poll-test: input_poll_test
+	./input_poll_test
 
-.PHONY: all run run-decode-test run-input-test clean
+clean:
+	rm -f host_smoke dsky_decode_test input_map_test input_poll_test
+
+.PHONY: all run run-decode-test run-input-test run-input-poll-test clean

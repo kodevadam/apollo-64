@@ -19,6 +19,8 @@ jobs:
         run: make -C tests run-decode-test
       - name: Run controller input-map unit tests
         run: make -C tests run-input-test
+      - name: Run controller input-poll integration test
+        run: make -C tests run-input-poll-test
       - name: Run smoke test (2M cycles, ~24s simulated AGC time)
         run: tests/host_smoke 2000000
 
