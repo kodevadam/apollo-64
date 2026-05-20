@@ -104,18 +104,37 @@ dsky_decode_panel(const volatile dsky_snapshot_t *src, dsky_panel_t *dst)
 
   uint16_t c11  = src->channel11;
   uint16_t c163 = src->channel163;
+  uint16_t r12  = src->latch[12];   /* channel 010 relay row 12: the lamp word */
 
-  dst->comp_acty   = (c11 & 002)   != 0;
-  dst->uplink_acty = (c11 & 004)   != 0;
-  dst->no_att      = (c11 & 010)   != 0;
-  dst->tracker     = (c11 & 0200)  != 0;
-  dst->alt         = (c11 & 0400)  != 0;
-  dst->vel         = (c11 & 01000) != 0;
+  /* COMP ACTY and UPLINK ACTY are channel 011 discretes. */
+  dst->comp_acty   = (c11 & 002) != 0;
+  dst->uplink_acty = (c11 & 004) != 0;
 
+  /* TEMP/STBY/KEY REL/OPR ERR/RESTART: the caution-and-status lamps the
+   * engine aggregates into the synthetic channel 0163. */
+  dst->temp        = (c163 & DSKY_TEMP)     != 0;
   dst->standby     = (c163 & DSKY_STBY)     != 0;
   dst->key_rel     = (c163 & DSKY_KEY_REL)  != 0;
   dst->opr_err     = (c163 & DSKY_OPER_ERR) != 0;
-  dst->prog_alarm  = (c163 & DSKY_VN_FLASH) != 0;
   dst->restart     = (c163 & DSKY_RESTART)  != 0;
-  dst->temp        = (c163 & DSKY_TEMP)     != 0;
+
+  /* The relay-driven lamps - NO ATT, GIMBAL LOCK, PROG, TRACKER, ALT,
+   * VEL, PRIO DISP - are NOT channel 011 bits. They live in channel 010
+   * relay row 12 (the lamp word, DSPTAB+11D). Bit assignments per
+   * yaDSKY2's indicator table:
+   *   01 PRIO DISP   02 NO DAP   04 VEL    010 NO ATT
+   *   020 ALT        040 GIMBAL LOCK       0200 TRACKER   0400 PROG    */
+  dst->prio_disp   = (r12 & 001)  != 0;
+  dst->vel         = (r12 & 004)  != 0;
+  dst->no_att      = (r12 & 010)  != 0;
+  dst->alt         = (r12 & 020)  != 0;
+  dst->gimbal_lock = (r12 & 040)  != 0;
+  dst->tracker     = (r12 & 0200) != 0;
+  dst->prog_alarm  = (r12 & 0400) != 0;
+
+  /* Verb/Noun flash. The engine owns the 1.28 s flash timing and raises
+   * this 0163 bit during the "off" phase; when set, the renderer blanks
+   * the VERB and NOUN digits. (This bit is NOT a program alarm - that was
+   * an earlier mis-decode; PROG is the relay lamp above.) */
+  dst->vn_flash    = (c163 & DSKY_VN_FLASH) != 0;
 }

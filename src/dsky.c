@@ -182,11 +182,14 @@ dsky_render(surface_t *fb)
   graphics_draw_text(fb, px, 10, "PROG");
   draw_digits(fb, px + 44, 6, panel.prog, 2);
 
-  /* VERB / NOUN row. */
+  /* VERB / NOUN row. While the AGC is flashing verb/noun (it wants the
+   * operator to act), the engine raises vn_flash during the off-phase of
+   * the 1.28 s cycle - blank both fields then so they visibly flash. */
+  static const char blank2[3] = "  ";
   graphics_draw_text(fb, px,       50, "VERB");
-  draw_digits(fb, px + 36, 46, panel.verb, 2);
+  draw_digits(fb, px + 36, 46, panel.vn_flash ? blank2 : panel.verb, 2);
   graphics_draw_text(fb, px + 90,  50, "NOUN");
-  draw_digits(fb, px + 126, 46, panel.noun, 2);
+  draw_digits(fb, px + 126, 46, panel.vn_flash ? blank2 : panel.noun, 2);
 
   /* R1 / R2 / R3: caption, sign, five digits. */
   int ry[3] = { 92, 130, 168 };

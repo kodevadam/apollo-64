@@ -134,20 +134,46 @@ test_lamps(void)
 {
   printf("test_lamps:\n");
   dsky_snapshot_t snap = {0};
-  snap.channel11  = 002 | 004 | 010 | 01000;  /* COMP, UPLINK, NO_ATT, VEL */
+  /* COMP ACTY + UPLINK ACTY are channel 011 discretes. */
+  snap.channel11  = 002 | 004;
+  /* TEMP / KEY REL / RESTART come from the synthetic channel 0163. */
   snap.channel163 = DSKY_KEY_REL | DSKY_RESTART | DSKY_TEMP;
+  /* NO ATT, GIMBAL LOCK, PROG, TRACKER, ALT, VEL, PRIO DISP are channel
+   * 010 relay row 12. Light NO ATT (010), PROG (0400), VEL (04). */
+  snap.latch[12]  = 060000 | 010 | 0400 | 04;   /* row-12 select + lamp bits */
 
   dsky_panel_t p;
   dsky_decode_panel(&snap, &p);
-  EXPECT_EQ_BOOL("COMP",    p.comp_acty,   true);
-  EXPECT_EQ_BOOL("UPLINK",  p.uplink_acty, true);
-  EXPECT_EQ_BOOL("NO_ATT",  p.no_att,      true);
-  EXPECT_EQ_BOOL("VEL",     p.vel,         true);
-  EXPECT_EQ_BOOL("TRACKER", p.tracker,     false);
-  EXPECT_EQ_BOOL("KEY_REL", p.key_rel,     true);
-  EXPECT_EQ_BOOL("RESTART", p.restart,     true);
-  EXPECT_EQ_BOOL("TEMP",    p.temp,        true);
-  EXPECT_EQ_BOOL("STBY",    p.standby,     false);
+  EXPECT_EQ_BOOL("COMP",       p.comp_acty,   true);
+  EXPECT_EQ_BOOL("UPLINK",     p.uplink_acty, true);
+  EXPECT_EQ_BOOL("NO_ATT",     p.no_att,      true);
+  EXPECT_EQ_BOOL("PROG",       p.prog_alarm,  true);
+  EXPECT_EQ_BOOL("VEL",        p.vel,         true);
+  EXPECT_EQ_BOOL("GIMBAL off", p.gimbal_lock, false);
+  EXPECT_EQ_BOOL("TRACKER off",p.tracker,     false);
+  EXPECT_EQ_BOOL("ALT off",    p.alt,         false);
+  EXPECT_EQ_BOOL("KEY_REL",    p.key_rel,     true);
+  EXPECT_EQ_BOOL("RESTART",    p.restart,     true);
+  EXPECT_EQ_BOOL("TEMP",       p.temp,        true);
+  EXPECT_EQ_BOOL("STBY",       p.standby,     false);
+}
+
+static void
+test_vn_flash(void)
+{
+  printf("test_vn_flash:\n");
+  dsky_snapshot_t snap = {0};
+  dsky_panel_t p;
+
+  snap.channel163 = 0;
+  dsky_decode_panel(&snap, &p);
+  EXPECT_EQ_BOOL("no flash bit -> vn_flash false", p.vn_flash, false);
+
+  snap.channel163 = DSKY_VN_FLASH;
+  dsky_decode_panel(&snap, &p);
+  EXPECT_EQ_BOOL("flash bit -> vn_flash true", p.vn_flash, true);
+  /* The flash bit must NOT be mistaken for a program alarm. */
+  EXPECT_EQ_BOOL("flash bit does not light PROG", p.prog_alarm, false);
 }
 
 static void
@@ -171,6 +197,7 @@ main(void)
   test_r1_signed();
   test_r2_positive();
   test_lamps();
+  test_vn_flash();
   test_sign_priority();
   if (failures == 0) {
     printf("\nAll DSKY decode tests passed.\n");

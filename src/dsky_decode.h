@@ -39,6 +39,8 @@ typedef struct {
   bool tracker;
   bool alt;
   bool vel;
+  bool vn_flash;    /* engine sets this during the flash "off" phase;
+                       when true the VERB and NOUN digits are blanked */
 } dsky_panel_t;
 
 /* Decode an AGC display 5-bit code into ASCII ('0'..'9' or ' '). */
