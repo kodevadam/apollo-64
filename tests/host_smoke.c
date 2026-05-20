@@ -64,6 +64,7 @@ main(int argc, char **argv)
 
   /* Optional flags (positional after cycle count, combinable). */
   bool send_v35e = false;
+  bool send_v16 = false;
   for (int i = 2; i < argc; i++) {
     if (strcmp(argv[i], "noperipherals") == 0)
       agc_host_set_peripherals(false);
@@ -73,6 +74,8 @@ main(int argc, char **argv)
       InhibitAlarms = 1;
     else if (strcmp(argv[i], "v35e") == 0)
       send_v35e = true;
+    else if (strcmp(argv[i], "v16n36e") == 0)
+      send_v16 = true;
     else if (strncmp(argv[i], "trace=", 6) == 0) {
       g_agc_trace = fopen(argv[i] + 6, "w");
       if (!g_agc_trace) perror(argv[i] + 6);
@@ -151,6 +154,19 @@ main(int argc, char **argv)
              v35e_step, v35e_seq[v35e_step], done);
       agc_host_press_key(v35e_seq[v35e_step]);
       v35e_step++;
+    }
+
+    /* V16 N36 E - "monitor decimal, noun 36 (AGC clock)". Unlike the
+     * one-shot lamp test, V16 is a *monitor* verb: the AGC re-displays
+     * the value continuously, so R1/R2/R3 should show the time and
+     * tick upward. Seven keystrokes: VERB 1 6 NOUN 3 6 ENTR. */
+    static const uint8_t v16_seq[] = { 021, 001, 006, 037, 003, 006, 034 };
+    static int v16_step = 0;
+    if (send_v16 && v16_step < 7 && done >= 1500000 + 300000UL * v16_step) {
+      printf("  *** V16N36E step %d: keycode %02o @ cycle %lu\n",
+             v16_step, v16_seq[v16_step], done);
+      agc_host_press_key(v16_seq[v16_step]);
+      v16_step++;
     }
     printf("  ... %lu / %lu cycles, gen=%u, Z=%06o, T1=%06o, "
            "ch11=%06o ch163=%06o RESTART=%u\n",

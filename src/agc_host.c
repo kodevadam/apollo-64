@@ -199,14 +199,12 @@ ChannelInput(agc_t *State)
               (unsigned long)State->CycleCounter, pending_key);
   } else if (key_release_counter) {
     if (--key_release_counter == 0) {
-      /* Synthetic key release: ch15 -> 0 with KEYRUPT, exactly what
-       * yaDSKY2 sends on real button-up. PINBALL's CHARIN handler
-       * sees code 0, falls through to CHARALRM which is a no-op for
-       * already-cleared error state - the important effect is that
-       * PINBALL's internal "last key" debounce is reset, so the next
-       * digit doesn't get folded into the previous one. */
+      /* Synthetic key release: channel 015 returns to 0, modelling the
+       * key contact opening. Crucially this does NOT raise KEYRUPT -
+       * the DSKY interrupt is keypress-edge-triggered only. (If release
+       * raised KEYRUPT, PINBALL's CHARIN would dispatch keycode 0 to
+       * CHARALRM and light OPR ERR on every single keystroke.) */
       State->InputChannel[015] = 0;
-      State->InterruptRequests[5] = 1;
       if (g_agc_trace)
         fprintf(g_agc_trace, "%6lu IN  015 000000   # release\n",
                 (unsigned long)State->CycleCounter);
