@@ -155,6 +155,20 @@ ChannelOutput(agc_t *State, int Channel, int Value)
     fprintf(g_agc_trace, "%6lu OUT %03o %06o\n",
             (unsigned long)State->CycleCounter, Channel, Value & 077777);
 
+  /* Channel 7 is the superbank-select. It is an OUTPUT channel whose value
+   * the AGC also needs to READ BACK (it is overlapped with input channel 7).
+   * The CPU uses it to address fixed-memory banks above 030. If a write to
+   * channel 7 is dropped, the AGC's next superbank-relative fetch reads the
+   * wrong bank - which corrupts the interpreter's instruction stream and
+   * sends it into an infinite GOTO-indirection loop. yaAGC's SocketAPI
+   * mirrors the write into InputChannel[7]; NullAPI (and our old code)
+   * silently dropped it. This single line is the difference between
+   * Luminary running and Luminary wedging within the first half second. */
+  if (Channel == 7) {
+    State->InputChannel[7] = State->OutputChannel7 = (Value & 0160);
+    return;
+  }
+
   /* Channel 010 is the DSKY display latch. The engine has already stored the
    * decoded relay row in State->OutputChannel10[row]; we just mirror the
    * array and bump the generation counter so the renderer redraws. */
