@@ -13,12 +13,19 @@ MIPS to spend on it.
 
 ## Status
 
-**It runs.** apollo64.z64 boots in the ares N64 emulator, the AGC
-executes unmodified Luminary099, and the DSKY shows real AGC state:
-on power-up the ROM keys V16 N36 E and the panel displays the AGC
-mission clock ticking upward. V35E (lamp test) also works - all
-segments and lamps light. The display changes because Luminary
-computed it, not because the UI faked it.
+**Milestone: `flight-credible-baseline`.** apollo-64 runs unmodified
+Luminary099 on a provably stock yaAGC engine, passes Luminary's own
+self-check, rejects corrupted rope memory, and produces deterministic
+machine-state fingerprints - all re-verified by CI on every push. See
+[CHANGELOG.md](CHANGELOG.md) for the milestone note and
+[docs/EQUIVALENCE.md](docs/EQUIVALENCE.md) for how the claim is kept
+honest.
+
+apollo64.z64 boots in the ares N64 emulator, the AGC executes the
+flight software, and the DSKY shows real AGC state: on power-up the
+ROM keys V16 N36 E and the panel displays the AGC mission clock
+ticking upward; V35E lights the lamp test. The display changes
+because Luminary computed it, not because the UI faked it.
 
 - [x] yaAGC engine vendored (`vendor/yaAGC/`), pinned to upstream
 - [x] Two-line patch documented under `vendor/yaAGC/PATCHES.md` to enable an
