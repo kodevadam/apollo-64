@@ -16,3 +16,4 @@ agc-software/**/MAIN.agc.lst
 # Upstream-leftover ignores
 yaYUL.exe
 core
+tests/selftest
