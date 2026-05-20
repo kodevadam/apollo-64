@@ -129,7 +129,7 @@ draw_digits(surface_t *fb, int x, int y, const char *digits, int n)
 }
 
 /* --- status lamp -------------------------------------------------------- */
-#define LAMP_W 58
+#define LAMP_W 62
 #define LAMP_H 20
 
 static void
