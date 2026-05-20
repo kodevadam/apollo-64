@@ -194,8 +194,8 @@ dsky_render(surface_t *fb)
     draw_digits(fb, px + 20 + DIG_W + 2, ry[r], rdig[r], 5);
   }
 
-  /* Controller hint along the bottom. */
+  /* Controller hint along the bottom (kept within the 320px width). */
   graphics_set_color(col_label, col_bg);
-  graphics_draw_text(fb,  6, 214, "D-pad/C:digits  L:VERB R:NOUN A:ENTR");
-  graphics_draw_text(fb,  6, 224, "Z=shift (Z+A:PRO Z+L:CLR Z+B:KEYREL)  Start:RSET");
+  graphics_draw_text(fb,  6, 214, "Keys: D-pad/C digits, L VERB, R NOUN");
+  graphics_draw_text(fb,  6, 224, "A ENTR, Start RSET, hold Z for shift");
 }
