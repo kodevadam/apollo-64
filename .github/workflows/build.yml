@@ -23,6 +23,10 @@ jobs:
         run: make -C tests run-input-poll-test
       - name: Run AGC self-check (clean + injected-fault)
         run: make -C tests run-selftest
+      - name: Run AGC equivalence / determinism harness
+        run: make -C tests run-equiv
+      - name: Verify vendored yaAGC is byte-identical to upstream
+        run: tools/verify_vendor.sh
       - name: Run smoke test (2M cycles, ~24s simulated AGC time)
         run: tests/host_smoke 2000000
 

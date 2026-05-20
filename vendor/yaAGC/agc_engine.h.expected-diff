@@ -1,0 +1,4 @@
+172a173,175
+> #elif defined (N64)
+> // N64 / libdragon (apollo-64 fork). See vendor/yaAGC/PATCHES.md.
+> #include <stdint.h>

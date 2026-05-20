@@ -16,7 +16,7 @@ SOURCES = \
   ../src/rope.c \
   ../vendor/yaAGC/agc_engine.c
 
-all: host_smoke dsky_decode_test input_map_test input_poll_test selftest
+all: host_smoke dsky_decode_test input_map_test input_poll_test selftest equiv
 
 host_smoke: $(SOURCES)
 	$(CC) $(CFLAGS) -o $@ $(SOURCES)
@@ -24,6 +24,11 @@ host_smoke: $(SOURCES)
 # The self-check test boots the AGC and links the engine, like host_smoke.
 selftest: selftest.c ../src/agc_host.c ../src/rope.c ../vendor/yaAGC/agc_engine.c
 	$(CC) $(CFLAGS) -o $@ selftest.c ../src/agc_host.c ../src/rope.c \
+	  ../vendor/yaAGC/agc_engine.c
+
+# The equivalence / determinism harness, same link set.
+equiv: equiv.c ../src/agc_host.c ../src/rope.c ../vendor/yaAGC/agc_engine.c
+	$(CC) $(CFLAGS) -o $@ equiv.c ../src/agc_host.c ../src/rope.c \
 	  ../vendor/yaAGC/agc_engine.c
 
 # The decode test only needs the pure-C decoder + the agc_engine.h header
@@ -56,8 +61,12 @@ run-selftest: selftest
 	./selftest
 	./selftest corrupt
 
+run-equiv: equiv
+	./equiv
+
 clean:
-	rm -f host_smoke dsky_decode_test input_map_test input_poll_test selftest
+	rm -f host_smoke dsky_decode_test input_map_test input_poll_test \
+	      selftest equiv
 
 .PHONY: all run run-decode-test run-input-test run-input-poll-test \
-        run-selftest clean
+        run-selftest run-equiv clean

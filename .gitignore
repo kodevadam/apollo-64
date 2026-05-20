@@ -17,3 +17,4 @@ agc-software/**/MAIN.agc.lst
 yaYUL.exe
 core
 tests/selftest
+tests/equiv

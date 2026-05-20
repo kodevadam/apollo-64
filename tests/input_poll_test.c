@@ -29,6 +29,10 @@ static int     pro_held   = -1;   /* -1 = never called */
 void agc_host_press_key(uint8_t code) { last_key = code; key_calls++; }
 void agc_host_set_pro(bool held)      { pro_held = held ? 1 : 0; }
 
+/* input.c clicks the speaker on each keystroke; stub it for the test. */
+static int click_calls = 0;
+void sound_key_click(void) { click_calls++; }
+
 static int failures = 0;
 #define CHECK(name, cond) do {                              \
   if (!(cond)) { printf("  FAIL: %s\n", name); failures++; } \
@@ -41,6 +45,7 @@ poll_with(joypad_buttons_t state)
 {
   last_key = DSKY_KEY_NONE;
   key_calls = 0;
+  click_calls = 0;
   mock_joypad_state = state;
   input_poll();
 }
@@ -55,6 +60,7 @@ main(void)
   poll_with((joypad_buttons_t){ .l = 1 });
   CHECK("L press -> one key call", key_calls == 1);
   CHECK("L press -> VERB",         last_key == DSKY_KEY_VERB);
+  CHECK("L press -> one click",    click_calls == 1);
   /* release everything: no edge, no key */
   poll_with((joypad_buttons_t){0});
   CHECK("release -> no key", key_calls == 0);

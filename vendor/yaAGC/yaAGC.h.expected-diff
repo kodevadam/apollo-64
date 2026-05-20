@@ -1,0 +1,11 @@
+65c65,72
+< #if defined(unix) || defined(WASI)
+---
+> // N64 branch (apollo-64 fork): no sockets, just stdint. See vendor/yaAGC/PATCHES.md.
+> #if defined(N64)
+> 
+> #include <stdint.h>
+> #define FORMAT_64U "%llu"
+> #define FORMAT_64O "%llo"
+> 
+> #elif defined(unix) || defined(WASI)
