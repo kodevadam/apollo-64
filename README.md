@@ -28,9 +28,13 @@ computed it, not because the UI faked it.
 - [x] DSKY decoder (`src/dsky_decode.c`): pure-C channel 010 -> PROG/VERB/
       NOUN/R1/R2/R3 + status lamps, using the same 5-bit table yaDSKY2 uses.
       Split from the renderer so it's libdragon-free and unit-testable.
-- [x] DSKY renderer (`src/dsky.c`): libdragon-specific paint layer over the
-      decoder.
-- [x] N64 controller -> DSKY keypad mapping (`src/input.c`)
+- [x] DSKY renderer (`src/dsky.c`): procedurally-drawn seven-segment
+      digits in electroluminescent green + backlit status-lamp tiles.
+      No image-asset pipeline.
+- [x] N64 controller -> DSKY keypad mapping. Pure mapping logic in
+      `src/input_map.c` (libdragon-free, unit-tested); `src/input.c`
+      does the joypad glue. Z is a shift modifier so all 19 DSKY keys
+      are reachable.
 - [x] Host tool `tools/bin2rope` to convert a yaYUL `.bin` into an embedded
       C array.
 - [x] `src/rope.c` committed as a real assembled Luminary099 binary
