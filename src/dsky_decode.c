@@ -30,17 +30,24 @@
 char
 dsky_decode_digit(uint8_t code)
 {
+  /* The 5-bit relay code -> digit table, straight from
+   * PINBALL_GAME__BUTTONS_AND_LIGHTS.agc:446 ("THE 5 BIT OUTPUT RELAY
+   * CODES ARE"). yaDSKY2's 7Seg-NN.jpg filenames use NN in *decimal*;
+   * these case labels are octal, so e.g. 7Seg-21 (decimal 21) is octal
+   * 025 = '0'. Getting the radix wrong here only mis-decodes 0/2/3/4 -
+   * the all-8s lamp test still looks right - so it is an easy bug to
+   * miss. */
   switch (code & 0x1F) {
-    case 021: return '0';
-    case 003: return '1';
-    case 025: return '2';
-    case 027: return '3';
-    case 015: return '4';
-    case 036: return '5';
-    case 034: return '6';
-    case 023: return '7';
-    case 035: return '8';
-    case 037: return '9';
+    case 025: return '0';   /* 10101 */
+    case 003: return '1';   /* 00011 */
+    case 031: return '2';   /* 11001 */
+    case 033: return '3';   /* 11011 */
+    case 017: return '4';   /* 01111 */
+    case 036: return '5';   /* 11110 */
+    case 034: return '6';   /* 11100 */
+    case 023: return '7';   /* 10011 */
+    case 035: return '8';   /* 11101 */
+    case 037: return '9';   /* 11111 */
     default:  return ' ';
   }
 }

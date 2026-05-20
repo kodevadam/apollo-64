@@ -45,18 +45,19 @@ latch(int row, int high, int low, int sign_bit)
 }
 
 /* Digit-to-code (5-bit AGC display code from the yaDSKY2 table). */
-static int code_for[10] = { 021, 003, 025, 027, 015, 036, 034, 023, 035, 037 };
+/* 5-bit relay code per digit, octal, from PINBALL_GAME...agc:446. */
+static int code_for[10] = { 025, 003, 031, 033, 017, 036, 034, 023, 035, 037 };
 
 static void
 test_digit_table(void)
 {
   printf("test_digit_table:\n");
   EXPECT_EQ_CHAR("blank (0)",        dsky_decode_digit(0),    ' ');
-  EXPECT_EQ_CHAR("0 (021)",          dsky_decode_digit(021),  '0');
+  EXPECT_EQ_CHAR("0 (025)",          dsky_decode_digit(025),  '0');
   EXPECT_EQ_CHAR("1 (003)",          dsky_decode_digit(003),  '1');
-  EXPECT_EQ_CHAR("2 (025)",          dsky_decode_digit(025),  '2');
-  EXPECT_EQ_CHAR("3 (027)",          dsky_decode_digit(027),  '3');
-  EXPECT_EQ_CHAR("4 (015)",          dsky_decode_digit(015),  '4');
+  EXPECT_EQ_CHAR("2 (031)",          dsky_decode_digit(031),  '2');
+  EXPECT_EQ_CHAR("3 (033)",          dsky_decode_digit(033),  '3');
+  EXPECT_EQ_CHAR("4 (017)",          dsky_decode_digit(017),  '4');
   EXPECT_EQ_CHAR("5 (036)",          dsky_decode_digit(036),  '5');
   EXPECT_EQ_CHAR("6 (034)",          dsky_decode_digit(034),  '6');
   EXPECT_EQ_CHAR("7 (023)",          dsky_decode_digit(023),  '7');
@@ -64,7 +65,7 @@ test_digit_table(void)
   EXPECT_EQ_CHAR("9 (037)",          dsky_decode_digit(037),  '9');
   EXPECT_EQ_CHAR("invalid (010)",    dsky_decode_digit(010),  ' ');
   /* Mask: only bottom 5 bits considered. */
-  EXPECT_EQ_CHAR("masked high bits", dsky_decode_digit(0xE0 | 021), '0');
+  EXPECT_EQ_CHAR("masked high bits", dsky_decode_digit(0xE0 | 025), '0');
 }
 
 static void
