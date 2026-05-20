@@ -1,10 +1,7 @@
 /*
- * apollo-64: N64 controller -> DSKY keypad mapping.
- *
- * The real DSKY has 19 keys; the N64 controller has 14 buttons. We use a
- * modal mapping: D-pad enters digits 0-9 directly (with the C-buttons
- * filling out the second hand), and the shoulder/face buttons cover the
- * action keys (VERB, NOUN, ENTR, PRO, CLR, RSET, KEY REL).
+ * apollo-64: N64 controller -> DSKY. Reads the joypad via libdragon, then
+ * defers the actual button-to-keycode mapping to input_map.c (which is
+ * libdragon-free and unit-tested). See input_map.h for the button layout.
  *
  * If you wire a real DSKY into a controller port, this is where you'd
  * read it instead.
@@ -13,65 +10,43 @@
 #include <libdragon.h>
 
 #include "input.h"
+#include "input_map.h"
 #include "agc_host.h"
 
-static joypad_buttons_t prev;
+static dsky_buttons_t prev;
 
 void
 input_init(void)
 {
   joypad_init();
-  prev = (joypad_buttons_t){ .raw = 0 };
+  prev = (dsky_buttons_t){0};
 }
 
-/* Return the DSKY key code for the first button that transitioned from
- * released to pressed this frame, or DSKY_KEY_NONE if nothing edged. */
-static uint8_t
-map_edge(joypad_buttons_t now, joypad_buttons_t was)
+/* Snapshot libdragon's joypad state into our libdragon-free struct. */
+static dsky_buttons_t
+read_buttons(void)
 {
-  /* Edge detection: pressed this frame and not last frame. */
-#define EDGE(field) (now.field && !was.field)
-
-  if (EDGE(d_up))    return DSKY_KEY_1;
-  if (EDGE(d_right)) return DSKY_KEY_3;
-  if (EDGE(d_down))  return DSKY_KEY_5;
-  if (EDGE(d_left))  return DSKY_KEY_7;
-  if (EDGE(c_up))    return DSKY_KEY_2;
-  if (EDGE(c_right)) return DSKY_KEY_4;
-  if (EDGE(c_down))  return DSKY_KEY_6;
-  if (EDGE(c_left))  return DSKY_KEY_8;
-  if (EDGE(a))       return DSKY_KEY_ENTR;
-  if (EDGE(b))       return DSKY_KEY_PRO;
-  if (EDGE(l))       return DSKY_KEY_VERB;
-  if (EDGE(r))       return DSKY_KEY_NOUN;
-  if (EDGE(z))       return DSKY_KEY_CLR;
-  if (EDGE(start))   return DSKY_KEY_RSET;
-
-  /* 9 and 0 share a chord with the shoulders to avoid stealing more digit slots.
-   * Chord = "L + C-up" -> 9, "L + C-down" -> 0. The chord fires once on press
-   * of the C-button while L is held. */
-  if (now.l && EDGE(c_up))   return DSKY_KEY_9;
-  if (now.l && EDGE(c_down)) return DSKY_KEY_0;
-
-  /* KEY REL on Start chord. */
-  if (now.z && EDGE(start))  return DSKY_KEY_KEY_REL;
-
-  /* +/- on the analog stick edges (cheap & cheerful). */
-  /* (Skipped here for clarity; wire up via stick deflection thresholds.) */
-
-#undef EDGE
-  return DSKY_KEY_NONE;
+  joypad_buttons_t j = joypad_get_buttons(JOYPAD_PORT_1);
+  return (dsky_buttons_t){
+    .a = j.a, .b = j.b, .z = j.z, .start = j.start, .l = j.l, .r = j.r,
+    .d_up = j.d_up, .d_down = j.d_down, .d_left = j.d_left, .d_right = j.d_right,
+    .c_up = j.c_up, .c_down = j.c_down, .c_left = j.c_left, .c_right = j.c_right,
+  };
 }
 
 void
 input_poll(void)
 {
   joypad_poll();
-  joypad_buttons_t now = joypad_get_buttons(JOYPAD_PORT_1);
+  dsky_buttons_t now = read_buttons();
 
-  uint8_t code = map_edge(now, prev);
-  if (code != DSKY_KEY_NONE)
+  uint8_t code = input_map_edge(&now, &prev);
+  if (code != DSKY_KEY_NONE && code != DSKY_KEY_PRO)
     agc_host_press_key(code);
+
+  /* PROCEED is not a keypad key - it is a held discrete on channel 032.
+   * Drive it by level (Z-shift + A held), not by edge. */
+  agc_host_set_pro(now.z && now.a);
 
   prev = now;
 }

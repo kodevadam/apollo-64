@@ -16,7 +16,7 @@ SOURCES = \
   ../src/rope.c \
   ../vendor/yaAGC/agc_engine.c
 
-all: host_smoke dsky_decode_test
+all: host_smoke dsky_decode_test input_map_test
 
 host_smoke: $(SOURCES)
 	$(CC) $(CFLAGS) -o $@ $(SOURCES)
@@ -26,13 +26,20 @@ host_smoke: $(SOURCES)
 dsky_decode_test: dsky_decode_test.c ../src/dsky_decode.c
 	$(CC) $(CFLAGS) -o $@ dsky_decode_test.c ../src/dsky_decode.c
 
+# The input-map test only needs the pure-C mapper. No engine, no libdragon.
+input_map_test: input_map_test.c ../src/input_map.c
+	$(CC) $(CFLAGS) -o $@ input_map_test.c ../src/input_map.c
+
 run: host_smoke
 	./host_smoke
 
 run-decode-test: dsky_decode_test
 	./dsky_decode_test
 
-clean:
-	rm -f host_smoke dsky_decode_test
+run-input-test: input_map_test
+	./input_map_test
 
-.PHONY: all run run-decode-test clean
+clean:
+	rm -f host_smoke dsky_decode_test input_map_test
+
+.PHONY: all run run-decode-test run-input-test clean

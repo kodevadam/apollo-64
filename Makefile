@@ -27,6 +27,7 @@ src = \
   src/dsky.c \
   src/dsky_decode.c \
   src/input.c \
+  src/input_map.c \
   src/rope.c \
   vendor/yaAGC/agc_engine.c
 
