@@ -13,10 +13,12 @@ MIPS to spend on it.
 
 ## Status
 
-End-to-end pipeline validated. A real `apollo64.z64` builds, links, and
-loads cleanly in mupen64plus (CIC boot chip check passes, ROM header
-parses, plugins attach). Not yet smoke-tested on real hardware or a
-GL-capable emulator.
+**It runs.** apollo64.z64 boots in the ares N64 emulator, the AGC
+executes unmodified Luminary099, and the DSKY shows real AGC state:
+on power-up the ROM keys V16 N36 E and the panel displays the AGC
+mission clock ticking upward. V35E (lamp test) also works - all
+segments and lamps light. The display changes because Luminary
+computed it, not because the UI faked it.
 
 - [x] yaAGC engine vendored (`vendor/yaAGC/`), pinned to upstream
 - [x] Two-line patch documented under `vendor/yaAGC/PATCHES.md` to enable an
@@ -44,39 +46,33 @@ GL-capable emulator.
       Mupen64plus accepts it - CIC type detected, video/RSP plugins
       attach, MIPS interpreter starts. Documented build path via the
       `ghcr.io/dragonminded/libdragon` docker image; see BUILDING.md.
-- [ ] Confirmed booting on a real display (GL emulator like ares, or
-      hardware via flashcart). The headless test env can't render output
-      so we know it loads but not what it draws.
-- [ ] Real-time pacing via timer ISR (currently runs frame-batched)
-- [ ] DSKY artwork (uses libdragon built-in font for now)
-- [x] Luminary boots all the way to DUMMYJOB (executive idle loop at
-      fixed-memory 006647-006674). Critical init fields - especially
-      `AllowInterrupt = 1` - were missing from `agc_host_init`; once
-      added, the TC-trap-storm/GOJAM loop mostly clears and the AGC
-      behaves like real Apollo hardware sitting on the pad. RestartLight
-      staying on is *correct* (the astronaut had to press RSET) - the
-      smoke test demonstrates clearing it.
-- [x] `tools/trace_yaagc` socket-protocol tracer for capturing golden
-      reference behaviour from upstream `yaAGC`, in the same wire
-      format as the smoke test's optional `trace=<file>` log. Lets us
-      diff our channel-I/O against vanilla line-for-line.
-- [x] Key release timing modelled (300ms hold then synthetic release,
-      matching what `yaDSKY2::OutputKeycode` would produce with a
-      human pressing buttons).
-- [ ] **Get V35E (lamp test) to visibly fire.** Identified via the
-      trace harness: vanilla yaAGC + Luminary099 runs cleanly (0
-      alarms in 30s, V35E correctly emits "all 8s" lamp data) while
-      our setup trips NightWatchman at cycle ~109k (~1.28s
-      simulated), cascading into a GOJAM storm that wipes the pending
-      KEYRUPT. agc_t init state matches vanilla field-for-field, so
-      the divergence is in execution. Root cause: something prevents
-      our AGC from accessing NEWJOB (address 0o67) within the first
-      1.28s, even though `Z` shows it spending time in DUMMYJOB.
-      Next investigation: instrument FindMemoryWord to log when 0o67
-      is accessed, compare timing against a yaAGC trace.
+- [x] Confirmed running in the **ares** N64 emulator: DSKY renders,
+      V16N36E shows the AGC clock ticking, V35E lights the lamp test.
+- [x] Luminary boots cleanly to the DUMMYJOB executive idle and runs
+      indefinitely with zero alarms - matching upstream yaAGC. Three
+      bugs were responsible for the long road here, all found by
+      differential tracing against upstream:
+        1. `AllowInterrupt` was 0 after our `memset` init (canonical
+           init sets it 1) - caused a TC-trap GOJAM storm.
+        2. **Channel 7 (superbank select) writes were dropped.** The
+           AGC writes then reads back ch7 to address fixed-memory
+           banks above 030; dropping the write corrupted the
+           interpreter's bank addressing and wedged it in an infinite
+           GOTO loop. One line in `ChannelOutput` fixed it.
+        3. The DSKY digit-decode table had a decimal/octal mixup for
+           codes 0/2/3/4 - V35E (all 8s) never exposed it; V16N36E
+           did.
+- [x] `tools/trace_yaagc` socket-protocol tracer + the smoke test's
+      `trace=<file>` log - the diff harness that made the above
+      tractable.
+- [x] Key press/release modelled correctly (press raises KEYRUPT,
+      release just clears channel 015 - release must NOT interrupt or
+      every keystroke lights OPR ERR).
 - [x] PIPA accelerometer pulse generation in `ChannelInput` (~168 Hz
       Z-axis simulating 1g vertical, 4 Hz X/Y bias).
-- [ ] CDU pulses (gimbal angle counter activity).
+- [ ] Real-time pacing via timer ISR (currently runs frame-batched)
+- [ ] DSKY artwork (uses libdragon built-in font for now)
+- [ ] CDU pulses (gimbal angle counter activity)
 - [ ] Audio (1202 alarm beep, key clicks)
 
 ## Layout

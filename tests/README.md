@@ -13,11 +13,15 @@ configurable number of machine cycles, and dumps state.
 make -C tests                          # builds host_smoke + dsky_decode_test
 tests/host_smoke                       # 200k cycles (default)
 tests/host_smoke 5000000               # 5M cycles, ~60s simulated
-tests/host_smoke 2000000 rset          # ...and inject RSET halfway
+tests/host_smoke 2000000 rset          # inject RSET early (clear restart)
+tests/host_smoke 2500000 rset v35e     # ...then V35E lamp test - panel
+                                       #   shows 88 / +88888 across the board
+tests/host_smoke 4000000 rset v16n36e  # ...then V16 N36 E - panel shows the
+                                       #   AGC clock; R3 ticks between runs
 tests/host_smoke 2000000 alarms        # print every alarm the engine fires
 tests/host_smoke 2000000 inhibit       # disable alarm-triggered GOJAMs
 tests/host_smoke 2000000 noperipherals # no PIPA pulse injection
-tests/host_smoke 2000000 alarms inhibit noperipherals   # combine
+tests/host_smoke 2000000 trace=out.log # log channel I/O for diffing
 ```
 
 Flags are positional after the cycle count and can be combined freely.
@@ -99,48 +103,27 @@ tests/host_smoke 2500000 v35e trace=apollo.trace
 #    1 ms ~= 85 cycles.
 ```
 
-Findings from this comparison so far:
+This comparison harness cracked the DSKY-blank problem. The chain of
+findings:
 
-- Vanilla yaAGC running Luminary099 emits **zero channel 077 (alarm)
-  writes** over 30+ seconds of execution.
-- Our setup emits a NightWatchman alarm at cycle ~109k (~1.28s
-  simulated) followed by repeated TC trap alarms.
-- Vanilla emits VBTSTLTS lamp-test display data (channel 010 payloads
-  with `0o1675` = "8 8") in response to V35E. We don't.
-- Init state matches upstream `agc_engine_init.c` field-for-field.
+1. Vanilla yaAGC ran Luminary099 with zero alarms; our setup tripped
+   NightWatchman at cycle ~109k and never displayed anything.
+2. A minimal harness (vanilla `agc_engine_init` + `NullAPI` + a
+   flat-out engine loop) reproduced the bug - so it was not our init.
+3. Swapping `NullAPI` for `SocketAPI` in that harness fixed it.
+4. Diffing the two: `SocketAPI::ChannelOutput` has a channel-7
+   (superbank select) case that `NullAPI` - and our `agc_host.c` -
+   lacked. A dropped channel-7 write corrupts fixed-memory bank
+   addressing and wedges the interpreter in an infinite GOTO loop.
 
-Root cause unknown but localised: something causes Luminary's executive
-not to access NEWJOB (address 0o67) within the first ~1.28s simulated,
-tripping NightWatchman, which cascades into a GOJAM storm. Without
-NightWatchman tripping, the executive reaches DUMMYJOB and accepts
-keypresses; with it, V35E is never dispatched. Next investigation step
-is to identify what Luminary is doing during cycles 0-100k that
-differs between our setup and vanilla.
+The fix was one case in `ChannelOutput` (see the commit "Handle
+channel 7"). With it, our NEWJOB-access gap dropped from 74619 cycles
+to 2312 - matching vanilla's 2299 - and the AGC runs indefinitely
+with zero alarms.
 
-## Known limitation: blank DSKY without real-DSKY-handshake
-
-Both our setup and vanilla `yaAGC` running unmodified Luminary099 produce
-a blank DSKY display from cold boot, even when V35E (lamp test) or V36E
-(fresh start) is injected via the canonical keystroke path
-(channel 015 + KEYRUPT). This was verified by running upstream `yaAGC`
-on the same `Luminary099.bin` and sending V35E over its socket protocol -
-the channel 010 packet stream contains row-select bits with zero payload,
-identical to what `tests/host_smoke` observes.
-
-What we know works:
-- KEYRUPT fires (`g_dsky.generation` advances, PC excursion out of
-  DUMMYJOB).
-- 2BLANK runs after VERB key (DSPTAB[9] gets the blank-row pattern,
-  T4RUPT pushes it to channel 010 row 10).
-- DSPOUT cycles through DSPTAB each T4RUPT.
-
-What's missing: some piece of executive state (NEWJOB / WAITLIST /
-specific flag) that makes the AGC's PINBALL handler actually populate
-DSPTAB with digit codes when keys arrive. Real Apollo had a hardware
-DSKY responding to AGC channel writes - it's possible Luminary expects
-a handshake we're not providing. This needs deeper PINBALL-state
-investigation, possibly with side-by-side comparison against
-`yaAGC + yaDSKY2` (the real GUI), to nail down.
+V35E (lamp test) and V16N36E (AGC clock monitor) both now work end to
+end. The trace harness remains useful for any future divergence
+debugging.
 
 ## What this does NOT validate
 
