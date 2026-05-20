@@ -25,20 +25,22 @@
  * under a millisecond per frame even pessimistically. */
 #define AGC_CYCLES_PER_FRAME ((1024000 / 12) / 60)
 
-/* Power-on checkout sequence. Real Apollo procedure began with the operator
- * keying V35E - the lamp test - to verify every DSKY segment and lamp. We
- * run it automatically at boot: first an RSET to clear the power-up RESTART
- * light, then VERB 3 5 ENTR. Each step is one keypress; we space them a few
- * frames apart so the AGC's KEYRUPT handler processes each cleanly. After
- * the sequence finishes, control belongs entirely to the operator.
+/* Power-on sequence, run automatically at boot:
+ *
+ *   RSET                     clear the power-up RESTART light
+ *   VERB 1 6 NOUN 3 6 ENTR   V16N36E - monitor the AGC mission clock
+ *
+ * This leaves the panel showing a live, ticking time so the display
+ * is visibly driven by real AGC state from the moment it boots. The
+ * operator can then key anything else (V35E lamp test, etc.) via the
+ * controller. We avoid auto-running the lamp test because V35E holds
+ * DSPLOCK for 5 s, which would swallow the keystrokes that follow it.
  *
  * Keypad codes (channel 015): see src/input.h. */
 static const uint8_t poweron_seq[] = {
-  022,  /* RSET - clear the power-up restart light */
-  021,  /* VERB */
-  003,  /* 3    */
-  005,  /* 5    */
-  034,  /* ENTR */
+  022,                       /* RSET */
+  021, 001, 006,             /* V16  */
+  037, 003, 006, 034,        /* N36E - monitor AGC clock */
 };
 #define POWERON_STEPS  (sizeof poweron_seq / sizeof poweron_seq[0])
 #define POWERON_SPACING 45   /* video frames between checkout keystrokes */
