@@ -108,7 +108,16 @@ agc_host_init(void)
   /* Step 4: program counter to the boot vector. */
   g_agc.Erasable[0][RegZ] = 04000;
 
+  /* Step 5: reset per-run peripheral state, so a second agc_host_init()
+   * in the same process (tests/equiv runs several scenarios back to back)
+   * yields a genuinely clean boot. peripherals_enabled and g_agc_trace
+   * are deliberately NOT reset - callers set those before agc_host_init(). */
+  pending_key = 0;
+  pending_key_dirty = false;
+  key_release_counter = 0;
+  pipa_z_counter = pipa_x_counter = pipa_y_counter = 0;
 
+  memset((void *)&g_dsky, 0, sizeof g_dsky);
   g_dsky.generation = 1;
 }
 

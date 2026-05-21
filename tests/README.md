@@ -10,7 +10,7 @@ via the same `agc_host_init()` code the N64 uses, runs the engine for a
 configurable number of machine cycles, and dumps state.
 
 ```sh
-make -C tests                          # builds host_smoke + dsky_decode_test
+make -C tests                          # builds all host tests
 tests/host_smoke                       # 200k cycles (default)
 tests/host_smoke 5000000               # 5M cycles, ~60s simulated
 tests/host_smoke 2000000 rset          # inject RSET early (clear restart)
@@ -65,6 +65,24 @@ software writes RSET to channel 015 from inside an interrupt handler.
 Without a wired DSKY input, the AGC has no way to acknowledge. Wiring up
 real interrupts (a libdragon timer ISR feeding KEYRUPT1 with the actual
 key code) is what the N64 build provides, not what this host test does.
+
+## `selftest` and `equiv`
+
+`selftest` runs Luminary's own SELF-CHECK diagnostic (`V21 N27 E 10 E`)
+and confirms it both passes a clean rope and catches a corrupted one.
+
+`equiv` is the multi-scenario equivalence harness: six scripted operator
+sessions (cold boot, V35E lamp test, V16N36E clock monitor, V37 major-
+mode select, V21 data load, OPR ERR + RSET recovery). Each session is
+fingerprinted at fixed checkpoints for determinism, and verdict-checked
+against the decoded DSKY panel for correctness. `./equiv regen` reprints
+the fingerprints when an intentional behaviour change needs new goldens.
+See `docs/EQUIVALENCE.md`.
+
+```sh
+make -C tests run-selftest
+make -C tests run-equiv
+```
 
 ## What this validates
 

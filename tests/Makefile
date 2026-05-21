@@ -26,10 +26,12 @@ selftest: selftest.c ../src/agc_host.c ../src/rope.c ../vendor/yaAGC/agc_engine.
 	$(CC) $(CFLAGS) -o $@ selftest.c ../src/agc_host.c ../src/rope.c \
 	  ../vendor/yaAGC/agc_engine.c
 
-# The equivalence / determinism harness, same link set.
-equiv: equiv.c ../src/agc_host.c ../src/rope.c ../vendor/yaAGC/agc_engine.c
-	$(CC) $(CFLAGS) -o $@ equiv.c ../src/agc_host.c ../src/rope.c \
-	  ../vendor/yaAGC/agc_engine.c
+# The equivalence / determinism harness. Links the DSKY decoder too, so
+# each scenario can assert the facet it exercises against the decoded panel.
+equiv: equiv.c ../src/agc_host.c ../src/dsky_decode.c ../src/rope.c \
+       ../vendor/yaAGC/agc_engine.c
+	$(CC) $(CFLAGS) -o $@ equiv.c ../src/agc_host.c ../src/dsky_decode.c \
+	  ../src/rope.c ../vendor/yaAGC/agc_engine.c
 
 # The decode test only needs the pure-C decoder + the agc_engine.h header
 # (for DSKY_* constants). No engine link required.

@@ -48,21 +48,37 @@ the instruction set. apollo-64 runs it both ways:
 Passing good memory *and* rejecting bad memory is what makes the clean
 pass meaningful. The computer is genuinely testing itself.
 
-## 4. Behaviour is deterministic and pinned
+## 4. Behaviour is deterministic, and every facet is exercised
 
 The AGC is a pure integer machine: given the same rope and the same
 scripted input it must reach bit-identical state every run, on any
-host. `tests/equiv.c` runs a scripted operator scenario (boot, RSET,
-V35E lamp test, V16 N36 clock monitor) and fingerprints the *entire*
-machine state - all erasable memory, every I/O channel, the cycle
-counter - at five checkpoints. The expected fingerprints are committed;
-CI re-runs and asserts they are unchanged.
+host. `tests/equiv.c` is a multi-scenario harness - it drives six
+scripted operator sessions, each isolating a distinct facet of the
+system:
 
-The fingerprint is a word-wise hash, independent of host endianness, so
-the numbers are portable: the same scenario driven into a stock yaAGC
-build produces the same fingerprints. That makes `equiv.c` both a
-regression net for apollo-64 and the reference side of an upstream
-cross-check.
+| Scenario      | Facet it proves |
+|---------------|-----------------|
+| cold-boot     | the executive boots, with no operator input, to a stable idle |
+| lamp-test     | V35E drives every seven-segment digit and the status-lamp bank |
+| clock-monitor | V16N36E dispatches a live monitor verb; the AGC clock advances |
+| major-mode    | V37 selects an AGC major mode (program) |
+| data-load     | V21's flash/accept data-load handshake completes |
+| opr-err       | an illegal verb lights OPR ERR, and RSET clears it |
+
+Each scenario boots a fresh AGC and, at fixed checkpoints, does two
+independent checks:
+
+- **Fingerprint.** A word-wise hash of the *entire* machine state - all
+  erasable memory, every I/O channel, the cycle counter. The expected
+  values are committed; CI asserts them, so any accidental change in AGC
+  behaviour is caught. The hash is endianness-independent, so the same
+  scenario driven into a stock yaAGC build produces the same numbers -
+  the reference side of an upstream cross-check.
+- **Verdict.** The decoded DSKY panel (the same `dsky_decode.c` the N64
+  renderer uses) is inspected to assert the facet actually happened -
+  the lamp test really lit every digit, the clock really advanced, the
+  illegal key really lit OPR ERR. A fingerprint proves "deterministic";
+  the verdict proves "deterministically *correct*".
 
 ## What this adds up to
 
@@ -71,7 +87,7 @@ cross-check.
 | 1   | Is the engine the real AGC?      | `verify_vendor.sh` |
 | 2   | Is the flight software real?     | `rope.c` from `agc-software/` |
 | 3   | Does the computer work?          | `selftest` (clean + fault) |
-| 4   | Is behaviour stable & portable?  | `equiv` fingerprints |
+| 4   | Is behaviour stable & correct?   | `equiv` (6 scenarios) |
 
 Engine identical to upstream, flight software unmodified, the machine
 passing its own self-check, behaviour deterministic and pinned - that

@@ -24,8 +24,8 @@ faked it.
 
 See [CHANGELOG.md](CHANGELOG.md) for the milestone note and
 [docs/EQUIVALENCE.md](docs/EQUIVALENCE.md) for how the "genuine AGC" claim is
-kept honest. Not yet done: DSKY artwork (uses a built-in font for now) and CDU
-gimbal-angle pulses.
+kept honest. Not yet done: period-correct DSKY caption typography (lamp and
+panel labels use a stand-in font) and CDU gimbal-angle pulses.
 
 ## Layout
 
